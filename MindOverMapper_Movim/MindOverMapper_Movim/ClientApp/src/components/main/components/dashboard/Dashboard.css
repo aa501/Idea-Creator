@@ -1,0 +1,89 @@
+.dashboard-container{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 95vh;
+    max-height: 95vh;
+}
+
+.dashboard-header{
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 5vh;
+}
+
+.dashboard-body{
+    display: flex;
+    height: 80vh;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.project-paper-holder{
+    height: 30%;
+    width: 25%;
+    margin-right: 50px;
+    margin-top: 10px; 
+    margin-bottom: 240px;
+}
+
+.project-paper{
+    width: 100%;
+    height: 100%;
+}
+
+#no-projects-image{
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  max-width:595px;
+  max-height:494px;
+  width: auto;
+  height: auto;
+}
+
+#project-card-content{
+    min-height: 15%;
+}
+
+#font-awesome-space{
+    margin-left: 10px;
+}
+
+#font-awesome-space-right{
+    margin-right: 10px;
+}
+
+
+#myInput{
+    min-width: 400px;
+}
+
+#tainer{
+    min-width: 1200px;
+}
+
+#projectId-input-ds{
+    height: 5vh;
+    min-width: 325px; 
+}
+
+#save-changes{
+    margin-top: 50px;
+}
+
+#share-learn-container{  
+    margin: auto;
+    margin-top: 3%;
+
+}
+
+#learn-button{
+    margin-left: 2vw;
+}

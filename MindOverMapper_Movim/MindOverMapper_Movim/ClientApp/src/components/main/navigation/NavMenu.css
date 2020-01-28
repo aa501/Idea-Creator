@@ -1,0 +1,51 @@
+﻿a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+#nav-text-accru {
+  
+}
+
+#home-icon{
+  color: lightskyblue;
+  max-width: 25px;
+}
+#naviboi{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#app-name {
+  font-size: 24px;
+  background: linear-gradient(135deg, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 24%,rgba(41,137,216,1) 24%,rgba(41,137,216,1) 40%,rgba(109,166,214,1) 54%,rgba(109,166,214,1) 54%,rgba(41,137,216,1) 68%,rgba(41,137,216,1) 75%,rgba(41,137,216,1) 75%,rgba(0,110,201,1) 80%,rgba(0,110,201,1) 80%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background-clip: content-box;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} 
+
+#name-span {
+    border-radius: 25px; /* or 50% */
+    margin-right:4px;
+    white-space:nowrap;
+}
+
+.navbar-toggler {
+    background: linear-gradient(67deg, #c02e2e 10%, #9c08d8 75%, #3708d8 85%,#9a9a9a 100%);
+}
+

@@ -1,0 +1,210 @@
+.project-creator-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.project-creator-header{
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 5vh;
+}
+
+.project-creator-body{
+    display: flex;
+    height: 80vh;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    flex-direction: column;
+}
+
+#blue-card-holder{
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 5vh;
+}
+
+#project-name-holder{
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 5vh;
+}
+
+#project-description-holder{
+    display:flex;
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 5%;
+    width: 90%;
+    height: 45vh;
+    
+}
+
+#project-definition-holder{
+    display:flex;
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 100vh;
+}
+
+#project-exclusions-holder{
+    display:flex;
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 600vh;
+}
+
+#research-area-1{
+    
+    margin-left: 5%;    
+    margin-right: 5%;
+    margin-top: 5%;
+    width: 90%;
+    height: 45vh;
+
+}
+
+#research-area-2{
+    
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 5%;
+    width: 90%;
+    height: 45vh;
+
+}
+
+#research-area-3{
+    
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 5%;
+    width: 90%;
+    height: 45vh;
+    
+}
+
+#blue-card-container{
+    height: 100%;
+    width: 100%; 
+}
+
+#r-and-d-col{
+    margin-top: 4%;
+}
+
+#stimulusDesc-input{
+    height: 125px;
+    width: 400px; 
+}
+
+#stimulusLink-input{
+    height: 20px;
+    width: 400px;
+}
+
+#page-title{
+    margin-left: 160px;
+    margin-top: 60px;
+}
+
+#projectDefinition-input{
+    height:100px;
+    width: 600px;
+}
+
+#projectExclusions-input{
+    height:100px;
+    width: 600px;
+}
+
+#projectResearch1-input{
+    height:50px;
+    width:400px;
+}
+
+#projectResearch2-input{
+    height:50px;
+    width:400px;
+}
+
+#projectResearch3-input{
+    height:50px;
+    width:400px;
+}
+
+#project-id-holder{
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+}
+
+#confirmation-button-holder{
+    display: flex;
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 5%;
+    width: 90%;
+    height: 5vh;
+    justify-content: space-between;
+}
+
+#projectName-input{
+    height: 5vh;
+    width: 30%; 
+}
+
+#projectId-input{
+    height: 5vh;
+    min-width: 150px; 
+}
+
+#addStim{
+    margin-left: 15px;
+}
+
+
+
+#listContainer{
+    background-color: #d9d9d9;
+    height: 420px;
+    max-height: 420px;
+    overflow: auto;
+    border-radius: 10px;
+    margin-top: 25px;
+    border-color: red;
+
+}
+
+#button-box-submit{
+    margin-left: 20%;
+    margin-top: 2vh;
+}
+
+#button-box{
+    margin-top: 3vh;
+}
+
+#pop-text{
+    margin:10px;
+    overflow: auto;
+    max-height: 420px;
+}
+
+#pop-icon{
+    margin-left: 25px;
+    margin-right: 25px;
+}

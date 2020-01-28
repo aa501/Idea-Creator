@@ -1,0 +1,51 @@
+.dashboard-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.dashboard-header{
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 5vh;
+}
+
+.dashboard-body{
+    display: flex;
+    height: 80vh;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#admin-delete{
+    color:red;
+
+}
+
+#admin-delete-button{
+    margin-left: 2vw;
+}
+.project-paper-holder{
+    height: 30%;
+    width: 25%;
+    margin-right: 50px;
+    margin-top: 10px; 
+}
+
+.project-paper{
+    width: 100%;
+    height: 100%;
+}
+#userList {
+    min-width: 350px;
+}
+
+#trash-icon-button{
+    margin-left: .25vw;
+    display:inline;
+}
