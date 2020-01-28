@@ -1,4 +1,4 @@
-# MindOverMapper--Movim
+Idea Creator
  
 
-2019 KSU Senior Project
+2020 KSU Senior Project
