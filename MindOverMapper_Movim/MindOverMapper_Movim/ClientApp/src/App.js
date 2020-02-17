@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Login } from './components/login/Login';
 import { Main } from './components/main/Main';
+import Concept from './components/main/components/concept/Concept';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminPanel from './components/main/components/admin/AdminPanel';
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -28,9 +29,9 @@ library.add(
   faFile,
   faFileInvoiceDollar,
   faFileExport,
-  faBalanceScale, 
+  faBalanceScale,
   faTimesCircle,
-  faExclamationTriangle, 
+  faExclamationTriangle,
   faCheck,
   faClock,
   faBalanceScale,
@@ -57,6 +58,7 @@ export default class App extends Component {
                   <Route exact path="/" component={Login} />
                   <Route exactpath="/home" component={Main} />
                   <Route exactpath="/admin-panel" component={AdminPanel} />
+                  <Route exactpath="/concept" component={Concept} />
               </Switch>
           </div>
     );

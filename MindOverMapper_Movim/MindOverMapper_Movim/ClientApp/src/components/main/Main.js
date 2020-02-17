@@ -6,6 +6,7 @@ import ProjectCreator from './components/projectcreation/ProjectCreator.js'
 import AdminPanel from './components/admin/AdminPanel.js';
 import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
+import Concept from './components/concept/Concept.js'
 
 
 export class Main extends Component {
@@ -13,7 +14,7 @@ export class Main extends Component {
     constructor(props) {
         super(props);
     }
-    
+
     componentDidMount() {
         if(this.props.location.state === undefined){
             this.props.history.push({
@@ -36,6 +37,7 @@ export class Main extends Component {
                         <Route path='/admin-panel' component={AdminPanel}/>
                         <Route path='/project-view' component={ProjectView}/>
                         <Route path='/project-stimuli' component={ProjectStimuli}/>
+                        <Route path='/concept' component={Concept}/>
                     </Layout>
                 ): (null)}
             </div>
