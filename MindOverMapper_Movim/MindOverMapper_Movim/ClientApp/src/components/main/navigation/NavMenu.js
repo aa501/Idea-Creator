@@ -39,7 +39,7 @@ export class NavMenu extends Component {
 
     render() {
     return (
-     
+
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" dark expand="xl">
           <div id='naviboi'>
             <NavbarBrand id='nav-text-accru' tag={Link} to={{ pathname: '/home', state: {userData: this.props.userData} }}>
@@ -49,8 +49,14 @@ export class NavMenu extends Component {
                 <span id='name-span'>
                 <h id='app-name'>Idea Creator <FontAwesomeIcon id = "home-icon" icon="home"/></h>
                 </span>
-                
             </NavbarBrand>
+
+            <NavbarBrand id='test' tag={Link} to={{ pathname: '/concept', state: {userData: this.props.userData} }}>
+              <span id='concept-span'>
+              <h2 id='app-name'>Concept</h2>
+              </span>
+            </NavbarBrand>
+
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
