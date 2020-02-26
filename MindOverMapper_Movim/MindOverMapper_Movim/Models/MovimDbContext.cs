@@ -70,13 +70,13 @@ namespace MindOverMapper_Movim.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.ConceptName)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Headline)
+                entity.Property(e => e.NewsHeadline)
                     .IsRequired()
                     .HasColumnName("headline")
                     .HasMaxLength(500)
@@ -88,7 +88,7 @@ namespace MindOverMapper_Movim.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Problem)
+                entity.Property(e => e.CustomerProblem)
                     .IsRequired()
                     .HasColumnName("problem")
                     .HasMaxLength(500)
@@ -112,7 +112,7 @@ namespace MindOverMapper_Movim.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Threats)
+                entity.Property(e => e.DeathThreats)
                     .IsRequired()
                     .HasColumnName("threats")
                     .HasMaxLength(1000)
@@ -123,8 +123,7 @@ namespace MindOverMapper_Movim.Models
                     .HasColumnName("proof")
                     .HasMaxLength(500)
                     .IsUnicode(false);
-                                                                                    
-            }
+            });
                 modelBuilder.Entity<Project>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");
