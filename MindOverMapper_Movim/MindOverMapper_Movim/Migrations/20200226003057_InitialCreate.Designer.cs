@@ -10,7 +10,7 @@ using MindOverMapper_Movim.Models;
 namespace MindOverMapper_Movim.Migrations
 {
     [DbContext(typeof(MovimDbContext))]
-    [Migration("20200217023702_InitialCreate")]
+    [Migration("20200226003057_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
