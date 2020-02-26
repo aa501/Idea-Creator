@@ -17,6 +17,7 @@ namespace MindOverMapper_Movim.Models
 
         public virtual DbSet<Links> Links { get; set; }
         public virtual DbSet<Permissions> Permissions { get; set; }
+        public virtual DbSet<Concept> Concept { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<ProjectParameters> ProjectParameters { get; set; }
         public virtual DbSet<RecoveryGrant> RecoveryGrant { get; set; }
@@ -59,7 +60,72 @@ namespace MindOverMapper_Movim.Models
                 entity.Property(e => e.ProjId).HasColumnName("proj_id");
             });
 
-            modelBuilder.Entity<Project>(entity =>
+            modelBuilder.Entity<Concept>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Uid)
+                    .IsRequired()
+                    .HasColumnName("uid")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Headline)
+                    .IsRequired()
+                    .HasColumnName("headline")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Customer)
+                    .IsRequired()
+                    .HasColumnName("customer")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Problem)
+                    .IsRequired()
+                    .HasColumnName("problem")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Promise)
+                    .IsRequired()
+                    .HasColumnName("promise")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Price)
+                    .IsRequired()
+                    .HasColumnName("price")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Passion)
+                    .IsRequired()
+                    .HasColumnName("passion")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Threats)
+                    .IsRequired()
+                    .HasColumnName("threats")
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Proof)
+                    .IsRequired()
+                    .HasColumnName("proof")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+                                                                                    
+            }
+                modelBuilder.Entity<Project>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
