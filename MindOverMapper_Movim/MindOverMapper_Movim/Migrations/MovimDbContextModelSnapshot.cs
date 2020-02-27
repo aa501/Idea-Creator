@@ -19,6 +19,80 @@ namespace MindOverMapper_Movim.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("MindOverMapper_Movim.Models.Concept", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ConceptName")
+                        .IsRequired()
+                        .HasColumnName("name")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Customer")
+                        .IsRequired()
+                        .HasColumnName("customer")
+                        .HasMaxLength(500)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CustomerProblem")
+                        .IsRequired()
+                        .HasColumnName("problem")
+                        .HasMaxLength(500)
+                        .IsUnicode(false);
+
+                    b.Property<string>("DeathThreats")
+                        .IsRequired()
+                        .HasColumnName("threats")
+                        .HasMaxLength(1000)
+                        .IsUnicode(false);
+
+                    b.Property<string>("NewsHeadline")
+                        .IsRequired()
+                        .HasColumnName("headline")
+                        .HasMaxLength(500)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Passion")
+                        .IsRequired()
+                        .HasColumnName("passion")
+                        .HasMaxLength(500)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Price")
+                        .IsRequired()
+                        .HasColumnName("price")
+                        .HasMaxLength(500)
+                        .IsUnicode(false);
+
+                    b.Property<int>("ProjectId");
+
+                    b.Property<string>("Promise")
+                        .IsRequired()
+                        .HasColumnName("promise")
+                        .HasMaxLength(500)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Proof")
+                        .IsRequired()
+                        .HasColumnName("proof")
+                        .HasMaxLength(500)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnName("uid")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Concept");
+                });
+
             modelBuilder.Entity("MindOverMapper_Movim.Models.Links", b =>
                 {
                     b.Property<int>("Id")

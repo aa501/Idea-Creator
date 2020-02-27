@@ -9,6 +9,29 @@ namespace MindOverMapper_Movim.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Concept",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    uid = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
+                    name = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
+                    headline = table.Column<string>(unicode: false, maxLength: 500, nullable: false),
+                    customer = table.Column<string>(unicode: false, maxLength: 500, nullable: false),
+                    problem = table.Column<string>(unicode: false, maxLength: 500, nullable: false),
+                    promise = table.Column<string>(unicode: false, maxLength: 500, nullable: false),
+                    proof = table.Column<string>(unicode: false, maxLength: 500, nullable: false),
+                    price = table.Column<string>(unicode: false, maxLength: 500, nullable: false),
+                    passion = table.Column<string>(unicode: false, maxLength: 500, nullable: false),
+                    threats = table.Column<string>(unicode: false, maxLength: 1000, nullable: false),
+                    ProjectId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Concept", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Links",
                 columns: table => new
                 {
@@ -112,6 +135,9 @@ namespace MindOverMapper_Movim.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Concept");
+
             migrationBuilder.DropTable(
                 name: "Links");
 
