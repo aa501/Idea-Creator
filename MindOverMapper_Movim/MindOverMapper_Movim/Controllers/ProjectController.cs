@@ -687,25 +687,30 @@ namespace MindOverMapper_Movim.Controllers
         }
 
         [Authorize]
-        [HttpPost("{uid}/concept)")]
+        [HttpPost("concept")]
         public ActionResult CreateConcept([FromBody] ConceptRequest req)
         {
             var uid = _service.GetUid(HttpContext.User.Identity as ClaimsIdentity);
             var user = _context.User.Where(u => u.Uid == uid).FirstOrDefault<User>();
             var proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
-            Concept cpt = new Concept();
+            Concept cpt = new Concept
+            {
+                Uid = user.Uid,
+                ProjectId = 1,
+                ConceptName = req.ConceptName,
+                NewsHeadline = req.NewsHeadline,
+                Customer = req.Customer,
+                CustomerProblem = req.CustomerProblem,
+                Promise = req.Promise,
+                Proof = req.Proof,
+                Price = req.Price,
+                Passion = req.Passion,
+                DeathThreats = req.DeathThreats
+            };
 
-            cpt.Uid = user.Uid;
-            cpt.ProjectId = Int32.Parse(proj.Uid);
-            cpt.ConceptName = req.ConceptName;
-            cpt.NewsHeadline = req.NewsHeadline;
-            cpt.Customer = req.Customer;
-            cpt.CustomerProblem = req.CustomerProblem;
-            cpt.Promise = req.Promise;
-            cpt.Proof = req.Proof;
-            cpt.Price = req.Price;
-            cpt.Passion = req.Passion;
-            cpt.DeathThreats = req.DeathThreats;
+
+            _context.Concept.Add(cpt);
+            _context.SaveChanges();
 
             return Ok(new { message = "Success!" });
         }

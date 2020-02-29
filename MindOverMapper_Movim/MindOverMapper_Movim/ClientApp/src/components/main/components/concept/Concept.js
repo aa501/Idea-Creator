@@ -99,13 +99,13 @@ export default class Concept extends Component {
     }
 
     submitConcept = () => {
-        axios.post('/api/project',
+        axios.post('/api/project/concept',
             {
                 'conceptName': this.state.conceptName,
                 'newsHeadline': this.state.newsHeadline,
                 'customer': this.state.customer,
                 'customerProblem': this.state.customerProblem,
-                'promise': this.state.promise,
+                'promise': this.state.benefitPromise,
                 'proof': this.state.proof,
                 'price': this.state.price,
                 'passion': this.state.passion,
