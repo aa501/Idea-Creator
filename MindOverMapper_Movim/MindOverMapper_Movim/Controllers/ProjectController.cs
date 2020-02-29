@@ -687,7 +687,7 @@ namespace MindOverMapper_Movim.Controllers
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("{uid}/concept)")]
         public ActionResult CreateConcept([FromBody] ConceptRequest req)
         {
             var uid = _service.GetUid(HttpContext.User.Identity as ClaimsIdentity);

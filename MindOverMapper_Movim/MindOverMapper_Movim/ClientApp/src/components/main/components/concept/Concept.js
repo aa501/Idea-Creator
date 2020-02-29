@@ -99,11 +99,8 @@ export default class Concept extends Component {
     }
 
     submitConcept = () => {
-        axios.post('/api/project', {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
-              },
-            data: {
+        axios.post('/api/project',
+            {
                 'conceptName': this.state.conceptName,
                 'newsHeadline': this.state.newsHeadline,
                 'customer': this.state.customer,
@@ -112,8 +109,12 @@ export default class Concept extends Component {
                 'proof': this.state.proof,
                 'price': this.state.price,
                 'passion': this.state.passion,
-                'deathThreats': this.state.deathThreats
-            }
+                'deathThreats': this.state.deathThreats,
+            },
+          {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
         });
     }
 
