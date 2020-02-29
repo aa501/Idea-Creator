@@ -686,5 +686,28 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(new { message = "Success!" });
         }
 
+        [Authorize]
+        [HttpPost]
+        public ActionResult CreateConcept([FromBody] ConceptRequest req)
+        {
+            var uid = _service.GetUid(HttpContext.User.Identity as ClaimsIdentity);
+            var user = _context.User.Where(u => u.Uid == uid).FirstOrDefault<User>();
+            var proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            Concept cpt = new Concept();
+
+            cpt.Uid = user.Uid;
+            cpt.ProjectId = Int32.Parse(proj.Uid);
+            cpt.ConceptName = req.ConceptName;
+            cpt.NewsHeadline = req.NewsHeadline;
+            cpt.Customer = req.Customer;
+            cpt.CustomerProblem = req.CustomerProblem;
+            cpt.Promise = req.Promise;
+            cpt.Proof = req.Proof;
+            cpt.Price = req.Price;
+            cpt.Passion = req.Passion;
+            cpt.DeathThreats = req.DeathThreats;
+
+            return Ok(new { message = "Success!" });
+        }
     }
 }

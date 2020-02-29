@@ -98,44 +98,21 @@ export default class Concept extends Component {
         });
     }
 
-    submitProject = () => {
+    submitConcept = () => {
         axios.post('/api/project', {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
               },
             data: {
-                'title': this.state.projectName,
-                'description': this.state.projectDescription,
-                'problemStatement': {
-                    'title': this.state.projectName,
-                    'description': this.state.projectDescription,
-                    'link*': {
-                        'href': this.state.projectResearchLink1,
-                        'hrefName': this.state.projectResearchLink1
-                    }
-                },
-                'exclusion': [{
-                    'content': this.state.projectExclusions,
-                    'link*': {
-                        'href': this.state.projectResearchLink3,
-                        'hrefName': this.state.projectResearchLink3
-                    }
-                }],
-                'constraints': [{
-                    'content': this.state.projectDefinition,
-                    'link*': {
-                        'href': this.state.projectResearchLink3,
-                        'hrefName': this.state.projectResearchLink3
-                    }
-                }],
-                'areasOfResearch': [{
-                    'content': this.state.projectResearch1,
-                    'link*': {
-                        'href': this.state.projectResearchLink1,
-                        'hrefName': this.state.projectResearchLink1
-                    }
-                }],
-                'stimulus': []
+                'conceptName': this.state.conceptName,
+                'newsHeadline': this.state.newsHeadline,
+                'customer': this.state.customer,
+                'customerProblem': this.state.customerProblem,
+                'promise': this.state.promise,
+                'proof': this.state.proof,
+                'price': this.state.price,
+                'passion': this.state.passion,
+                'deathThreats': this.state.deathThreats
             }
         });
     }
@@ -169,7 +146,7 @@ export default class Concept extends Component {
                                 value={this.state.newsHeadline}
                                 onChange={this.handleNewsHeadlineChange}
                                 label="News Headline"
-                                placeholder="Enter News Headline..."
+                                placeholder="Enter the big idea for this concept..."
                                 multiline
                                 rows="2"
                                 margin="normal"
@@ -183,7 +160,7 @@ export default class Concept extends Component {
                                 value={this.state.customer}
                                 onChange={this.handleCustomerChange}
                                 label="Customer"
-                                placeholder="Enter Customer..."
+                                placeholder="Enter your customer for this concept..."
                                 multiline
                                 rows="2"
                                 margin="normal"
@@ -195,7 +172,7 @@ export default class Concept extends Component {
                                 value={this.state.customerProblem}
                                 onChange={this.handleCustomerProblemChange}
                                 label="Customer Problem"
-                                placeholder="Enter Customer Problem..."
+                                placeholder="Enter the customer problem you're trying to solve..."
                                 multiline
                                 rows="2"
                                 margin="normal"
@@ -209,7 +186,7 @@ export default class Concept extends Component {
                                 value={this.state.benefitPromise}
                                 onChange={this.handleBenefitPromiseChange}
                                 label="Benefit Promise"
-                                placeholder="Enter Benefit Promise..."
+                                placeholder="Enter what you're promising as a benefit to your customer..."
                                 multiline
                                 rows="2"
                                 margin="normal"
@@ -217,20 +194,31 @@ export default class Concept extends Component {
                             </TextField>
                         </Col>
                         <Col md={{ span: 5, offset: 0 }} >
-                            <TextField id="concept-field"
-                                value={this.state.price}
-                                onChange={this.handlePriceChange}
-                                label="Price"
-                                placeholder="Enter Price..."
-                                multiline
-                                rows="2"
-                                margin="normal"
-                                variant="outlined">
-                            </TextField>
+                          <TextField id="concept-field"
+                              value={this.state.proof}
+                              onChange={this.handleProofChange}
+                              label="Proof"
+                              multiline
+                              rows="3"
+                              margin="normal"
+                              placeholder="Enter proof that your concept can work..."
+                              variant="outlined">
+                          </TextField>
+                        </Col>                      </Row>
+                      <Row>
+                        <Col md={{ span: 6, offset: 0 }} >
+                          <TextField id="concept-field"
+                              value={this.state.price}
+                              onChange={this.handlePriceChange}
+                              label="Price"
+                              placeholder="Enter your price for this concept..."
+                              multiline
+                              rows="2"
+                              margin="normal"
+                              variant="outlined">
+                          </TextField>
                         </Col>
-                    </Row>
-                    <Row>
-                      <Col md={{ span: 6, offset: 0 }} >
+                      <Col md={{ span: 5, offset: 0 }} >
                         <TextField id="concept-field"
                             value={this.state.passion}
                             onChange={this.handlePassionChange}
@@ -238,7 +226,7 @@ export default class Concept extends Component {
                             multiline
                             rows="3"
                             margin="normal"
-                            placeholder="Enter Passion..."
+                            placeholder="Enter your passion for this concept..."
                             variant="outlined">
                         </TextField>
                       </Col>
@@ -252,26 +240,16 @@ export default class Concept extends Component {
                             multiline
                             rows="3"
                             margin="normal"
-                            placeholder="Enter Death Threats..."
+                            placeholder="Enter any potential threats to the success of this project..."
                             variant="outlined">
                           </TextField>
                       </Col>
                     </Row>
                     <Row>
-                        <Col md={{ span: 3, offset: 0 }}>
-                            <div id='project-id-holder'>
-                                Project ID: <input type="text" disabled='true' class="form-control" id="projectId-input" value={'#' + this.state.projectNumber} />
-                            </div>
-                        </Col>
-                        <Col md={{ span: 3, offset: 0 }}>
-                            <div id='project-id-holder'>
-                                Project Owner: <input type="text" disabled='true' class="form-control" id="projectId-input" value={this.props.location.state.userData.firstName + ' ' + this.props.location.state.userData.lastName} />
-                            </div>
-                        </Col>
-                        <Col md={{ span: 2, offset: 1 }}>
+                        <Col md={{ span: 3, offset: 1 }}>
                             <div id='confirmation-button-holder'>
                                 <Button color = 'warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
-                                <Button color = 'primary' id='submit-project' disabled = {this.state.projectName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
+                                <Button color = 'primary' id='submit-concept' disabled = {this.state.projectName === ''} onClick={this.submitConcept}><FontAwesomeIcon icon="check" /> Submit</Button>
                             </div>
                         </Col>
                     </Row>
