@@ -23,11 +23,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import Portal from '@material-ui/core/Portal';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-
 import './Dashboard.css';
 import { textAlign } from '@material-ui/system';
 import noProjectImage from "../../../../static/NoProjectsFound.png";
 import City from "../../../../static/City.jpg";
+import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
