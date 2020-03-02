@@ -402,6 +402,28 @@ export default class Dashboard extends Component {
 
                         </NavItem>
 
+                        <NavItem role="menuitem" eventKey="info">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                                About
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="help">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="question id="dash-icon" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                                Help
+                            </NavText>
+
+                        </NavItem>
+
                         <NavItem role="menuitem" eventKey="logout">
                             <NavIcon>
                                 <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.75em' }} />

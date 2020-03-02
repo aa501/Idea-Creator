@@ -150,13 +150,13 @@
     height: 45px;
     margin-top: 1%;
     margin-bottom: 0%;
-    background-color: mediumaquamarine;
-    border-color: mediumaquamarine;
+    background-color: #0a5a6e;
+    border-color: #0a5a6e;
 }
 
 #submit-button:hover {
     background: white;
-    color: mediumaquamarine;
+    color: #0a5a6e;
     width: 84%;
     height: 45px;
     cursor: pointer;

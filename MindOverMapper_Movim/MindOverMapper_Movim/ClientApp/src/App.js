@@ -5,7 +5,7 @@ import { Main } from './components/main/Main';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminPanel from './components/main/components/admin/AdminPanel';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlus, faQuestionCircle, faCog, faCogs, faCircleNotch, faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faQuestion, faInfo, faQuestionCircle, faCog, faCogs, faCircleNotch, faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
     faIgloo,
@@ -45,7 +45,9 @@ library.add(
     faProjectDiagram,
     faStream,
     faCogs,
-    faQuestionCircle
+    faQuestionCircle,
+    faQuestion,
+    faInfo
 
 )
 
