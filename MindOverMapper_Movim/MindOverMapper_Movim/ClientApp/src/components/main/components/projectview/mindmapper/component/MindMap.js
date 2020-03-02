@@ -5,6 +5,9 @@ import { Toolbar } from "./Toolbar";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import IconButton from '@material-ui/core/IconButton';
 import { Diagram } from "@blink-mind/renderer-react";
+import { Container, Row, Col } from 'react-bootstrap';
+import { Button, Alert, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
+import TextField from '@material-ui/core/TextField';
 import RichTextEditorPlugin from "@blink-mind/plugin-rich-text-editor";
 import { JsonSerializerPlugin } from "@blink-mind/plugin-json-serializer";
 import { ThemeSelectorPlugin } from "@blink-mind/plugin-theme-selector";
@@ -26,12 +29,16 @@ export default class MindMap extends React.Component {
     this.state = {
       userData: this.props.userData,
       projectInfo: this.props.projectInfo,
+      projectConcept: '',
       change: false,
       diagramVersion: 0,
       openSuccessSnackBar: false,
       oldState: null,
       newState: null,
       loading: true,
+      visible: true,
+      modalIsOpen: false
+
     };
     // This was adam's idea
     this.timeOutID = null;
@@ -57,13 +64,44 @@ export default class MindMap extends React.Component {
   handleOpenErrorSnackBar = () => {
     this.setState({ openErrorSnackBar: true })
   }
+
   handleCloseErrorSnackBar = () => {
     this.setState({ openErrorSnackBar: false })
+    }
+
+  toggleAlert() {
+      this.setState({
+          visible: !this.state.visible
+      });
   }
+  toggleModal() {
+      this.setState({
+          modalIsOpen: !this.state.modalIsOpen
+      });
+  }
+
+  nextPage = () => {
+      this.props.history.push({
+          pathname: '../../concept',
+          state: this.state  // need this for moving to different component
+      });
+    }
+
+  handleProjectConcept = (event) => {
+      this.setState({
+          projectConcept: event.target.value
+      });
+    }
+
+    testFunction = () => {
+        let projectConcept = this.state.projectConcept;
+        this.props.projectConcept(projectConcept);
+    }
+
 
   componentDidMount = async () => {
     await this.retrieveMindMap(this.props.projectInfo.uid);
-    this.autoSave(); // Enable auto save 
+    this.autoSave(); // Enable auto save
   };
 
   componentWillUnmount() {
@@ -71,7 +109,7 @@ export default class MindMap extends React.Component {
     {
       clearTimeout(this.timeOutID);
     }
-    
+
 }
 
   autoSave = async () => {
@@ -95,7 +133,7 @@ export default class MindMap extends React.Component {
       headers: {
         Authorization: 'Bearer ' + this.props.userData.token //the token is a variable which holds the token
       }
-    }).then(res => { 
+    }).then(res => {
       this.setState({
         loading: false
       });
@@ -104,7 +142,7 @@ export default class MindMap extends React.Component {
     const props = this.diagram.getDiagramProps();
     const { controller } = props;
     let obj = mindModelConfig.state;
-    let model = controller.run("deserializeModel", { controller, obj });    
+    let model = controller.run("deserializeModel", { controller, obj });
     this.setState({
       model,
       diagramVersion: mindModelConfig.version,
@@ -123,8 +161,8 @@ export default class MindMap extends React.Component {
       data: JSON.stringify({
         "state" : exportyboi,
         "version" : this.state.diagramVersion,
-      }) 
-    }).then(response => { 
+      })
+    }).then(response => {
       // Saved successfully
       this.handleOpenSuccessSnackBar(response.data.version)
     })
@@ -228,7 +266,34 @@ export default class MindMap extends React.Component {
       canUndo,
       canRedo
     };
-    return <Toolbar {...toolbarProps} />;
+    return (
+      <Row><Col>
+      <Toolbar {...toolbarProps} />
+      </Col>
+      <Col>
+      <div id="conceptButton" align="right">
+          <Button color="primary" onClick={this.toggleModal.bind(this)}>Concept</Button>
+      </div>
+      <Modal isOpen={this.state.modalIsOpen}>
+          <ModalHeader toggle={this.toggleModal.bind(this)}>Concept</ModalHeader>
+          <ModalBody>
+              <div className='project-concept'>
+                  <TextField
+                      value={this.state.projectConcept}
+                      onChange={this.handleProjectConcept}
+                      label="Title"
+                      margin="normal"
+                      placeholder="Enter Title..."
+                      variant="outlined">
+                  </TextField>
+              </div>
+          </ModalBody>
+          <ModalFooter>
+                        <Button color="primary" onClick={this.testFunction}>Add Concept</Button>
+          </ModalFooter>
+      </Modal>
+      </Col></Row>
+    );
   }
 
   renderDialog() {}
@@ -247,7 +312,7 @@ export default class MindMap extends React.Component {
           <div >
             <img src={LoadingGIF} className='loading-content' />
           </div>
-           ):( 
+           ):(
           this.renderDiagram())}
         <Snackbar
           anchorOrigin={{
@@ -300,6 +365,7 @@ export default class MindMap extends React.Component {
           ]}
         />
       </div>
+
     );
   }
 }

@@ -10,7 +10,6 @@ import Slide from '@material-ui/core/Slide';
 import { Container, Row, Col } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import './Concept.css';
 
 
@@ -19,10 +18,9 @@ export default class Concept extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            projectName: this.props.location.state.projectName,
-            projectNumber: Math.floor(Math.random() * 1000000),
+            projectNumber: this.props.location.state.projectName,
             userData: this.props.location.state.userData || this.props.userData,
-            conceptName: '',
+            conceptName: this.props.location.state.projectConcept,
             newsHeadline: '',
             customer: '',
             customerProblem: '',

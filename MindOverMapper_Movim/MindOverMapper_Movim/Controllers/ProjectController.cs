@@ -696,7 +696,7 @@ namespace MindOverMapper_Movim.Controllers
             Concept cpt = new Concept
             {
                 Uid = user.Uid,
-                ProjectId = 1,
+                ProjectId = proj.Id,
                 ConceptName = req.ConceptName,
                 NewsHeadline = req.NewsHeadline,
                 Customer = req.Customer,
