@@ -30,7 +30,7 @@
 
 #logo-holder {
     z-index: 1;
-    margin-top: 25%;
+    margin-top: 20%;
     margin: auto;
 }
 
@@ -40,9 +40,9 @@
     background: linear-gradient(135deg, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 24%,rgba(41,137,216,1) 24%,rgba(41,137,216,1) 40%,rgba(109,166,214,1) 54%,rgba(109,166,214,1) 54%,rgba(41,137,216,1) 68%,rgba(41,137,216,1) 75%,rgba(41,137,216,1) 75%,rgba(0,110,201,1) 80%,rgba(0,110,201,1) 80%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 18px;
+    font-size: 28px;
     font-family: 'Exo-2', sans-serif;
-    margin-top: 10%;
+    margin-top: 8%;
 }
 
 #login-logo-span {
@@ -62,7 +62,7 @@
 #login-text-span {
     display: block;
     height: 30px;
-    width: 200px;
+    width: 300px;
     line-height: 60px;
     border-radius: 30px;
     color: white;
@@ -72,7 +72,8 @@
 }
 
 #login-logo {
-    width: 124px;
+    width: 80px;
+    margin-top: 0%;
 }
 
 #login-container {
@@ -80,27 +81,26 @@
     display: flex;
     flex-direction: column;
     margin: auto;
-    height: 450px;
-    width: 300px;
-    background: white;
-    border: solid;
-    border-radius: 5px;
-    border-width: 2px;
-    border-color: grey;
+    height: 490px;
+    width: 500px;   
     box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
-    background-color: #989898;
     justify-content: center;
     align-items: center;
-    max-width: 400px;
+    max-width: 500px;
     border-radius: 2px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25), 0 3px 6px rgba(0,0,0,0.29), 10px 10px 10px rgba(0, 0, 0, 0.5);
-    background-color: rgba(255, 255, 255, .8);
+    background-color: rgba(40, 50, 60, .8);
 }
 
 #username-field {
-    margin-left: 5%;
-    display: flex;
-    flex-direction: column;
+    width: 86%;
+    margin-top: 8%;
+}
+
+#password-field {
+    width: 86%;
+    margin-bottom: 2%;
+    margin-top: 8%;
 }
 
 #userName-label {
@@ -109,7 +109,9 @@
 }
 
 #userName-input {
-    width: 95%;
+    background-color: rgba(20, 30, 40, 1);
+    border-color: grey;
+    color: white;
 }
 
 #password-label {
@@ -118,35 +120,47 @@
 }
 
 #password-input {
-    margin-left: 4%;
-    width: 95%;
-    margin-top: 10%;
+    background-color: rgba(20, 30, 40, 1);
+    border-color: grey;
+    color: white;
 }
 
 #remember-me {
-    margin-left: 20%;
-    margin-top: 4%;
+    margin-left: 0%;
+    margin-bottom: 3%;
     color: black;
+    margin-right: 57%;
+    text-align: left;
 }
 
 #forgot-pass {
-    float: middle;
-    margin-right: 5%;
+    margin-bottom: -2%;
+    margin-right: 58%;
+    text-align: left;
+}
+
+#register {
+    margin-bottom: -2%;
+    margin-right: 57%;
+    text-align: left;
 }
 
 #submit-button {
-    background: linear-gradient(90deg, rgba(5,14,20,1) 34%, rgba(19,51,65,1) 100%, rgba(249,255,255,1) 100%);
-    width: 150px;
-    margin-top: 2%;
-    margin-bottom: 2%;
+    width: 86%;
+    height: 45px;
+    margin-top: 1%;
+    margin-bottom: 0%;
+    background-color: mediumaquamarine;
+    border-color: mediumaquamarine;
 }
 
-    #submit-button:hover {
-        background: white;
-        color: rgba(0, 123, 255, 1);
-        width: 150px;
-        cursor: pointer;
-    }
+#submit-button:hover {
+    background: white;
+    color: mediumaquamarine;
+    width: 84%;
+    height: 45px;
+    cursor: pointer;
+}
 
 #submit-button2 {
     background: linear-gradient(90deg, rgba(5,14,20,1) 34%, rgba(19,51,65,1) 100%, rgba(249,255,255,1) 100%);
@@ -175,8 +189,8 @@
 }
 
 .form-check-label {
-    margin-bottom: 5px;
-    margin-top: 1%;
+    margin-bottom: 0px;
+    margin-top: 2%;
     -webkit-text-fill-color: aliceblue;
 }
 @keyframes slideInFromTop {

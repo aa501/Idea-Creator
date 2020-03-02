@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Col } from 'react-bootstrap';
 import './NavMenu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import logo from '../../../static/Logo.png';
 
 export class NavMenu extends Component {
@@ -40,14 +39,14 @@ export class NavMenu extends Component {
     render() {
     return (
      
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" dark expand="xl">
+        <Navbar className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-3" dark expand="xl">
           <div id='naviboi'>
             <NavbarBrand id='nav-text-accru' tag={Link} to={{ pathname: '/home', state: {userData: this.props.userData} }}>
                 <span id ='title-image'>
                     <img src={logo} width = "50"/>
                 </span>
                 <span id='name-span'>
-                <h id='app-name'>Idea Creator <FontAwesomeIcon id = "home-icon" icon="home"/></h>
+                <h id='app-name'>Idea Creator</h>
                 </span>
                 
             </NavbarBrand>
@@ -75,6 +74,7 @@ export class NavMenu extends Component {
             </Collapse>
           </div>
         </Navbar>
+
     );
   }
 }
