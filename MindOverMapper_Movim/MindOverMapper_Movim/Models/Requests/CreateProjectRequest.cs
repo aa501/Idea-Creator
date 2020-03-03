@@ -16,3 +16,4 @@ namespace MindOverMapper_Movim.Models
         public List<StimulusRequest> UnrelatedStimulus { get; set; }
     }
 }
+   

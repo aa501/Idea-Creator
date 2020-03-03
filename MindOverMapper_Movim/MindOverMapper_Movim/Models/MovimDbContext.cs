@@ -21,6 +21,7 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<ProjectParameters> ProjectParameters { get; set; }
         public virtual DbSet<RecoveryGrant> RecoveryGrant { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Prototype> Prototype { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -205,6 +206,31 @@ namespace MindOverMapper_Movim.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
+
+            modelBuilder.Entity<Prototype>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Uid)
+                    .IsRequired()
+                    .HasColumnName("uid")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrototypeName)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrototypeDescription)
+                    .IsRequired()
+                    .HasColumnName("description")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+               
+            });
+
         }
     }
 }

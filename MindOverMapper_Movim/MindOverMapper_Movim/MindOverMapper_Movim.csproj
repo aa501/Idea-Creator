@@ -7,6 +7,9 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +27,14 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <Compile Remove="Migrations\20200229171319_movim data.cs" />
+    <Compile Remove="Migrations\20200229171319_movim data.Designer.cs" />
+    <Compile Remove="Migrations\20200229171806_ignorechanges.cs" />
+    <Compile Remove="Migrations\20200229171806_ignorechanges.Designer.cs" />
+    <Compile Remove="Migrations\20200229174045_movim.cs" />
+    <Compile Remove="Migrations\20200229174045_movim.Designer.cs" />
+    <Compile Remove="Migrations\20200229181214_Script.cs" />
+    <Compile Remove="Migrations\20200229181214_Script.Designer.cs" />
     <None Remove="Services\AuthService.css" />
     <Content Remove="Services\Service.json" />
     <Content Remove="Models\Requests\ItemRequest.json" />
@@ -40,10 +51,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Models\Requests\" />
     <Folder Include="Controllers\" />
     <Folder Include="Helpers\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Services\" />
     <Folder Include="Artifacts\" />
   </ItemGroup>
@@ -94,7 +104,7 @@
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)build\**" />
-      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>

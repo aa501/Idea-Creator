@@ -16,7 +16,7 @@ namespace MindOverMapper_Movim.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : Controller
-    {
+    {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 
         private readonly MovimDbContext _context;
         private readonly AuthService _service;

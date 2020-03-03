@@ -185,7 +185,7 @@ export default class ProjectStimuli extends Component {
       {
         'title': this.state.projectName,
         'description': this.state.projectDescription,
-        'definition' : this.state.projectDefinition,
+        'definition' : this.state.projectDefinition, //project mission
         'problemStatement': {
           'content': this.state.projectName
         },
