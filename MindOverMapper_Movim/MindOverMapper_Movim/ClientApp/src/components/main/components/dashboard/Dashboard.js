@@ -415,7 +415,7 @@ export default class Dashboard extends Component {
 
                         <NavItem role="menuitem" eventKey="help">
                             <NavIcon>
-                                <FontAwesomeIcon icon="question id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.75em' }} />
                             </NavIcon>
 
                             <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
