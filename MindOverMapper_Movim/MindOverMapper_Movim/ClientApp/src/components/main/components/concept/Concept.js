@@ -18,7 +18,7 @@ export default class Concept extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            projectNumber: this.props.location.state.projectName,
+            projectName: this.props.location.state.projectName,
             userData: this.props.location.state.userData || this.props.userData,
             conceptName: this.props.location.state.projectConcept,
             newsHeadline: '',
@@ -108,6 +108,7 @@ export default class Concept extends Component {
                 'price': this.state.price,
                 'passion': this.state.passion,
                 'deathThreats': this.state.deathThreats,
+                'projectUid': this.state.projectName.uid
             },
           {
           headers: {

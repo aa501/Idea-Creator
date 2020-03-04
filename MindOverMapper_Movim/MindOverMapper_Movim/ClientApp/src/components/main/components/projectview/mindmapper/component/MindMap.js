@@ -80,12 +80,6 @@ export default class MindMap extends React.Component {
       });
   }
 
-  nextPage = () => {
-      this.props.history.push({
-          pathname: '../../concept',
-          state: this.state  // need this for moving to different component
-      });
-    }
 
   handleProjectConcept = (event) => {
       this.setState({

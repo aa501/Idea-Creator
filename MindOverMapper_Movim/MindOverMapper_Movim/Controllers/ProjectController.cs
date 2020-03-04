@@ -690,9 +690,11 @@ namespace MindOverMapper_Movim.Controllers
         [HttpPost("concept")]
         public ActionResult CreateConcept([FromBody] ConceptRequest req)
         {
+            Console.WriteLine(req.projectUid);
             var uid = _service.GetUid(HttpContext.User.Identity as ClaimsIdentity);
             var user = _context.User.Where(u => u.Uid == uid).FirstOrDefault<User>();
-            var proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            Project proj = _context.Project.Where(p => p.Uid == req.projectUid).FirstOrDefault();
+
             Concept cpt = new Concept
             {
                 Uid = user.Uid,
