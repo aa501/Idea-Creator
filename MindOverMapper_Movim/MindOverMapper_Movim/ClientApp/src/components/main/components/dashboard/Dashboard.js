@@ -23,11 +23,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import Portal from '@material-ui/core/Portal';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-
 import './Dashboard.css';
 import { textAlign } from '@material-ui/system';
 import noProjectImage from "../../../../static/NoProjectsFound.png";
 import City from "../../../../static/City.jpg";
+import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
@@ -345,91 +348,203 @@ export default class Dashboard extends Component {
 
         return (
             <div className='dashboard-container'>
-                <div className='dashboard-header'>
-                </div>
-                <div className='dashboard-body'>
-                    {this.state.projectList.length === 0 ? (
-                        <img src={noProjectImage} id='no-projects-image' alt="No Projects Found" />
 
-                    ) : (<div></div>)}
-                    {/* TODO: Have to make this conditional render, render the project tiles */}
-                    {this.state.projectList.map((project, index) => {
-                        return (
-                            <div className='project-paper-holder'>
-                                <Card style={{ height: 400 }}>
-                                    <Paper className='project-paper'>
-                                        <CardActionArea onClick={() => this.viewProject(project)}>
-                                            <CardMedia
-                                            
-                                                style={{ height: 0, paddingTop: '10em' }}
-                                                image = {this.renderSwitch(index)}
-                                                title="Idea"
-                                               
-                                            />
-                                            <CardContent id='project-card-content'>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    {project.title}
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    <FontAwesomeIcon id='font-awesome-space-right' icon="stream" />
-                                                    {project.description.slice(0,75)}
-                                                    
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" />
-                                                    Project ID: #{project.uid}
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" />
-                                                    Date Created: {project.dateCreated.slice(0, 10)}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <div id='share-learn-container'>
-                                                <Button size="small" color="primary" onClick={this.openShareModal}>
-                                                    Share
+              
+                <SideNav
+                    onSelect={(selected) => {
+                        // Add your code here
+                    }}
+                >
+
+                 <SideNav.Toggle />
+                 
+                    <SideNav.Nav defaultSelected="">
+
+                        
+                        <NavItem role="menuitem" eventKey="home">
+                            <NavIcon>
+                                    <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{paddingTop: 13, paddingRight: 32, fontSize: 18}}>
+                                Home
+                            </NavText>
+                            
+                        </NavItem>
+
+                        <NavItem eventKey="charts">
+                            <NavIcon>
+                                    <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+                            <NavText style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                                Add Project
+                            </NavText>
+                            <NavItem eventKey="charts/linechart">
+                                <NavText>
+                                    Line Chart
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="charts/barchart">
+                                <NavText>
+                                    Bar Chart
+                                </NavText>
+                            </NavItem>
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="settings">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                                Settings
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="info">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                                About
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="help">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                                Help
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="logout">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                                Logout
+                            </NavText>
+
+                        </NavItem>
+
+
+                    </SideNav.Nav>           
+                  
+               </SideNav>
+              
+          
+
+
+                <div class="row" id="background-projects">
+                    
+
+
+
+
+                        <div className='dashboard-body'>
+                            {this.state.projectList.length === 0 ? (
+                                <img src={noProjectImage} id='no-projects-image' alt="No Projects Found" />
+
+                            ) : (<div></div>)}
+
+
+
+
+                            {/* TODO: Have to make this conditional render, render the project tiles */}
+                            {this.state.projectList.map((project, index) => {
+                                return (
+                                    <div class='project-paper-holder'>
+                                        <Card style={{ height: 400 }}>
+                                            <Paper className='project-paper'>
+                                                <CardActionArea onClick={() => this.viewProject(project)}>
+                                                    <CardMedia
+
+                                                        style={{ height: 0, paddingTop: '10em' }}
+                                                        image={this.renderSwitch(index)}
+                                                        title="Idea"
+
+                                                    />
+                                                    <CardContent id='project-card-content'>
+                                                        <Typography gutterBottom variant="h5" component="h2">
+                                                            {project.title}
+                                                        </Typography>
+                                                        <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="stream" style={{ fontSize: '1.4em' }}/>
+                                                            <strong>Description:</strong> {project.description.slice(0, 58)}...
+                                                        </Typography>
+                                                        <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" style={{ fontSize: '1.1em' }}/>
+                                                                <strong>Project ID:</strong> #{project.uid}
+                                                        </Typography>
+                                                        <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" style={{ fontSize: '1.4em' }}/>
+                                                            <strong>Date Created:  </strong>{project.dateCreated.slice(0, 10)}
+                                                        </Typography>
+                                                    </CardContent>
+                                                </CardActionArea>
+                                                <CardActions>
+                                                    <div id='share-learn-container'>
+                                                        <Button size="small" color="primary" onClick={this.openShareModal}>
+                                                            Share
                                     <FontAwesomeIcon id='font-awesome-space' icon="share-square" />
-                                                </Button>
+                                                        </Button>
 
-                                                <Button id='learn-button' size="small" color="info" onClick={() => this.handleOpenLearnModal(project.uid)}>
-                                                    Learn More
+                                                        <Button id='learn-button' size="small" color="info" onClick={() => this.handleOpenLearnModal(project.uid)}>
+                                                            Learn More
                                     <FontAwesomeIcon id='font-awesome-space' icon="info-circle" />
-                                                </Button>
-                                            </div>
-                                        </CardActions>
-                                    </Paper>
-                                </Card>
-                            </div>
-                        );
-                    })
-                    }
-                    {this.state.userData.type === 'admin' ? (
-                        <div className='project-paper-holder'>
-                            <Card>
-                                <Paper className='project-paper' onClick={this.addProject}>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            style={{ height: 0, paddingTop: '56.25%' }}
-                                            image={require("../../../../static/addProject.jpg")}
-                                            title="Add Project"
-                                        />
+                                                        </Button>
+                                                    </div>
+                                                </CardActions>
+                                            </Paper>
+                                        </Card>
+                                    </div>
+                                );
+                            })
+                            }
+                            {this.state.userData.type === 'admin' ? (
+                                <div className='project-paper-holder'>
+                                    <Card>
+                                        <Paper className='project-paper' onClick={this.addProject}>
+                                            <CardActionArea>
+                                                <CardMedia
+                                                    style={{ height: 0, paddingTop: '56.25%' }}
+                                                    image={require("../../../../static/addProject.jpg")}
+                                                    title="Add Project"
+                                                />
 
-                                        <CardContent>
+                                                <CardContent>
 
-                                            <Typography variant="h5" component="h2">
-                                                <center>
-                                                    Add Project +
+                                                    <Typography variant="h5" component="h2">
+                                                        <center>
+                                                            Add Project +
                                         </center>
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
+                                                    </Typography>
+                                                </CardContent>
+                                            </CardActionArea>
 
-                                </Paper>
-                            </Card>
+                                        </Paper>
+                                    </Card>
+                                </div>
+                            ) : (null)}
                         </div>
-                    ) : (null)}
+
+
+                   
                 </div>
+
+
+
+
+
+
 
                 <div>
                     <Dialog id="share-dialog"
@@ -661,63 +776,63 @@ export default class Dashboard extends Component {
                             <Button color="danger" onClick={this.handleCloseLearnModal}>Cancel</Button>
                             {this.state.userData.type === 'admin' ? (
                                 <div>
-                                    <Button color="primary" disabled = {this.state.projectName.length <= 0} onClick={() => { this.setStateOnSaveChanges() }}>Submit</Button>
+                                    <Button color="primary" disabled={this.state.projectName.length <= 0} onClick={() => { this.setStateOnSaveChanges() }}>Submit</Button>
                                 </div>
                             ) : (null)}
                         </DialogActions>
                     </Dialog>
                 </div>
-                <Portal>      
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                    open={this.state.openSuccessSnackBar}
-                    autoHideDuration={3000}
-                    onClose={this.handleCloseSuccessSnackBar}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    variant="success"
-                    message={<span id="message-id"><CheckCircleIcon /> Saved Successfully!</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="red"
+                <Portal>
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                        open={this.state.openSuccessSnackBar}
+                        autoHideDuration={3000}
+                        onClose={this.handleCloseSuccessSnackBar}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        variant="success"
+                        message={<span id="message-id"><CheckCircleIcon /> Saved Successfully!</span>}
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="Close"
+                                color="red"
 
-                            onClick={this.handleCloseSuccessSnackBar}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
-                <Snackbar
-                    id='success-snack'
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                    open={this.state.openErrorSnackBar}
-                    autoHideDuration={6000}
-                    onClose={this.handleCloseErrorSnackBar}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id"><CheckCircleIcon /> Error Saving</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="red"
+                                onClick={this.handleCloseSuccessSnackBar}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                    <Snackbar
+                        id='success-snack'
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                        open={this.state.openErrorSnackBar}
+                        autoHideDuration={6000}
+                        onClose={this.handleCloseErrorSnackBar}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id"><CheckCircleIcon /> Error Saving</span>}
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="Close"
+                                color="red"
 
-                            onClick={this.handleCloseErrorSnackBar}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                /></Portal>   
+                                onClick={this.handleCloseErrorSnackBar}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    /></Portal>
             </div>
 
 
