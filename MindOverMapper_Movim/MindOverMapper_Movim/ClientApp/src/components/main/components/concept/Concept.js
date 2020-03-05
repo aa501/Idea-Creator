@@ -246,7 +246,17 @@ export default class Concept extends Component {
                       </Col>
                     </Row>
                     <Row>
-                        <Col md={{ span: 3, offset: 1 }}>
+                        <Col md={{ span: 3, offset: 0 }}>
+                            <div id='project-id-holder'>
+                                Project: <input type="text" disabled='true' class="form-control" id="projectId-input" value={this.state.projectName.title} />
+                            </div>
+                        </Col>
+                        <Col md={{ span: 3, offset: 0 }}>
+                            <div id='project-id-holder'>
+                                Project Owner: <input type="text" disabled='true' class="form-control" id="projectId-input" value={this.props.location.state.userData.firstName + ' ' + this.props.location.state.userData.lastName} />
+                            </div>
+                        </Col>
+                        <Col md={{ span: 2, offset: 1 }}>
                             <div id='confirmation-button-holder'>
                                 <Button color = 'warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
                                 <Button color = 'primary' id='submit-concept' disabled = {this.state.projectName === ''} onClick={this.submitConcept}><FontAwesomeIcon icon="check" /> Submit</Button>
