@@ -110,17 +110,16 @@ export default class Concept extends Component {
                 'deathThreats': this.state.deathThreats,
                 'projectUid': this.state.projectName.uid
             },
-          {
-          headers: {
-            Authorization: 'Bearer ' + this.state.userData.token
-          }
-        });
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token
+                }
+            });
     }
-
 
     nextPage = () => {
         this.props.history.push({
-            pathname: '/project-stimuli',
+            pathname: '/concept-question',
             state: this.state  // need this for moving to different component
         });
     }
@@ -259,7 +258,7 @@ export default class Concept extends Component {
                         <Col md={{ span: 2, offset: 1 }}>
                             <div id='confirmation-button-holder'>
                                 <Button color = 'warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
-                                <Button color = 'primary' id='submit-concept' disabled = {this.state.projectName === ''} onClick={this.submitConcept}><FontAwesomeIcon icon="check" /> Submit</Button>
+                                <Button color = 'primary' id='submit-concept' disabled = {this.state.projectName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
                             </div>
                         </Col>
                     </Row>

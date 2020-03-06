@@ -6,8 +6,8 @@ import ProjectCreator from './components/projectcreation/ProjectCreator.js'
 import AdminPanel from './components/admin/AdminPanel.js';
 import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
-import Concept from './components/concept/Concept.js'
-
+import Concept from './components/concept/Concept.js';
+import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 
 export class Main extends Component {
     static displayName = Main.name;
@@ -37,7 +37,8 @@ export class Main extends Component {
                         <Route path='/admin-panel' component={AdminPanel}/>
                         <Route path='/project-view' component={ProjectView}/>
                         <Route path='/project-stimuli' component={ProjectStimuli}/>
-                        <Route path='/concept' component={Concept}/>
+                        <Route path='/concept' component={Concept} />
+                        <Route path='/concept-question' component={ConceptQuestion}/>
                     </Layout>
                 ): (null)}
             </div>

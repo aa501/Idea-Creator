@@ -166,7 +166,7 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(new { message = "Success!" });
         }
 
-        [Authorize]
+         [Authorize]
         [HttpGet]
         public ActionResult GetPreviews()
         {
