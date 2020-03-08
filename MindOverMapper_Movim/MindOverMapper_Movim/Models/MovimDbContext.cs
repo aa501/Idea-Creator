@@ -292,6 +292,39 @@ namespace MindOverMapper_Movim.Models
                 .HasMaxLength(1000)
                 .IsUnicode(false);
             });
+
+            modelBuilder.Entity<Question>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Uid)
+                .IsRequired()
+                .HasColumnName("uid")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+                entity.Property(e => e.Text)
+                .IsRequired()
+                .HasColumnName("text")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                .IsRequired()
+                .HasColumnName("type")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+                entity.Property(e => e.DateCreated)
+                .HasColumnName("date_created")
+                .HasColumnType("datetime");
+
+                entity.Property(e => e.DateArchived)
+                .HasColumnName("date_archived")
+                .HasColumnType("datetime");
+
+            });
+
         }
     }
 }
