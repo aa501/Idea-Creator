@@ -162,7 +162,7 @@ export default class ProjectLandingPage extends Component {
                     <div class="landing-page-body">
 
                         <h2 id="project-name" >Project Name</h2>
-                        <hr />
+                        <hr id="hr-1" />
 
                         <div class="page-body-1 row">
 
@@ -205,10 +205,49 @@ export default class ProjectLandingPage extends Component {
                         </div>
 
                         <h2 id="project-options" >Project Options</h2>
-                        <hr />
+                        <hr id="hr-2" />
 
-                        <div class="page-body-2">
+                        <div class="page-body-2 row">
 
+                            <div class="col-sm-2">
+                                <Card class="card-button">
+                                    <CardActionArea>                
+                                        <CardContent>
+                                            <Typography id="options-label">
+                                                <center>
+                                                    Research
+                                                 </center>
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>
+                            <div class="col-sm-2">
+                                <Card class="card-button-2">
+                                    <CardActionArea>
+                                        <CardContent>
+                                            <Typography id="options-label">
+                                                <center>
+                                                    Concepts
+                                                 </center>
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>
+                            <div class="col-sm-2">
+                                <Card class="card-button-3">
+                                    <CardActionArea>
+                                        <CardContent>
+                                            <Typography id="options-label">
+                                                <center>
+                                                    Surveys
+                                                 </center>
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>
                             
 
                         </div>

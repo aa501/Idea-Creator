@@ -1,6 +1,7 @@
-﻿.landing-page-container{
+﻿.landing-page-container {
     width: 100%;
     height: 100%;
+    background-color: rgba(245, 245, 245, 1)
 }
 
 .landing-page-body{
@@ -17,8 +18,8 @@
 #project-options {
     font-family: 'Exo-2', sans-serif;
     font-weight: 100;
-    margin-top: 50px;
-    font-size: 24px;
+    margin-top: 44px;
+    font-size: 25px;
 }
 
 .page-body-1{
@@ -26,8 +27,19 @@
     margin-right: 50px;
 }
 
-hr {
-    width: 60%;
+.page-body-2 {
+    margin-top: 10px;
+    margin-right: 50px;
+}
+
+#hr-1 {
+    width: 38%;
+    height: 1px;
+    background-color: darkgray;
+}
+
+#hr-2 {
+    width: 70%;
     height: 1px;
     background-color: darkgray;
 }
@@ -36,12 +48,52 @@ hr {
    
 }
 
+
+
 .card {
     height: 45%;
-    width: 45%;
-    min-height: 220px;
-    min-width: 220px;
-    margin-left: 60px;
+    width: 49%;  
+    margin-left: 70px;
+}
+
+.card-button {
+    height: 130px;
+    width: 150px;
+    background-color: white;
+    border-top: solid;
+    border-top-color: aqua;
+    border-top-width: 12px;
+    box-shadow: 0 2px 4px 0 rgba(138, 148, 159, 0.2);
+    border-radius: 10px;
+}
+
+.card-button-2 {
+    height: 130px;
+    width: 150px;
+    background-color: white;
+    border-top: solid;
+    border-top-color: salmon;
+    border-top-width: 12px;
+    box-shadow: 0 2px 4px 0 rgba(138, 148, 159, 0.2);
+    border-radius: 10px;
+}
+
+.card-button-3 {
+    height: 130px;
+    width: 150px;
+    background-color: white;
+    border-top: solid;
+    border-top-color: violet;
+    border-top-width: 12px;
+    box-shadow: 0 2px 4px 0 rgba(138, 148, 159, 0.2);
+    border-radius: 10px;
+}
+
+#options-label {
+    margin-top: 25%;
+    font-size: 20px;
+    font-weight: 300;
+    
 }
 
 ul {
