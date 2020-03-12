@@ -30,6 +30,9 @@ import City from "../../../../static/City.jpg";
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
 
 export default class ProjectLandingPage extends Component {
     constructor(props) {
@@ -62,7 +65,7 @@ export default class ProjectLandingPage extends Component {
     
     render() {
         return (
-            <div>
+            <div class="landing-page-container">
                 
                 <SideNav
                     onSelect={(selected) => {
@@ -154,9 +157,68 @@ export default class ProjectLandingPage extends Component {
 
                 </SideNav>
 
-                <div id="landing-page-container">
-                    <h2>works</h2>
+                <div id="landing-page-container">               
+
+                    <div class="landing-page-body">
+
+                        <h2 id="project-name" >Project Name</h2>
+                        <hr />
+
+                        <div class="page-body-1 row">
+
+                            <div class="col-sm project-details">
+                                <ul>
+                                    <li class="li">
+                                        <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" style={{ fontSize: '1.3em' }} />
+                                        <strong>Project ID: </strong>00002901
+                                    </li>
+                                    <li class="li">
+                                        <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" style={{ fontSize: '1.4em' }} />
+                                        <strong>Date Created: </strong>10/4/19
+                                    </li>
+                                    <li class="li">
+                                        <FontAwesomeIcon id='font-awesome-space-right' icon="stream" style={{ fontSize: '1.3em' }} />
+                                        <strong>Description: </strong>This is a test description of this project. Something something, filler text goes here. And then some more filler text goes here and here.
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm card-holder align-self-center">
+                                <Card class="card">                                   
+                                     <CardActionArea>
+                                         <CardMedia
+                                             style={{ height: 0, paddingTop: '56.25%' }}
+                                             image={require("../../../../static/addProject.jpg")}
+                                             title="Add Project"
+                                         />
+                                         <CardContent>
+                                             <Typography variant="h5" component="h2">
+                                                 <center>
+                                                     View Mind-Map
+                                                 </center>
+                                             </Typography>
+                                         </CardContent>
+                                     </CardActionArea>         
+                                </Card>
+                            </div>
+
+                        </div>
+
+                        <h2 id="project-options" >Project Options</h2>
+                        <hr />
+
+                        <div class="page-body-2">
+
+                            
+
+                        </div>
+
+
+                    </div>
+
                 </div>
+
+
 
 
             </div>
