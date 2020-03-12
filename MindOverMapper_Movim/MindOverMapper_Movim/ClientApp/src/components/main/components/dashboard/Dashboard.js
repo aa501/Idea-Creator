@@ -211,9 +211,13 @@ export default class Dashboard extends Component {
         });
     }
 
+
+ //**********Change made here******************
     viewProject = (projectTitle) => {
         this.props.history.push({
-            pathname: '/project-view',
+
+            pathname: '/project-landing-page',
+   //****   pathname: '/project-view',
             state: { userData: this.state.userData, projectName: projectTitle } // need this for moving to different component
         });
     }

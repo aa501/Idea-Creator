@@ -3,6 +3,10 @@ import './ProjectView.css';
 //import App from './mindmapper/App';
 import MindMap from './mindmapper/component/MindMap';
 import Toolbar from './mindmapper/component/Toolbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+
 
 export default class ProjectView extends Component {
     constructor(props) {
@@ -43,8 +47,8 @@ export default class ProjectView extends Component {
     render() {
         return (
             <div>
-                <MindMap userData={this.props.location.state.userData} projectInfo={this.props.location.state.projectName} projectConcept={this.callback}/>
+                <MindMap userData={this.props.location.state.userData} projectInfo={this.props.location.state.projectName} projectConcept={this.callback} />
             </div>
-            );
+        );   
     }
 }

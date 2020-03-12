@@ -7,6 +7,7 @@ import AdminPanel from './components/admin/AdminPanel.js';
 import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
 import Concept from './components/concept/Concept.js'
+import ProjectLandingPage from './components/projectLandingPage/projectLandingPage.js';
 
 
 export class Main extends Component {
@@ -37,7 +38,8 @@ export class Main extends Component {
                         <Route path='/admin-panel' component={AdminPanel}/>
                         <Route path='/project-view' component={ProjectView}/>
                         <Route path='/project-stimuli' component={ProjectStimuli}/>
-                        <Route path='/concept' component={Concept}/>
+                        <Route path='/concept' component={Concept} />
+                        <Route path='/project-landing-page' component={ProjectLandingPage} />
                     </Layout>
                 ): (null)}
             </div>
