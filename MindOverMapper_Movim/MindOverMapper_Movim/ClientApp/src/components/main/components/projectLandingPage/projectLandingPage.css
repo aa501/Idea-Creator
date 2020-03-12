@@ -1,7 +1,7 @@
 ﻿.landing-page-container {
     width: 100%;
     height: 100%;
-    background-color: rgba(245, 245, 245, 1)
+    background-color: #ebf2f2;
 }
 
 .landing-page-body{
@@ -63,7 +63,7 @@
     border-top: solid;
     border-top-color: aqua;
     border-top-width: 12px;
-    box-shadow: 0 2px 4px 0 rgba(138, 148, 159, 0.2);
+    box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
 }
 
@@ -74,7 +74,7 @@
     border-top: solid;
     border-top-color: salmon;
     border-top-width: 12px;
-    box-shadow: 0 2px 4px 0 rgba(138, 148, 159, 0.2);
+    box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
 }
 
@@ -85,7 +85,7 @@
     border-top: solid;
     border-top-color: violet;
     border-top-width: 12px;
-    box-shadow: 0 2px 4px 0 rgba(138, 148, 159, 0.2);
+    box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
 }
 

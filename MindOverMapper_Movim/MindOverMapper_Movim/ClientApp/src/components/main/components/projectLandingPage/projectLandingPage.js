@@ -188,7 +188,7 @@ export default class ProjectLandingPage extends Component {
                                      <CardActionArea>
                                          <CardMedia
                                              style={{ height: 0, paddingTop: '56.25%' }}
-                                             image={require("../../../../static/addProject.jpg")}
+                                             image={require("../../../../static/ideaPicture.jpg")}
                                              title="Add Project"
                                          />
                                          <CardContent>
