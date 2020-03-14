@@ -6,9 +6,15 @@ import ProjectCreator from './components/projectcreation/ProjectCreator.js'
 import AdminPanel from './components/admin/AdminPanel.js';
 import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
+<<<<<<< HEAD
 import Concept from './components/concept/Concept.js';
 import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 import QuestionEditor from './components/questionEditor/QuestionEditor.js';
+=======
+import Concept from './components/concept/Concept.js'
+import ProjectLandingPage from './components/projectLandingPage/projectLandingPage.js';
+
+>>>>>>> origin/bailey2
 
 export class Main extends Component {
     static displayName = Main.name;
@@ -39,8 +45,12 @@ export class Main extends Component {
                         <Route path='/project-view' component={ProjectView}/>
                         <Route path='/project-stimuli' component={ProjectStimuli}/>
                         <Route path='/concept' component={Concept} />
+<<<<<<< HEAD
                         <Route path='/concept-question' component={ConceptQuestion}/>
                         <Route path='/question-editor' component={QuestionEditor}/>
+=======
+                        <Route path='/project-landing-page' component={ProjectLandingPage} />
+>>>>>>> origin/bailey2
                     </Layout>
                 ): (null)}
             </div>

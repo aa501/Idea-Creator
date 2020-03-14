@@ -3,3 +3,5 @@ node_modules/
 MindOverMapper_Movim/obj/
 MindOverMapper_Movim/bin/
 MindOverMapper_Movim/appsettings.json
+bin/
+obj/

@@ -1,9 +1,10 @@
-.dashboard-container{
+.dashboard-container {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
     height: 95vh;
     max-height: 95vh;
+    
 }
 
 .dashboard-header{
@@ -14,27 +15,34 @@
     height: 5vh;
 }
 
-.dashboard-body{
+#background-projects {
     display: flex;
-    height: 80vh;
-    margin-left: 5%;
+    height: 100%;
+
+}
+
+.dashboard-body {
+    display: flex;
+    height: 100vh;
+    margin-left: 26%;
     margin-right: 5%;
     width: 90%;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .project-paper-holder{
     height: 30%;
-    width: 25%;
-    margin-right: 50px;
+    width: 35%;
+    margin-right: 60px;
     margin-top: 10px; 
-    margin-bottom: 240px;
+    margin-bottom: 260px;
 }
 
 .project-paper{
     width: 100%;
-    height: 100%;
+    height: 90%;
 }
 
 #no-projects-image{
@@ -80,10 +88,28 @@
 
 #share-learn-container{  
     margin: auto;
-    margin-top: 3%;
+    margin-top: 0%;
 
 }
 
 #learn-button{
     margin-left: 2vw;
 }
+
+#description-logo {
+    margin-bottom: 1%;
+}
+
+#dash-icon {
+    color: white;
+}
+
+
+.sidenav{
+    background: black;
+}
+
+
+
+
+

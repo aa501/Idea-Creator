@@ -9,6 +9,7 @@ import Slide from '@material-ui/core/Slide';
 import logo from '../../static/Logo.png';
 import background from '../../static/background.mp4';
 import './Login.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
@@ -266,28 +267,55 @@ export class Login extends Component {
                 </video>
                 <div id='login-holder'>
                     <div id='login-container'>
-                        <div id='logo-holder'>
-                            <span id = 'login-logo-span'>
-                                <img id ='login-logo' alt = "Login Logo" src = {logo} />
-                            </span>
+                        <div id='logo-holder-logo' class="col-row">
+
+
+                            <img id='login-logo' alt="Login Logo" src={logo} />
+
+
                         </div>
-                        <div id='logo-holder'>
-                            <span id = 'login-text-span'>
-                                <p id = 'logo-name-text'>Idea Creator</p>
-                            </span>
+
+
+                        <div id='logo-holder-text' class="row-md">
+
+                            <text id='logo-name-text'>Idea Creator</text>
+
+
                         </div>
+
                         <div id='username-field'>
-                            <input type="email" class="form-control" id="userName-input" placeholder="Email" value={this.state.userName} onChange={this.handleUserNameChange} />
+
+                            <input type="email" autofocus class="form-control" id="userName-input" placeholder="Email"
+                                value={this.state.userName} onChange={this.handleUserNameChange} />
                         </div>
                         <div id='password-field'>
-                            <input type="password" class="form-control" id="password-input" onKeyDown={this.handleKeyDown} placeholder="Password" value={this.state.password} onChange={this.handlePasswordChange} />
+
+                            <input type="password" class="form-control" id="password-input"
+                                onKeyDown={this.handleKeyDown} placeholder="Password" value={this.state.password}
+                                onChange={this.handlePasswordChange} />
                         </div>
+
+
                         <div class="form-check" id='remember-me'>
-                            <input type="checkbox" class="form-check-input" id="rememberme-check"/>
+                            <input type="checkbox" class="form-check-input" id="rememberme-check" />
                             <label class="form-check-label" for="rememberme-check">Remember Me?</label>
-                            <Button color="link" id='forgot-pass' onClick={this.handleClickOpenForgotPassword}>Forgot password?</Button>
-                            <Button color="link" id='forgot-pass' onClick={this.openRegisterAccount}>Register</Button>                                                        
-                        </div>                       
+                        </div>
+
+                        <button type="submit" class="btn btn-lg btn-primary" id='submit-button'
+                            onClick={this.handleSubmit}>Login
+                        </button>
+
+
+                        <Button color="link" id='forgot-pass' onClick={this.handleClickOpenForgotPassword}>Forgot
+                            password?</Button>
+
+
+                        <Button color="link" id='register' onClick={this.openRegisterAccount}>Create
+                            Account <FontAwesomeIcon icon="user-plus" /></Button>
+
+
+
+
                         <div >
                             <Dialog
                                 open={this.state.openForgotPassword}
@@ -407,7 +435,7 @@ export class Login extends Component {
                                 </DialogActions>
                             </Dialog>
                         </div>
-                        <button type="submit" class="btn btn-primary" id='submit-button' onClick={this.handleSubmit} >Login</button>  
+                         
                     </div>
                 </div>
             </div>

@@ -1,7 +1,8 @@
-.dashboard-container{
+.dashboard-container {
     display: flex;
     flex-direction: column;
     width: 100%;
+    
 }
 
 .dashboard-header{
@@ -12,14 +13,24 @@
     height: 5vh;
 }
 
-.dashboard-body{
+#background-projects {
     display: flex;
-    height: 80vh;
-    margin-left: 5%;
-    margin-right: 5%;
-    width: 90%;
+    height: 100%;
+    flex-direction: row;
+    
+}
+
+.dashboard-body {
+    display: flex;
+    
+    margin-left: 13%;
+    margin-right: 10%;
+    margin-top: 5%;
+    width: 80%;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
+    
 }
 
 #opt {
@@ -36,10 +47,18 @@
     margin-left: 2vw;
 }
 .project-paper-holder{
+<<<<<<< HEAD
     height: 30%;
     width: 25%;
     margin-right: 50px;
     margin-top: 10px;
+=======
+    height: 25%;
+    width: 40%;
+    margin-right: 32px;
+    margin-left: 32px;
+    margin-top: 2px;
+>>>>>>> origin/bailey2
 }
 
 .project-paper{
@@ -54,3 +73,9 @@
     margin-left: .25vw;
     display:inline;
 }
+<<<<<<< HEAD
+=======
+#project-card-content {
+    height: 10%;
+}
+>>>>>>> origin/bailey2
