@@ -22,6 +22,8 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<ProjectParameters> ProjectParameters { get; set; }
         public virtual DbSet<RecoveryGrant> RecoveryGrant { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<IdeationAnswers> IdeationAnswers { get; set; }
+        public virtual DbSet<Question> Question { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -77,49 +79,41 @@ namespace MindOverMapper_Movim.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NewsHeadline)
-                    .IsRequired()
                     .HasColumnName("headline")
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Customer)
-                    .IsRequired()
                     .HasColumnName("customer")
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CustomerProblem)
-                    .IsRequired()
                     .HasColumnName("problem")
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Promise)
-                    .IsRequired()
                     .HasColumnName("promise")
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Price)
-                    .IsRequired()
                     .HasColumnName("price")
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Passion)
-                    .IsRequired()
                     .HasColumnName("passion")
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DeathThreats)
-                    .IsRequired()
                     .HasColumnName("threats")
                     .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Proof)
-                    .IsRequired()
                     .HasColumnName("proof")
                     .HasMaxLength(500)
                     .IsUnicode(false);
@@ -269,6 +263,67 @@ namespace MindOverMapper_Movim.Models
                     .HasColumnName("uid")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<IdeationAnswers>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Uid)
+                .IsRequired()
+                .HasColumnName("uid")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+                entity.Property(e => e.Cid)
+                .IsRequired()
+                .HasColumnName("cid")
+                .IsUnicode(false);
+
+                entity.Property(e => e.Qid)
+                .IsRequired()
+                .HasColumnName("qid")
+                .IsUnicode(false);
+
+                entity.Property(e => e.Answer)
+                .IsRequired()
+                .HasColumnName("answer")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Question>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Uid)
+                .IsRequired()
+                .HasColumnName("uid")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+                entity.Property(e => e.Text)
+                .IsRequired()
+                .HasColumnName("text")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                .HasColumnName("type")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+                entity.Property(e => e.DateCreated)
+                .IsRequired()
+                .HasColumnName("date_created")
+                .HasColumnType("datetime");
+
+                entity.Property(e => e.Archived)
+                .IsRequired()
+                .HasColumnName("archived")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
             });
         }
     }

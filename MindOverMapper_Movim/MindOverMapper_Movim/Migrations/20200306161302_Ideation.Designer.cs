@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MindOverMapper_Movim.Models;
 
 namespace MindOverMapper_Movim.Migrations
 {
     [DbContext(typeof(MovimDbContext))]
-    partial class MovimDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200306161302_Ideation")]
+    partial class Ideation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,12 +100,16 @@ namespace MindOverMapper_Movim.Migrations
                         .HasMaxLength(1000)
                         .IsUnicode(false);
 
-                    b.Property<int>("Cid")
-                        .HasColumnName("cid")
+                    b.Property<string>("ConceptName")
+                        .IsRequired()
+                        .HasColumnName("conceptName")
+                        .HasMaxLength(50)
                         .IsUnicode(false);
 
-                    b.Property<int>("Qid")
-                        .HasColumnName("qid")
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnName("question")
+                        .HasMaxLength(200)
                         .IsUnicode(false);
 
                     b.Property<string>("Uid")
@@ -241,45 +247,6 @@ namespace MindOverMapper_Movim.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Project_Parameters");
-                });
-
-            modelBuilder.Entity("MindOverMapper_Movim.Models.Question", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Archived")
-                        .IsRequired()
-                        .HasColumnName("archived")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnName("date_created")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnName("text")
-                        .HasMaxLength(1000)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Type")
-                        .HasColumnName("type")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Uid")
-                        .IsRequired()
-                        .HasColumnName("uid")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("MindOverMapper_Movim.Models.RecoveryGrant", b =>

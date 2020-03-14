@@ -5,6 +5,52 @@ import { Main } from './components/main/Main';
 import Concept from './components/main/components/concept/Concept';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminPanel from './components/main/components/admin/AdminPanel';
+<<<<<<< HEAD
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPlus, faCog, faCircleNotch,faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream, faAngleDoubleRight, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+
+library.add(
+  faIgloo,
+  faHome,
+  faTrash,
+  faTasks,
+  faCircleNotch,
+  faTrashAlt,
+  faUndo,
+  faPlus,
+  faCog,
+  faUserPlus,
+  faUserEdit,
+  faUserCircle,
+  faSignOutAlt,
+  faTools,
+  faFileAlt,
+  faCalculator,
+  faEdit,
+  faFile,
+  faFileInvoiceDollar,
+  faFileExport,
+  faBalanceScale,
+  faTimesCircle,
+  faExclamationTriangle,
+  faCheck,
+  faClock,
+  faBalanceScale,
+  faFileInvoice,
+  faScroll,
+  faUserLock,
+  faSignInAlt,
+  faCalendar,
+  faFileDownload,
+  faShareSquare,
+  faInfoCircle,
+  faProjectDiagram,
+  faStream,
+  faAngleDoubleRight,
+  faArrowLeft,
+  faArrowRight
+  )
+=======
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlus, faQuestion, faInfo, faQuestionCircle, faCog, faCogs, faCircleNotch, faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream } from '@fortawesome/free-solid-svg-icons';
 
@@ -51,6 +97,7 @@ library.add(
     faInfo
 
 )
+>>>>>>> origin/bailey2
 
 export default class App extends Component {
     static displayName = App.name;

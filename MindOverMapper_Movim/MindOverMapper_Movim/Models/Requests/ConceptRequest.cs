@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace MindOverMapper_Movim.Models
 {
     public partial class ConceptRequest
@@ -12,5 +14,7 @@ namespace MindOverMapper_Movim.Models
         public string Price { get; set; }
         public string Passion { get; set; }
         public string DeathThreats { get; set; }
+        public string projectUid { get; set; }
+        public string[] answerList { get; set; }
     }
 }

@@ -33,6 +33,11 @@
     
 }
 
+#opt {
+    background-color: rgb(139, 90, 180);
+    margin-right: 10%;
+}
+
 #admin-delete{
     color:red;
 
@@ -42,11 +47,18 @@
     margin-left: 2vw;
 }
 .project-paper-holder{
+<<<<<<< HEAD
+    height: 30%;
+    width: 25%;
+    margin-right: 50px;
+    margin-top: 10px;
+=======
     height: 25%;
     width: 40%;
     margin-right: 32px;
     margin-left: 32px;
     margin-top: 2px;
+>>>>>>> origin/bailey2
 }
 
 .project-paper{
@@ -61,6 +73,9 @@
     margin-left: .25vw;
     display:inline;
 }
+<<<<<<< HEAD
+=======
 #project-card-content {
     height: 10%;
 }
+>>>>>>> origin/bailey2

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MindOverMapper_Movim.Models
 {
-    public class Concept
+    public partial class Concept
     {
         public int Id { get; set; }
         public string Uid { get; set; }

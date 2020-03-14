@@ -4,18 +4,17 @@
     width: 100%;
 }
 
-#opt{
-    background-color: rgb(139, 90, 180);
-    margin-top: 2%;
-    margin-right: 3%;
-}
-
-.concept-container{
+.concept-question-container{
     width: 100%;
     overflow-y: scroll;
     height: 89vh;
     max-height: 89vh;
     padding-bottom: 1vh;
+}
+
+#opt {
+    background-color: rgb(139, 90, 180);
+    margin-right: 10%;
 }
 
 .project-creator-header{
@@ -62,7 +61,7 @@
 
 #project-definition-holder{
     display:flex;
-    flex-direction: rowch;
+    flex-direction: row;
     margin-left: 5%;
     margin-right: 5%;
     width: 90%;
@@ -196,7 +195,13 @@
     height: 70px;
 }
 
-#submit-project{
+#submit-concept{
     margin-left: 15px;
+    height: 70px;
+}
+
+#submit-question {
+    margin-left: 15px;
+    width: 100px;
     height: 70px;
 }

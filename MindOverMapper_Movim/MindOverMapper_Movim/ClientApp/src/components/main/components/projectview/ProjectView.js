@@ -15,12 +15,12 @@ export default class ProjectView extends Component {
         this.state = {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
-            projectConcept: ''
-        }
+            projectConcept: '',
+          }
     }
 
     componentDidMount() {
-        if(this.props.location.state === undefined){
+        if (this.props.location.state === undefined) {
             this.props.history.push({
                 pathname: '/'
             });
@@ -28,20 +28,23 @@ export default class ProjectView extends Component {
             this.setState({
                 userData: this.props.location.state.userData,
                 projectName: this.props.location.state.projectName,
-                projectConcept: this.props.location.state.projectConcept
             });
         }
+    }
+
+    componentWillReceiveProps(props) {
+        console.log(props)
     }
 
     callback = (title) => {
         this.setState({
             projectConcept: title
-        });
-
-        this.props.history.push({
+        }, () => {
+        return this.props.history.push({
             pathname: '/concept',
             state: this.state
         });
+      });
     };
 
     render() {
