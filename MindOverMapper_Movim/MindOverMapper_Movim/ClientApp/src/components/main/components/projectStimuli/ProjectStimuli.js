@@ -238,9 +238,6 @@ export default class ProjectStimuli extends Component {
         errorMessage: 'Error: Project could not be created!'
       });
     });
-
-
-
   }
 
   sortStimulus = () => {

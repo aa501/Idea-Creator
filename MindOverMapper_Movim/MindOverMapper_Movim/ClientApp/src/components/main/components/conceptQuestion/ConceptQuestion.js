@@ -14,7 +14,9 @@ import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './ConceptQuestion.css';
 
-
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 export default class ConceptQuestion extends Component {
     constructor(props) {
@@ -99,6 +101,41 @@ export default class ConceptQuestion extends Component {
         });
     }
 
+    handleCloseErrorModal = () => {
+      this.setState({
+          errorModal: false
+      });
+    }
+
+    openErrorModal = () => {
+      this.setState({
+          errorModal: true
+      });
+    }
+
+    handleCloseSuccessModal = () => {
+      this.setState({
+          successModal: false
+      });
+    }
+
+    openSuccessModal = () => {
+      this.setState({
+          successModal: true
+      });
+    }
+
+    returnToMap = () => {
+        this.props.history.push({
+            pathname: '/project-view',
+            state: {
+                userData: this.state.userData,
+                projectName: this.state.projectName
+                } // need this for moving to different component
+        });
+    }
+
+
     handleAnswer = (event, i) => {
         console.log(event.target.value)
         this.setState({
@@ -131,6 +168,17 @@ export default class ConceptQuestion extends Component {
           headers: {
             Authorization: 'Bearer ' + this.state.userData.token
           }
+        }
+      ).then(() => {
+          this.openSuccessModal();
+          this.setState({
+            successMessage: 'Concept ' + this.state.conceptName + ' has successfully been created!'
+          });
+        }).catch(() => {
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'Error: Concept could not be created!'
+          });
         });
       }
 
@@ -207,7 +255,47 @@ export default class ConceptQuestion extends Component {
                         </Col>
                     </Row>
                 </Container>
+
+                <div>
+                  <Dialog
+                    open={this.state.errorModal}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth='lg'
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                  >
+                    <DialogTitle id="responsibe-alert-dialog-slide-title">
+                      {this.state.errorMessage}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={this.handleCloseErrorModal} color="primary">
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
+                <div >
+                  <Dialog
+                    open={this.state.successModal}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth='lg'
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                  >
+                    <DialogTitle id="responsibe-alert-dialog-slide-title">
+                      {this.state.successMessage}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={this.returnToMap} color="primary">
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
             </div>
+
         );
     }
 }
