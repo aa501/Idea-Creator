@@ -1,36 +1,72 @@
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\appsettings.Development.json
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\appsettings.json
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\package-lock.json
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\data.adj
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\data.adv
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\data.noun
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\data.verb
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\index.adj
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\index.adv
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\index.noun
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\index.sense
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\Artifacts\index.verb
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\MindOverMapper_Movim.deps.json
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\MindOverMapper_Movim.runtimeconfig.json
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\MindOverMapper_Movim.runtimeconfig.dev.json
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\MindOverMapper_Movim.dll
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\MindOverMapper_Movim.pdb
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\MindOverMapper_Movim.Views.dll
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\bin\Debug\netcoreapp2.2\MindOverMapper_Movim.Views.pdb
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.csprojAssemblyReference.cache
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.RazorAssemblyInfo.cache
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.RazorAssemblyInfo.cs
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.AssemblyInfoInputs.cache
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.AssemblyInfo.cs
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.TagHelpers.input.cache
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.TagHelpers.output.cache
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.RazorCoreGenerate.cache
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\Razor\Pages\Error.cshtml.g.cs
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\Razor\Pages\_ViewImports.cshtml.g.cs
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.RazorTargetAssemblyInfo.cache
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.RazorTargetAssemblyInfo.cs
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.Views.pdb
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.dll
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.pdb
-C:\Users\Bailey Cash\Idea-Creator\MindOverMapper_Movim\MindOverMapper_Movim\obj\Debug\netcoreapp2.2\MindOverMapper_Movim.csproj.CopyComplete
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/appsettings.Development.json
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/appsettings.json
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/package-lock.json
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Properties/launchSettings.json
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/data.adj
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/data.adv
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/data.noun
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/data.verb
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.adj
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.adv
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.noun
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.sense
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.verb
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.deps.json
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.runtimeconfig.json
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.runtimeconfig.dev.json
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.dll
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.pdb
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.Views.dll
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.Views.pdb
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.csprojAssemblyReference.cache
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorAssemblyInfo.cache
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorAssemblyInfo.cs
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.AssemblyInfoInputs.cache
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.AssemblyInfo.cs
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.TagHelpers.input.cache
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.TagHelpers.output.cache
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorCoreGenerate.cache
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/Razor/Pages/Error.cshtml.g.cs
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/Razor/Pages/_ViewImports.cshtml.g.cs
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorTargetAssemblyInfo.cache
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorTargetAssemblyInfo.cs
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.Views.pdb
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.dll
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.pdb
+C:/Users/Bailey Cash/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.csproj.CopyComplete
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/appsettings.Development.json
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/appsettings.json
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/package-lock.json
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Properties/launchSettings.json
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/data.adj
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/data.adv
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/data.noun
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/data.verb
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.adj
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.adv
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.noun
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.sense
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/Artifacts/index.verb
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.deps.json
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.runtimeconfig.json
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.runtimeconfig.dev.json
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.dll
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.pdb
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.Views.dll
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/bin/Debug/netcoreapp2.2/MindOverMapper_Movim.Views.pdb
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.csprojAssemblyReference.cache
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorAssemblyInfo.cache
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorAssemblyInfo.cs
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.AssemblyInfoInputs.cache
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.AssemblyInfo.cs
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.TagHelpers.input.cache
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.TagHelpers.output.cache
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorCoreGenerate.cache
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/Razor/Pages/Error.cshtml.g.cs
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/Razor/Pages/_ViewImports.cshtml.g.cs
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorTargetAssemblyInfo.cache
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.RazorTargetAssemblyInfo.cs
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.Views.pdb
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.dll
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.pdb
+/Users/Bailey/Idea-Creator/MindOverMapper_Movim/MindOverMapper_Movim/obj/Debug/netcoreapp2.2/MindOverMapper_Movim.csproj.CopyComplete
