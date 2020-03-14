@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './navigation/Layout';
 import DashBoard  from './components/dashboard/Dashboard.js';
-import ProjectCreator from './components/projectcreation/ProjectCreator.js'
+import ProjectDefinition from './components/projectdefinition/ProjectDefinition.js'
+import ProjectResearch from './components/projectresearch/ProjectResearch.js'
 import AdminPanel from './components/admin/AdminPanel.js';
 import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
+import ProjectPrototype from './components/projectprototype/ProjectPrototype.js'
 import Concept from './components/concept/Concept.js';
 import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 import QuestionEditor from './components/questionEditor/QuestionEditor.js';
@@ -34,10 +36,12 @@ export class Main extends Component {
                 {this.state ? (
                     <Layout props={this.state.userData}>
                         <Route path='/home' component={DashBoard}/>
-                        <Route path='/create-project' component={ProjectCreator}/>
-                        <Route path='/admin-panel' component={AdminPanel}/>
-                        <Route path='/project-view' component={ProjectView}/>
-                        <Route path='/project-stimuli' component={ProjectStimuli}/>
+                        <Route path='/create-project' component={ProjectDefinition} />
+                        <Route path='/project-research' component={ProjectResearch} />
+                        <Route path='/admin-panel' component={AdminPanel} />
+                        <Route path='/project-view' component={ProjectView} />
+                        <Route path='/project-stimuli' component={ProjectStimuli} />
+                        <Route path='/add-prototype' component={ProjectPrototype} />
                         <Route path='/concept' component={Concept} />
                         <Route path='/concept-question' component={ConceptQuestion}/>
                         <Route path='/question-editor' component={QuestionEditor}/>

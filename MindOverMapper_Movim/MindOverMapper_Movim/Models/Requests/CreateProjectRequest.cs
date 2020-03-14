@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace MindOverMapper_Movim.Models
@@ -16,3 +16,4 @@ namespace MindOverMapper_Movim.Models
         public List<StimulusRequest> UnrelatedStimulus { get; set; }
     }
 }
+   

@@ -5,32 +5,34 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
+import { Button, Label } from 'reactstrap';
 import Slide from '@material-ui/core/Slide';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, FormGroup, InputGroup, Form, Input} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Dropzone from 'react-dropzone'
+import './ProjectResearch.css';
 
-import './ProjectCreator.css';
 
-
-
-export default class ProjectCreator extends Component {
+export default class ProjectResearch extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            projectName: '',
+            projectName: this.props.location.state.projectName,
             projectNumber: Math.floor(Math.random() * 1000000),
             userData: this.props.location.state.userData || this.props.userData,
-            projectResearch1: '', 
+            projectDefinition: this.props.location.projectDefinition, //project mission
+            projectExclusions: this.props.location.projectExclusions,
+            projectConstraints: this.props.location.projectConstraints,
+            projectDescription: this.props.location.projectDescription,
+            projectExplorationAreas: this.props.location.projectExplorationAreas,
+            projectResearch1: '',
             projectResearch2: '',
             projectResearch3: '',
             projectResearchLink3: '',
             projectResearchLink2: '',
             projectResearchLink1: '',
-            projectDefinition: '',
-            projectExclusions: '',
-            projectDescription: '',
+            projectNotes: '',
         }
     }
 
@@ -40,16 +42,13 @@ export default class ProjectCreator extends Component {
 
     resetFields = () => {
         this.setState({
-            projectName: '',
             projectResearch1: '',
             projectResearch2: '',
             projectResearch3: '',
             projectResearchLink3: '',
             projectResearchLink2: '',
             projectResearchLink1: '',
-            projectDefinition: '',
-            projectExclusions: '',
-            projectDescription: '',
+            projectNotes: '',
         })
     }
 
@@ -105,11 +104,17 @@ export default class ProjectCreator extends Component {
         });
     }
 
+    handleProjectNotesChange = (event) => {
+        this.setState({
+            projectNotes: event.target.value
+        });
+    }
+
     submitProject = () => {
         axios.post('/api/project', {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
-              },
+            },
             data: {
                 'title': this.state.projectName,
                 'description': this.state.projectDescription,
@@ -146,8 +151,8 @@ export default class ProjectCreator extends Component {
             }
         });
     }
-    
-    
+
+
     nextPage = () => {
         this.props.history.push({
             pathname: '/project-stimuli',
@@ -155,34 +160,15 @@ export default class ProjectCreator extends Component {
         });
     }
 
+    state = { showing: true };
+
     render() {
+       const { showing } = this.state;
         return (
             <div className='blue-card-container'>
-                <h3 className="page-title">Blue Card Page</h3>
+                <h3 className="page-title">Research</h3>
                 <Container>
-                    <div className='project-name-holder'>
-                        <TextField
-                            value={this.state.projectName}
-                            onChange={this.handleProjectNameChange}
-                            label="Title"
-                            margin="normal"
-                            placeholder="Enter Title..."
-                            variant="outlined">
-                        </TextField>
-                    </div>
                     <Row id='r-and-d-col'>
-                        <Col md={{ span: 6, offset: 0 }} >
-                            <TextField id="projectDescription-input"
-                                value={this.state.projectDescription}
-                                onChange={this.handleProjectDescriptionChange}
-                                label="Description"
-                                placeholder="Enter Project Description..."
-                                multiline
-                                rows="4"
-                                margin="normal"
-                                variant="outlined">
-                            </TextField>
-                        </Col>
                         <Col md={{ span: 5, offset: 0 }}>
                             <Row>
                                 <TextField id="projectLink-input"
@@ -209,20 +195,22 @@ export default class ProjectCreator extends Component {
                                 </TextField>
                             </Row>
                         </Col>
+                        <Col md={{ span: 6, offset: 0 }}>
+                            <Row>
+                                <TextField id="projectDescription-input"
+                                    value={this.state.projectNotes}
+                                    onChange={this.handleProjectNotesChange}
+                                    placeholder="Enter Research Notes"
+                                    multiline
+                                    rows="4"
+                                    label="Notes"
+                                    margin="normal"
+                                    variant="outlined">
+                                </TextField>
+                            </Row>
+                            </Col>
                     </Row>
                     <Row id='r-and-d-col'>
-                        <Col md={{ span: 6, offset: 0 }} >
-                            <TextField id="projectDescription-input"
-                                value={this.state.projectDefinition}
-                                onChange={this.handleProjectDefinitionChange}
-                                label="Definition"
-                                placeholder="Project Definition"
-                                multiline
-                                rows="4"
-                                margin="normal"
-                                variant="outlined">
-                            </TextField>
-                        </Col>
                         <Col md={{ span: 5, offset: 0 }}>
                             <Row>
                                 <TextField id="projectLink-input"
@@ -249,20 +237,11 @@ export default class ProjectCreator extends Component {
                                 </TextField>
                             </Row>
                         </Col>
+                        <Col md={{ span: 6, offset: 0 }}>
+
+                       </Col>
                     </Row>
                     <Row id='r-and-d-col'>
-                        <Col md={{ span: 6, offset: 0 }} >
-                            <TextField id="projectDescription-input"
-                                value={this.state.projectExclusions}
-                                onChange={this.handleProjectExclusionsChange}
-                                label="Exclusions"
-                                placeholder="Exclusions"
-                                multiline
-                                rows="4"
-                                margin="normal"
-                                variant="outlined">
-                            </TextField>
-                        </Col>
                         <Col md={{ span: 5, offset: 0 }}>
                             <Row>
                                 <TextField id="projectLink-input"
@@ -291,6 +270,29 @@ export default class ProjectCreator extends Component {
                         </Col>
                     </Row>
                     <Row>
+                     <div>
+                        <Button color="success" onClick={() => this.setState({ showing: !showing })}><FontAwesomeIcon icon="upload"/>Upload Files</Button>                      {showing
+                            ? <div className="zone">
+                                <Dropzone onDrop={this.onDrop} multiple>
+                                    {({ getRootProps, getInputProps, isDragActive, acceptedFiles }) => (
+                                        <div {...getRootProps()}>
+                                            <input {...getInputProps()} />
+                                            {isDragActive ? "Drop your file here" : 'Click or drag a file to upload'}
+                                            <ul className="list-group mt-2">
+                                                {acceptedFiles.length > 0 && acceptedFiles.map(acceptedFile => (
+                                                    <li className="list-group-item list-group-item-success">
+                                                        {acceptedFile.name}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </Dropzone>
+                            </div>
+                            : null}
+                        </div>
+                    </Row>
+                    <Row>
                         <Col md={{ span: 3, offset: 0 }}>
                             <div id='project-id-holder'>
                                 Project ID: <input type="text" disabled='true' class="form-control" id="projectId-input" value={'#' + this.state.projectNumber} />
@@ -303,8 +305,8 @@ export default class ProjectCreator extends Component {
                         </Col>
                         <Col md={{ span: 2, offset: 1 }}>
                             <div id='confirmation-button-holder'>
-                                <Button color = 'warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
-                                <Button color = 'primary' id='submit-project' disabled = {this.state.projectName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
+                                <Button color='warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
+                                <Button color='primary' id='submit-project' disabled={this.state.projectName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
                             </div>
                         </Col>
                     </Row>

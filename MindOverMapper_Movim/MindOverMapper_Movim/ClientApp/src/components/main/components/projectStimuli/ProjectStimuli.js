@@ -54,9 +54,11 @@ export default class ProjectStimuli extends Component {
       projectResearchLink3: this.props.location.state.projectResearchLink1,
       projectResearchLink2: this.props.location.state.projectResearchLink2,
       projectResearchLink1: this.props.location.state.projectResearchLink3,
-      projectDefinition: this.props.location.state.projectDefinition,
-      projectExclusions: this.props.location.state.projectExclusions,
-      projectDescription: this.props.location.state.projectDescription,
+      projectDefinition: this.props.location.projectDefinition, //project mission
+      projectExclusions: this.props.location.projectExclusions,
+      projectConstraints: this.props.location.projectConstraints,
+      projectDescription: this.props.location.projectDescription,
+      projectExplorationAreas: this.props.location.projectExplorationAreas,
       activeCheckboxes: [],
       inActiveCheckboxes: [],
       initStimuli: [],
@@ -185,14 +187,14 @@ export default class ProjectStimuli extends Component {
       {
         'title': this.state.projectName,
         'description': this.state.projectDescription,
-        'definition' : this.state.projectDefinition, // now is mission
+        'definition' : this.state.projectDefinition, //project mission
         'problemStatement': {
           'content': this.state.projectName
         },
         'exclusions': [{
           'content': this.state.projectExclusions
         }],
-        'areasOfResearch': [{ //
+        'areasOfResearch': [{
           'content': this.state.projectResearch1,
           'link': {
             'href': this.state.projectResearchLink1,
@@ -238,6 +240,9 @@ export default class ProjectStimuli extends Component {
         errorMessage: 'Error: Project could not be created!'
       });
     });
+
+
+
   }
 
   sortStimulus = () => {

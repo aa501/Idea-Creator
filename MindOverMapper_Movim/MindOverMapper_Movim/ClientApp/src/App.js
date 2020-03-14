@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Login } from './components/login/Login';
 import { Main } from './components/main/Main';
+import ProjectPrototype from './components/main/components/projectprototype/ProjectPrototype'
 import Concept from './components/main/components/concept/Concept';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminPanel from './components/main/components/admin/AdminPanel';
@@ -61,6 +62,7 @@ export default class App extends Component {
                   <Route exactpath="/home" component={Main} />
                   <Route exactpath="/admin-panel" component={AdminPanel} />
                   <Route exactpath="/concept" component={Concept} />
+                  <Route exactpath="/add-prototype" component={ProjectPrototype} />
               </Switch>
           </div>
     );
