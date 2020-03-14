@@ -166,7 +166,7 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(new { message = "Success!" });
         }
 
-         [Authorize]
+        [Authorize]
         [HttpGet]
         public ActionResult GetPreviews()
         {
@@ -690,14 +690,14 @@ namespace MindOverMapper_Movim.Controllers
         [HttpPost("concept")]
         public ActionResult CreateConcept([FromBody] ConceptRequest req)
         {
-            Console.WriteLine(req.projectUid);
-            var uid = _service.GetUid(HttpContext.User.Identity as ClaimsIdentity);
-            var user = _context.User.Where(u => u.Uid == uid).FirstOrDefault<User>();
+            var new_uid = Guid.NewGuid().ToString();
             Project proj = _context.Project.Where(p => p.Uid == req.projectUid).FirstOrDefault();
+            var answerls = req.answerList;
+            var length = _context.Question.Count<Question>();
 
             Concept cpt = new Concept
             {
-                Uid = user.Uid,
+                Uid = new_uid,
                 ProjectId = proj.Id,
                 ConceptName = req.ConceptName,
                 NewsHeadline = req.NewsHeadline,
@@ -710,10 +710,56 @@ namespace MindOverMapper_Movim.Controllers
                 DeathThreats = req.DeathThreats
             };
 
-
             _context.Concept.Add(cpt);
             _context.SaveChanges();
 
+            var conc = _context.Concept.Where(c => c.Uid == new_uid).FirstOrDefault<Concept>();
+
+            foreach (var obj in answerls){
+                if (obj != null) {
+                    IdeationAnswers ans = new IdeationAnswers
+                    {
+                        Uid = Guid.NewGuid().ToString(),
+                        Cid = conc.Id,
+                        Qid = Array.IndexOf(answerls, obj),
+                        Answer = obj
+                    };
+
+                    _context.IdeationAnswers.Add(ans);
+                }
+            }
+
+            _context.SaveChanges();
+
+            return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
+        [HttpGet("questions")]
+        public ActionResult GetQuestions()
+        {
+            var queryString = "concept";
+            var questions = _context.Question.Where(q => q.Type == queryString);
+
+            return Ok(questions);
+        }
+
+        [Authorize]
+        [HttpPost("submit-question")]
+        public ActionResult CreateConceptQuestion([FromBody] QuestionSubmission req)
+        {
+
+            Question qsn = new Question
+            {
+                Uid = Guid.NewGuid().ToString(),
+                Text = req.Text,
+                Type = req.Type,
+                DateCreated = DateTime.Now,
+                Archived = "No"
+            };
+
+            _context.Question.Add(qsn);
+            _context.SaveChanges();
             return Ok(new { message = "Success!" });
         }
     }

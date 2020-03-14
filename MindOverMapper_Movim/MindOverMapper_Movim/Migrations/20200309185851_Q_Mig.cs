@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MindOverMapper_Movim.Migrations
 {
-    public partial class Question : Migration
+    public partial class Q_Mig : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,9 +16,9 @@ namespace MindOverMapper_Movim.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     uid = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
                     text = table.Column<string>(unicode: false, maxLength: 1000, nullable: false),
-                    type = table.Column<string>(unicode: false, maxLength: 50, nullable: false),
+                    type = table.Column<string>(unicode: false, maxLength: 50, nullable: true),
                     date_created = table.Column<DateTime>(type: "datetime", nullable: false),
-                    date_archived = table.Column<DateTime>(type: "datetime", nullable: false)
+                    archived = table.Column<string>(unicode: false, maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {

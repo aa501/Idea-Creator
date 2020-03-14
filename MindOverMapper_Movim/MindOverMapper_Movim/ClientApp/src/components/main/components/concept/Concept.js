@@ -29,6 +29,7 @@ export default class Concept extends Component {
             price: '',
             passion: '',
             deathThreats: '',
+            completedConcept: false
         }
     }
 
@@ -47,6 +48,7 @@ export default class Concept extends Component {
             price: '',
             passion: '',
             deathThreats: '',
+            completedConcept: false
         })
     }
 
@@ -96,26 +98,6 @@ export default class Concept extends Component {
         });
     }
 
-    submitConcept = () => {
-        axios.post('/api/project/concept',
-            {
-                'conceptName': this.state.conceptName,
-                'newsHeadline': this.state.newsHeadline,
-                'customer': this.state.customer,
-                'customerProblem': this.state.customerProblem,
-                'promise': this.state.benefitPromise,
-                'proof': this.state.proof,
-                'price': this.state.price,
-                'passion': this.state.passion,
-                'deathThreats': this.state.deathThreats,
-                'projectUid': this.state.projectName.uid
-            },
-            {
-                headers: {
-                    Authorization: 'Bearer ' + this.state.userData.token
-                }
-            });
-    }
 
     nextPage = () => {
         this.props.history.push({
@@ -126,18 +108,28 @@ export default class Concept extends Component {
 
     render() {
         return (
-             <div className='concept-container'>
-                <h3 className="page-title">Concept Definition</h3>
+            <div className='concept-container'>
+
+                <Row>
+                    <Col md={{ span: 3 }}>
+                        <h3 className="page-title">Concept Definition</h3>
+                    </Col>
+                    <Col md={{ span: 2, offset: 5  }}>
+                        <div id="conceptButton" align="right">
+                            <Button id="opt" onClick={this.nextPage}>Concept Question <FontAwesomeIcon icon="arrow-right" /></Button>
+                        </div>
+                    </Col>
+                 </Row>
                 <Container>
                     <div className='concept-name-holder'>
                         <TextField
-                            value={this.state.conceptName}
-                            onChange={this.handleConceptNameChange}
-                            label="Name"
-                            margin="normal"
-                            placeholder="Enter Concept Name..."
-                            variant="outlined">
-                        </TextField>
+                        value={this.state.conceptName}
+                        onChange={this.handleConceptNameChange}
+                        label="Name"
+                        margin="normal"
+                        placeholder="Enter Concept Name..."
+                        variant="outlined">
+                         </TextField>
                     </div>
                     <Row id='r-and-d-col'>
                         <Col>
@@ -203,7 +195,8 @@ export default class Concept extends Component {
                               placeholder="Enter proof that your concept can work..."
                               variant="outlined">
                           </TextField>
-                        </Col>                      </Row>
+                        </Col>
+                      </Row>
                       <Row>
                         <Col md={{ span: 6, offset: 0 }} >
                           <TextField id="concept-field"

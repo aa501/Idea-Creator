@@ -24,7 +24,6 @@ export default class ProjectView extends Component {
             this.setState({
                 userData: this.props.location.state.userData,
                 projectName: this.props.location.state.projectName,
-             //   projectConcept: this.props.location.state.projectConcept
             });
         }
     }

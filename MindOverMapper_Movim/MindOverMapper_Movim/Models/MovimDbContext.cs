@@ -23,6 +23,7 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<RecoveryGrant> RecoveryGrant { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<IdeationAnswers> IdeationAnswers { get; set; }
+        public virtual DbSet<Question> Question { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -274,16 +275,14 @@ namespace MindOverMapper_Movim.Models
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-                entity.Property(e => e.ConceptName)
+                entity.Property(e => e.Cid)
                 .IsRequired()
-                .HasColumnName("conceptName")
-                .HasMaxLength(50)
+                .HasColumnName("cid")
                 .IsUnicode(false);
 
-                entity.Property(e => e.Question)
+                entity.Property(e => e.Qid)
                 .IsRequired()
-                .HasColumnName("question")
-                .HasMaxLength(200)
+                .HasColumnName("qid")
                 .IsUnicode(false);
 
                 entity.Property(e => e.Answer)
@@ -310,21 +309,22 @@ namespace MindOverMapper_Movim.Models
                 .IsUnicode(false);
 
                 entity.Property(e => e.Type)
-                .IsRequired()
                 .HasColumnName("type")
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
                 entity.Property(e => e.DateCreated)
+                .IsRequired()
                 .HasColumnName("date_created")
                 .HasColumnType("datetime");
 
-                entity.Property(e => e.DateArchived)
-                .HasColumnName("date_archived")
-                .HasColumnType("datetime");
+                entity.Property(e => e.Archived)
+                .IsRequired()
+                .HasColumnName("archived")
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             });
-
         }
     }
 }

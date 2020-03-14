@@ -10,8 +10,8 @@ using MindOverMapper_Movim.Models;
 namespace MindOverMapper_Movim.Migrations
 {
     [DbContext(typeof(MovimDbContext))]
-    [Migration("20200308013541_Question")]
-    partial class Question
+    [Migration("20200309185851_Q_Mig")]
+    partial class Q_Mig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -106,10 +106,8 @@ namespace MindOverMapper_Movim.Migrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
-                    b.Property<string>("Question")
-                        .IsRequired()
-                        .HasColumnName("question")
-                        .HasMaxLength(200)
+                    b.Property<int>("Qid")
+                        .HasColumnName("qid")
                         .IsUnicode(false);
 
                     b.Property<string>("Uid")
@@ -256,9 +254,11 @@ namespace MindOverMapper_Movim.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateArchived")
-                        .HasColumnName("date_archived")
-                        .HasColumnType("datetime");
+                    b.Property<string>("Archived")
+                        .IsRequired()
+                        .HasColumnName("archived")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnName("date_created")
@@ -271,7 +271,6 @@ namespace MindOverMapper_Movim.Migrations
                         .IsUnicode(false);
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnName("type")
                         .HasMaxLength(50)
                         .IsUnicode(false);

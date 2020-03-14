@@ -9,8 +9,8 @@ namespace MindOverMapper_Movim.Models
     {
         public int Id { get; set; }
         public string Uid { get; set; }
-        public string ConceptName { get; set; }
-        public string Question { get; set; }
+        public int Cid { get; set; }
+        public int Qid { get; set; }
         public string Answer { get; set; }
     }
 }

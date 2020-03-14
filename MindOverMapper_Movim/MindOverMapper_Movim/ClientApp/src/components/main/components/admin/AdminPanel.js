@@ -7,7 +7,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
+import { Row, Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
 import axios from 'axios';
 import noProjectImage from "../../../../static/NoProjectsFound.png";
 import Dialog from '@material-ui/core/Dialog';
@@ -65,7 +65,7 @@ export default class AdminPanel extends Component {
             errorModal: false
         });
       }
-      
+
       openErrorModal = (uid) => {
         this.setState({
             errorModal: true,
@@ -303,7 +303,7 @@ export default class AdminPanel extends Component {
     }
 
     handleDeleteProject = async () =>{
-        
+
         let projectUID = this.state.currentProjectUid
 
         if (projectUID !== '') {
@@ -321,7 +321,12 @@ export default class AdminPanel extends Component {
         this.handleCloseErrorModal();
     }
 
-
+    nextPage = () => {
+        this.props.history.push({
+            pathname: '/question-editor',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
     resetValue = () => {
         this.setState({
@@ -426,6 +431,9 @@ export default class AdminPanel extends Component {
 
         return (
             <div className='dashboard-container'>
+                <div id="conceptButton" padding-left="4" align="left">
+                    <Button id="opt" onClick={this.nextPage}>Question Editor <FontAwesomeIcon icon="edit" /></Button>
+                </div>
                 <div className='dashboard-header'>
                 </div>
                 <div className='dashboard-body'>
@@ -469,13 +477,13 @@ export default class AdminPanel extends Component {
                                                 Edit Users
                                                 <FontAwesomeIcon id='font-awesome-space' icon="edit" />
                                             </Button>
-                                            
-                                            
+
+
                                                 <Tooltip title="Delete Project">
                                                     <Button id='learn-button' onClick={()=> {this.openErrorModal(project.uid)}}>
-                                                        Delete Project 
+                                                        Delete Project
                                                         <div id = 'trash-icon-button'><FontAwesomeIcon id='admin-delete' icon="trash-alt" /></div>
-                                                        
+
                                                     </Button>
                                                 </Tooltip>
                                             </div>
@@ -602,9 +610,9 @@ export default class AdminPanel extends Component {
           </Button>
                     </DialogActions>
                 </Dialog>
-                
 
-            
+
+
             <Dialog
               open={this.state.errorModal}
               TransitionComponent={Transition}

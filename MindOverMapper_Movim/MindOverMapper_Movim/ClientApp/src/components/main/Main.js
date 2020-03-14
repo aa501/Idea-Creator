@@ -8,6 +8,7 @@ import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
 import Concept from './components/concept/Concept.js';
 import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
+import QuestionEditor from './components/questionEditor/QuestionEditor.js';
 
 export class Main extends Component {
     static displayName = Main.name;
@@ -39,6 +40,7 @@ export class Main extends Component {
                         <Route path='/project-stimuli' component={ProjectStimuli}/>
                         <Route path='/concept' component={Concept} />
                         <Route path='/concept-question' component={ConceptQuestion}/>
+                        <Route path='/question-editor' component={QuestionEditor}/>
                     </Layout>
                 ): (null)}
             </div>
