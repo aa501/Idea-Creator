@@ -12,7 +12,7 @@
 
 #project-name {
     font-family: 'Exo-2', sans-serif;
-    font-weight: 100;  
+    font-weight: 100;
 }
 
 #project-options {
@@ -45,14 +45,14 @@
 }
 
 .card-holder {
-   
+
 }
 
 
 
 .card {
     height: 45%;
-    width: 49%;  
+    width: 49%;
     margin-left: 70px;
 }
 
@@ -83,6 +83,17 @@
     width: 150px;
     background-color: white;
     border-top: solid;
+    border-top-color: yellow;
+    border-top-width: 12px;
+    box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
+    border-radius: 10px;
+}
+
+.card-button-4 {
+    height: 130px;
+    width: 150px;
+    background-color: white;
+    border-top: solid;
     border-top-color: violet;
     border-top-width: 12px;
     box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
@@ -93,7 +104,7 @@
     margin-top: 25%;
     font-size: 20px;
     font-weight: 300;
-    
+
 }
 
 ul {

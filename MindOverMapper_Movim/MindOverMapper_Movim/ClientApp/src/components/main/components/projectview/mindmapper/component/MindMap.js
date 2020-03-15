@@ -14,6 +14,7 @@ import { ThemeSelectorPlugin } from "@blink-mind/plugin-theme-selector";
 import "@blink-mind/renderer-react/lib/main.css";
 import './MindMap.css';
 import LoadingGIF from '../../../../../../static/Loading3.gif';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Snackbar from '@material-ui/core/Snackbar';
 import { downloadFile, generateSimpleModel } from "../utils";
 
@@ -30,6 +31,7 @@ export default class MindMap extends React.Component {
       userData: this.props.userData,
       projectInfo: this.props.projectInfo,
       projectConcept: '',
+      pushBack: '',
       change: false,
       diagramVersion: 0,
       openSuccessSnackBar: false,
@@ -87,11 +89,15 @@ export default class MindMap extends React.Component {
       });
     }
 
-    testFunction = () => {
+    goToConcept = () => {
         let projectConcept = this.state.projectConcept;
         this.props.projectConcept(projectConcept);
     }
 
+    viewProject = () => {
+      let pushback = "send it";
+      this.props.pushBack(pushback);
+    }
 
   componentDidMount = async () => {
     await this.retrieveMindMap(this.props.projectInfo.uid);
@@ -261,12 +267,18 @@ export default class MindMap extends React.Component {
       canRedo
     };
     return (
-      <Row><Col>
-      <Toolbar {...toolbarProps} />
+      <Row>
+      <Col md={{ span: 9 }}>
+        <Toolbar {...toolbarProps} />
       </Col>
-      <Col>
+      <Col md={{ span: 2 }}>
       <div id="conceptButton" align="right">
-          <Button color="primary" onClick={this.toggleModal.bind(this)}>Concept</Button>
+          <Button color="secondary" onClick={this.viewProject}><FontAwesomeIcon icon="arrow-left"/> Back to Project</Button>
+      </div>
+      </Col>
+      <Col md={{ span: 1.5 }}>
+      <div id="conceptButton" align="right">
+          <Button color="primary" onClick={this.toggleModal.bind(this)}><FontAwesomeIcon icon="plus"/> Concept</Button>
       </div>
       <Modal isOpen={this.state.modalIsOpen}>
           <ModalHeader toggle={this.toggleModal.bind(this)}>Concept</ModalHeader>
@@ -283,10 +295,11 @@ export default class MindMap extends React.Component {
               </div>
           </ModalBody>
           <ModalFooter>
-                        <Button color="primary" onClick={this.testFunction}>Add Concept</Button>
+                        <Button color="primary" onClick={this.goToConcept}>Add Concept</Button>
           </ModalFooter>
       </Modal>
-      </Col></Row>
+      </Col>
+      </Row>
     );
   }
 
