@@ -16,6 +16,7 @@ export default class ProjectView extends Component {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
             projectConcept: '',
+            pushBack: ''
           }
     }
 
@@ -47,11 +48,19 @@ export default class ProjectView extends Component {
       });
     };
 
+    viewProject = () => {
+      return this.props.history.push({
+          pathname: '/project-landing-page',
+          state: this.state
+      });
+    }
+
+
     render() {
         return (
             <div>
-                <MindMap userData={this.props.location.state.userData} projectInfo={this.props.location.state.projectName} projectConcept={this.callback} />
+                <MindMap userData={this.props.location.state.userData} projectInfo={this.props.location.state.projectName} projectConcept={this.callback} pushBack={this.viewProject}/>
             </div>
-        );   
+        );
     }
 }

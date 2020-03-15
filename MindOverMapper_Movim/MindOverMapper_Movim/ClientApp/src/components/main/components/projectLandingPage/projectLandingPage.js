@@ -8,6 +8,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import ButtonBase from '@material-ui/core/ButtonBase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -34,18 +35,24 @@ function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
+function formatDate(newDate) {
+    var splitDate = newDate.split("T");
+    var adjustedDate = splitDate[0];
+    return adjustedDate;
+}
+
 export default class ProjectLandingPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
-            projectConcept: ''
+            projectConcept: '',
         }
     }
 
-
     componentDidMount() {
+      console.log(this.state);
         if (this.props.location.state === undefined) {
             this.props.history.push({
                 pathname: '/'
@@ -59,14 +66,44 @@ export default class ProjectLandingPage extends Component {
         }
     }
 
+    pushToMindMap = () => {
+        this.props.history.push({
+            pathname: '/project-view',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
+    pushToResearch = () => {
+        this.props.history.push({
+            pathname: '/project-research',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
+    pushToConcepts = () => {
+        this.props.history.push({
+            pathname: '/concept',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
-    
+    pushToSurveys = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToPrototypes = () => {
+        this.props.history.push({
+            pathname: '/prototype',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
     render() {
         return (
             <div class="landing-page-container">
-                
                 <SideNav
                     onSelect={(selected) => {
                         // Add your code here
@@ -157,11 +194,11 @@ export default class ProjectLandingPage extends Component {
 
                 </SideNav>
 
-                <div id="landing-page-container">               
+                <div id="landing-page-container">
 
                     <div class="landing-page-body">
 
-                        <h2 id="project-name" >Project Name</h2>
+                        <h2 id="project-name" >{this.state.projectName.title}</h2>
                         <hr id="hr-1" />
 
                         <div class="page-body-1 row">
@@ -170,22 +207,22 @@ export default class ProjectLandingPage extends Component {
                                 <ul>
                                     <li class="li">
                                         <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" style={{ fontSize: '1.3em' }} />
-                                        <strong>Project ID: </strong>00002901
+                                        <strong>Project ID: </strong>{this.state.projectName.uid}
                                     </li>
                                     <li class="li">
                                         <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" style={{ fontSize: '1.4em' }} />
-                                        <strong>Date Created: </strong>10/4/19
+                                        <strong>Date Created: </strong>{formatDate(this.state.projectName.dateCreated)}
                                     </li>
                                     <li class="li">
                                         <FontAwesomeIcon id='font-awesome-space-right' icon="stream" style={{ fontSize: '1.3em' }} />
-                                        <strong>Description: </strong>This is a test description of this project. Something something, filler text goes here. And then some more filler text goes here and here.
+                                        <strong>Description: </strong>{this.state.projectName.description}
                                     </li>
                                 </ul>
                             </div>
 
                             <div class="col-sm card-holder align-self-center">
-                                <Card class="card">                                   
-                                     <CardActionArea>
+                                <Card class="card">
+                                     <CardActionArea onClick={this.pushToMindMap}>
                                          <CardMedia
                                              style={{ height: 0, paddingTop: '56.25%' }}
                                              image={require("../../../../static/ideaPicture.jpg")}
@@ -198,7 +235,7 @@ export default class ProjectLandingPage extends Component {
                                                  </center>
                                              </Typography>
                                          </CardContent>
-                                     </CardActionArea>         
+                                     </CardActionArea>
                                 </Card>
                             </div>
 
@@ -211,7 +248,7 @@ export default class ProjectLandingPage extends Component {
 
                             <div class="col-sm-2">
                                 <Card class="card-button">
-                                    <CardActionArea>                
+                                    <CardActionArea onClick={this.pushToResearch}>
                                         <CardContent>
                                             <Typography id="options-label">
                                                 <center>
@@ -224,7 +261,7 @@ export default class ProjectLandingPage extends Component {
                             </div>
                             <div class="col-sm-2">
                                 <Card class="card-button-2">
-                                    <CardActionArea>
+                                    <CardActionArea onClick={this.pushToConcepts}>
                                         <CardContent>
                                             <Typography id="options-label">
                                                 <center>
@@ -237,7 +274,20 @@ export default class ProjectLandingPage extends Component {
                             </div>
                             <div class="col-sm-2">
                                 <Card class="card-button-3">
-                                    <CardActionArea>
+                                    <CardActionArea onClick={this.pushToPrototypes}>
+                                        <CardContent>
+                                            <Typography id="options-label">
+                                                <center>
+                                                    Prototypes
+                                                 </center>
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>
+                            <div class="col-sm-2">
+                                <Card class="card-button-4">
+                                    <CardActionArea onClick={this.pushToSurveys}>
                                         <CardContent>
                                             <Typography id="options-label">
                                                 <center>
@@ -248,7 +298,7 @@ export default class ProjectLandingPage extends Component {
                                     </CardActionArea>
                                 </Card>
                             </div>
-                            
+
 
                         </div>
 
@@ -263,7 +313,7 @@ export default class ProjectLandingPage extends Component {
             </div>
         );
     }
-    
-    
+
+
 
 }
