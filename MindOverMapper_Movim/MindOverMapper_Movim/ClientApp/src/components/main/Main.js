@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './navigation/Layout';
 import DashBoard  from './components/dashboard/Dashboard.js';
-import ProjectCreator from './components/projectcreation/ProjectCreator.js';
+import ProjectDefinition from './components/projectdefinition/ProjectDefinition.js'
+import ProjectResearch from './components/projectresearch/ProjectResearch.js'
 import AdminPanel from './components/admin/AdminPanel.js';
 import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
@@ -10,6 +11,7 @@ import Concept from './components/concept/Concept.js';
 import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 import QuestionEditor from './components/questionEditor/QuestionEditor.js';
 import ProjectLandingPage from './components/projectLandingPage/projectLandingPage.js';
+import ProjectPrototype from './components/projectprototype/ProjectPrototype.js';
 
 export class Main extends Component {
     static displayName = Main.name;
@@ -35,7 +37,8 @@ export class Main extends Component {
                 {this.state ? (
                     <Layout props={this.state.userData}>
                         <Route path='/home' component={DashBoard}/>
-                        <Route path='/create-project' component={ProjectCreator}/>
+                        <Route path='/create-project' component={ProjectDefinition} />
+                        <Route path='/project-research' component={ProjectResearch} />
                         <Route path='/admin-panel' component={AdminPanel}/>
                         <Route path='/project-view' component={ProjectView}/>
                         <Route path='/project-stimuli' component={ProjectStimuli}/>
@@ -43,6 +46,7 @@ export class Main extends Component {
                         <Route path='/concept-question' component={ConceptQuestion}/>
                         <Route path='/question-editor' component={QuestionEditor}/>
                         <Route path='/project-landing-page' component={ProjectLandingPage} />
+                        <Route path='/add-prototype' component={ProjectPrototype} />
                     </Layout>
                 ): (null)}
             </div>

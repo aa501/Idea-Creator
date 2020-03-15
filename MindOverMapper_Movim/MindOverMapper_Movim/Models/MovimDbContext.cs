@@ -24,6 +24,7 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<IdeationAnswers> IdeationAnswers { get; set; }
         public virtual DbSet<Question> Question { get; set; }
+        public virtual DbSet<Prototype> Prototype { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -323,6 +324,30 @@ namespace MindOverMapper_Movim.Models
                 .HasColumnName("archived")
                 .HasMaxLength(50)
                 .IsUnicode(false);
+
+            });
+
+            modelBuilder.Entity<Prototype>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Uid)
+                    .IsRequired()
+                    .HasColumnName("uid")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrototypeName)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrototypeDescription)
+                    .IsRequired()
+                    .HasColumnName("description")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
             });
         }

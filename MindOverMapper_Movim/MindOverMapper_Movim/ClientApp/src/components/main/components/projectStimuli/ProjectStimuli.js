@@ -185,14 +185,14 @@ export default class ProjectStimuli extends Component {
       {
         'title': this.state.projectName,
         'description': this.state.projectDescription,
-        'definition' : this.state.projectDefinition, // now is mission
+        'definition' : this.state.projectDefinition, //project mission
         'problemStatement': {
           'content': this.state.projectName
         },
         'exclusions': [{
           'content': this.state.projectExclusions
         }],
-        'areasOfResearch': [{ //
+        'areasOfResearch': [{
           'content': this.state.projectResearch1,
           'link': {
             'href': this.state.projectResearchLink1,
@@ -238,6 +238,9 @@ export default class ProjectStimuli extends Component {
         errorMessage: 'Error: Project could not be created!'
       });
     });
+
+
+
   }
 
   sortStimulus = () => {
