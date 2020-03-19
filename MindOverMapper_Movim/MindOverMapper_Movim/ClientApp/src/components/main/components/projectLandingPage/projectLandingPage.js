@@ -89,7 +89,7 @@ export default class ProjectLandingPage extends Component {
 
     pushToSurveys = () => {
         this.props.history.push({
-            pathname: '/home',
+            pathname: '/surveys',
             state: this.state  // need this for moving to different component
         });
     }

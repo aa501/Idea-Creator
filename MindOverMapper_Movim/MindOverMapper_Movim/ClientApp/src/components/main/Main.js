@@ -12,6 +12,9 @@ import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 import QuestionEditor from './components/questionEditor/QuestionEditor.js';
 import ProjectLandingPage from './components/projectLandingPage/projectLandingPage.js';
 import ProjectPrototype from './components/projectprototype/ProjectPrototype.js';
+import ProjectSurvey from './components/Surveys/ProjecctSurvey.js';
+import NewSurvey from './components/Surveys/NewSurvey/NewSurvey.js';
+
 
 export class Main extends Component {
     static displayName = Main.name;
@@ -47,6 +50,8 @@ export class Main extends Component {
                         <Route path='/question-editor' component={QuestionEditor}/>
                         <Route path='/project-landing-page' component={ProjectLandingPage} />
                         <Route path='/add-prototype' component={ProjectPrototype} />
+                        <Route path='/surveys' component={ProjectSurvey} />
+                        <Route path='/new-survey' component={NewSurvey} />
                     </Layout>
                 ): (null)}
             </div>
