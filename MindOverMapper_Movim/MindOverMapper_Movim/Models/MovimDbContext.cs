@@ -314,6 +314,11 @@ namespace MindOverMapper_Movim.Models
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
+                entity.Property(e => e.Notes)
+                .HasColumnName("notes")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
                 entity.Property(e => e.DateCreated)
                 .IsRequired()
                 .HasColumnName("date_created")

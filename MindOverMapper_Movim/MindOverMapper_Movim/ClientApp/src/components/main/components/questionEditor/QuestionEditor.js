@@ -58,6 +58,7 @@ export default class QuestionEditor extends Component {
       {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
+          'notes': '',
           'archived': 'No'
       },
       {

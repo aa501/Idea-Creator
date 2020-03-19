@@ -5,6 +5,7 @@ namespace MindOverMapper_Movim.Models
     {
       public string Text { get; set; }
       public string Type { get; set; }
+      public string Notes { get; set; }
       public string Archived { get; set; }
     }
 }

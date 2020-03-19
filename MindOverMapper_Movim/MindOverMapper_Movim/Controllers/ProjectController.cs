@@ -754,6 +754,7 @@ namespace MindOverMapper_Movim.Controllers
                 Uid = Guid.NewGuid().ToString(),
                 Text = req.Text,
                 Type = req.Type,
+                Notes = req.Notes,
                 DateCreated = DateTime.Now,
                 Archived = "No"
             };
