@@ -277,7 +277,6 @@ namespace MindOverMapper_Movim.Models
                 .IsUnicode(false);
 
                 entity.Property(e => e.Cid)
-                .IsRequired()
                 .HasColumnName("cid")
                 .IsUnicode(false);
 
