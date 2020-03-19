@@ -12,7 +12,6 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import './SurveyQuestion.css';
 
-
 export default class SurveyQuestion extends Component {
     constructor(props) {
         super(props);
@@ -25,9 +24,10 @@ export default class SurveyQuestion extends Component {
             checkSub: [],
             qstType: '',
 
+            ratingMinNote: '',
+            ratingMaxNote: '',
             ratingQuestion: '',
-            ratingMinimum: '',
-            ratingMaximum: '',
+            ratingString: ''
         }
 
 
@@ -63,6 +63,25 @@ export default class SurveyQuestion extends Component {
         });
     }
 
+    handleRatingMin = (event) => {
+        this.setState({
+           ratingMinNote: event.target.value
+        });
+    }
+
+    handleRatingMax = (event) => {
+        this.setState({
+           ratingMaxNote: event.target.value
+        });
+    }
+
+    combineRatingStrings = () =>
+    {
+        this.setState({
+           ratingString: this.state.ratingString.concat('min,', this.state.ratingMinNote, ',max,', this.state.ratingMaxNote)
+        });
+    }
+
     resetFields = () => {
         this.setState({
             subQuestion: '',
@@ -77,11 +96,27 @@ export default class SurveyQuestion extends Component {
       });
     }
 
+    submitRatingQuestion = () => {
+      axios.post('/api/project/submit-question',
+      {
+          'text': this.state.subQuestion,
+          'type': this.state.qstType,
+          'notes': this.state.ratingString,
+          'archived': 'No'
+      },
+      {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
+      });
+    }
+
     submitTextQuestion = () => {
       axios.post('/api/project/submit-question',
       {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
+          'notes': 'none',
           'archived': 'No'
       },
       {
@@ -108,7 +143,11 @@ export default class SurveyQuestion extends Component {
     renderSubmitButton() {
       if (this.state.qstType === "Text") {
           return(
-          <Button color='primary' id='submit-question' onClick={this.submitTextQuestion}><FontAwesomeIcon icon="check" /> Submit Question</Button>
+          <Button color='primary'
+            id='submit-question'
+            disabled={this.state.subQuestion === ''}
+            onClick={this.submitTextQuestion}>
+          <FontAwesomeIcon icon="check" /> Submit Question</Button>
         )
       }
 
@@ -120,7 +159,11 @@ export default class SurveyQuestion extends Component {
 
       if (this.state.qstType === "Rating") {
           return(
-          <Button color='primary' id='submit-question' onClick={this.checker}><FontAwesomeIcon icon="check" /> Submit Question</Button>
+          <Button color='primary'
+            id='submit-question'
+            disabled={this.state.ratingMinNote == '' || this.state.ratingMaxNote == '' || this.state.subQuestion == ''}
+            onClick={this.submitRatingQuestion}>
+          <FontAwesomeIcon icon="check" /> Submit Question</Button>
         )
       }
     }
@@ -188,29 +231,32 @@ export default class SurveyQuestion extends Component {
                 placeholder="check"
                 variant="outlined">
             </TextField>
-            </Row>
-            <Row>
+          </Row>
+          <Row>
+            <Col>
             <TextField id="text-field2"
-                  value={this.state.subQuestion}
-                  onChange={this.handleSubQuestionChange}
+                  value={this.state.ratingMinNote}
+                  onChange={this.handleRatingMin}
                   label="Minimum"
                   width="400px"
                   margin="normal"
                   placeholder="check"
                   variant="outlined">
             </TextField>
-            </Row>
-            <Row>
             <TextField id="text-field2"
-                  value={this.state.subQuestion}
-                  onChange={this.handleSubQuestionChange}
+                  value={this.state.ratingMaxNote}
+                  onChange={this.handleRatingMax}
                   label="Maximum"
                   width="400px"
                   margin="normal"
                   placeholder="check"
                   variant="outlined">
             </TextField>
-            </Row>
+            </Col>
+              <Col>
+                <Button color='primary' id='Set' disabled={this.state.ratingMinNote == '' || this.state.ratingMaxNote == ''} onClick={this.combineRatingStrings}><FontAwesomeIcon icon="check" /> Set</Button>
+              </Col>
+          </Row>
           </div>
         )
       }
