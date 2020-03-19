@@ -10,6 +10,8 @@ import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
 import Concept from './components/concept/Concept.js';
 import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 import QuestionEditor from './components/questionEditor/QuestionEditor.js';
+import SurveyQuestion from './components/surveyQuestion/SurveyQuestion.js';
+import SurveyBuilder from './components/surveyBuilder/SurveyBuilder.js';
 import ProjectLandingPage from './components/projectLandingPage/projectLandingPage.js';
 import ProjectPrototype from './components/projectprototype/ProjectPrototype.js';
 
@@ -47,6 +49,8 @@ export class Main extends Component {
                         <Route path='/question-editor' component={QuestionEditor}/>
                         <Route path='/project-landing-page' component={ProjectLandingPage} />
                         <Route path='/add-prototype' component={ProjectPrototype} />
+                        <Route path='/survey-question' component={SurveyQuestion} />
+                        <Route path='/survey-builder' component={SurveyBuilder} />
                     </Layout>
                 ): (null)}
             </div>

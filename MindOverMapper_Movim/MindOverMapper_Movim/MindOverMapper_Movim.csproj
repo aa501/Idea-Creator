@@ -25,7 +25,6 @@
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="ClientApp\src\components\main\components\NewFolder\**" />
     <EmbeddedResource Remove="ClientApp\src\components\main\components\NewFolder\**" />
-    <None Remove="$(SpaRoot)**" />
     <None Remove="ClientApp\src\components\main\components\NewFolder\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     <None Remove="Services\AuthService.css" />

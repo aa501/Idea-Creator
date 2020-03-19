@@ -232,7 +232,8 @@ export default class ConceptQuestion extends Component {
                                         fullWidth
                                         variant="outlined">
                                     </TextField>
-                            </div>
+                                    <p></p>
+                                </div>
                         ))
                         }
                     </div>

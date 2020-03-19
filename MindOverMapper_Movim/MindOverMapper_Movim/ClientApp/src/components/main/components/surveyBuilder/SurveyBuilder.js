@@ -12,15 +12,14 @@ import Slide from '@material-ui/core/Slide';
 import { Container, Row, Col } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import './QuestionEditor.css';
+import './SurveyBuilder.css';
 
 
 
-export default class QuestionEditor extends Component {
+export default class SurveyBuilder extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userData: this.props.location.state.userData || this.props.userData,
             subQuestion: '',
             qstType: '',
         }
@@ -71,7 +70,7 @@ export default class QuestionEditor extends Component {
 
         return (
             <div className='concept-question-container'>
-                        <h3 className="page-title">Question Editor</h3>
+                        <h3 className="page-title">Create Survey Question</h3>
                 <Container>
                     <h4>Submit new questions for surveys or concepts.</h4>
                     <Row>
