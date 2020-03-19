@@ -18,9 +18,14 @@ export default class ProjectResearch extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            projectName: '',
-            projectNumber: Math.floor(Math.random() * 1000000),
+            projectName: this.props.location.state.projectName,
+            projectNumber: this.props.location.state.projectNumber,
             userData: this.props.location.state.userData || this.props.userData,
+            projectDefinition: this.props.location.state.projectDefinition, //project mission
+            projectExclusions: this.props.location.state.projectExclusions,
+            projectConstraints: this.props.location.state.projectConstraints,
+            projectDescription: this.props.location.state.projectDescription,
+            projectExplorationAreas: this.props.location.state.projectExplorationAreas,  
             projectResearch1: '',
             projectResearch2: '',
             projectResearch3: '',
