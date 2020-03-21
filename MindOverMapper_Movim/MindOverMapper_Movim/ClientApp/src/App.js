@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Login } from './components/login/Login';
 import { Main } from './components/main/Main';
+import { SurveyEnd } from './components/surveyend/SurveyEnd';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminPanel from './components/main/components/admin/AdminPanel';
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -56,9 +57,11 @@ export default class App extends Component {
     return (
       <div className="app-routes">
               <Switch>
-                  <Route exact path="/" component={Login} />
-                  <Route exactpath="/home" component={Main} />
-                  <Route exactpath="/admin-panel" component={AdminPanel} />
+                  <Route exact path ="/" component={Login} />
+                  <Route exact path ="/survey" component={SurveyEnd} />
+                  <Route exact path ="/login" component={Login} />
+                  <Route exactpath ="/home" component={Main} />
+                  <Route exactpath ="/admin-panel" component={AdminPanel} />
               </Switch>
           </div>
     );
