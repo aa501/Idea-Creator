@@ -18,7 +18,7 @@ export default class Concept extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            projectName: this.props.location.state.projectName,
+            projectName: '',
             userData: this.props.location.state.userData || this.props.userData,
             conceptName: this.props.location.state.projectConcept,
             newsHeadline: '',
@@ -34,7 +34,16 @@ export default class Concept extends Component {
     }
 
     componentDidMount = () => {
-        console.log(this.props)
+      if (this.props.location.state === undefined) {
+          this.props.history.push({
+              pathname: '/'
+          });
+      } else {
+          this.setState({
+              userData: this.props.location.state.userData,
+              projectName: this.props.location.state.projectName,
+          });
+      }
     }
 
     resetFields = () => {
@@ -122,13 +131,14 @@ export default class Concept extends Component {
                  </Row>
                 <Container>
                     <div className='concept-name-holder'>
-                        <TextField
-                        value={this.state.conceptName}
-                        onChange={this.handleConceptNameChange}
-                        label="Name"
-                        margin="normal"
-                        placeholder="Enter Concept Name..."
-                        variant="outlined">
+                        <TextField id="concept-name-field"
+                          value={this.state.conceptName}
+                          onChange={this.handleConceptNameChange}
+                          label="Name"
+                          multiline
+                          margin="dense"
+                          placeholder="Enter Concept Name..."
+                          variant="outlined">
                          </TextField>
                     </div>
                     <Row id='r-and-d-col'>

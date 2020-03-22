@@ -745,6 +745,15 @@ namespace MindOverMapper_Movim.Controllers
         }
 
         [Authorize]
+        [HttpGet("{uid}/get-concepts")]
+        public ActionResult GetConcepts(string uid)
+        {
+            Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            var concepts = _context.Concept.Where(c => c.ProjectId == proj.Id);
+            return Ok(concepts);
+        }
+
+        [Authorize]
         [HttpPost("submit-question")]
         public ActionResult CreateConceptQuestion([FromBody] QuestionSubmission req)
         {
