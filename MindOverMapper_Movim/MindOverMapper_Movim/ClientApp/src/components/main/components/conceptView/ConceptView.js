@@ -277,6 +277,7 @@ export default class ConceptView extends Component {
                                         <Card style={{ height: 200 }}>
                                             <Paper className='concept-paper'>
                                                     <CardContent id='concept-card-content'>
+
                                                         <Typography gutterBottom variant="h5" component="h2">
                                                             {concept.conceptName}
                                                         </Typography>
@@ -286,11 +287,11 @@ export default class ConceptView extends Component {
                                                         </Typography>
                                                         <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" style={{ fontSize: '1.1em' }}/>
-                                                                <strong>Concept ID:</strong> #{concept.uid}
+                                                                <strong>ID:</strong> #{concept.uid}
                                                         </Typography>
                                                         <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="heart" style={{ fontSize: '1.4em' }}/>
-                                                            <strong>Concept Promise  </strong>{concept.promise}
+                                                            <strong>Promise </strong>{concept.promise}
                                                         </Typography>
                                                     </CardContent>
                                                 <CardActions>

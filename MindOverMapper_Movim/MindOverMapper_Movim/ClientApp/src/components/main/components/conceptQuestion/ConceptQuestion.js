@@ -276,7 +276,7 @@ export default class ConceptQuestion extends Component {
                     </DialogActions>
                   </Dialog>
                 </div>
-                <div >
+                <div>
                   <Dialog
                     open={this.state.successModal}
                     TransitionComponent={Transition}

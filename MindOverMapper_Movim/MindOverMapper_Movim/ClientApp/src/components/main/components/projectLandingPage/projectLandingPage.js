@@ -230,26 +230,6 @@ export default class ProjectLandingPage extends Component {
                                     </li>
                                 </ul>
                             </div>
-
-                            <div class="col-sm card-holder align-self-center">
-                                <Card class="card">
-                                     <CardActionArea onClick={this.pushToMindMap}>
-                                         <CardMedia
-                                             style={{ height: 0, paddingTop: '56.25%' }}
-                                             image={require("../../../../static/ideaPicture.jpg")}
-                                             title="Add Project"
-                                         />
-                                         <CardContent>
-                                             <Typography variant="h5" component="h2">
-                                                 <center>
-                                                     View Mind-Map
-                                                 </center>
-                                             </Typography>
-                                         </CardContent>
-                                     </CardActionArea>
-                                </Card>
-                            </div>
-
                         </div>
 
                         <h2 id="project-options" >Project Options</h2>
@@ -309,8 +289,19 @@ export default class ProjectLandingPage extends Component {
                                     </CardActionArea>
                                 </Card>
                             </div>
-
-
+                            <div class="col-sm-2">
+                                <Card class="card-button-5">
+                                    <CardActionArea onClick={this.pushToMindMap}>
+                                        <CardContent>
+                                            <Typography id="options-label">
+                                                <center>
+                                                    Mind Map
+                                                 </center>
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>
                         </div>
 
 

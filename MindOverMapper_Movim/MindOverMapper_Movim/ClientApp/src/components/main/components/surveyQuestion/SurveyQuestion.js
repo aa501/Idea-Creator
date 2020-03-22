@@ -12,12 +12,18 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import './SurveyQuestion.css';
 
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 export default class SurveyQuestion extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
+            questions: [],
+            numQs: 0,
 
             textSub: '',
             ratingSub: '',
@@ -27,7 +33,9 @@ export default class SurveyQuestion extends Component {
             ratingMinNote: '',
             ratingMaxNote: '',
             ratingQuestion: '',
-            ratingString: ''
+            ratingString: '',
+
+            choices: ''
         }
 
 
@@ -56,13 +64,6 @@ export default class SurveyQuestion extends Component {
         });
     }
 
-
-    handleRating = (event) => {
-        this.setState({
-           ratingQuestion: event.target.value
-        });
-    }
-
     handleRatingMin = (event) => {
         this.setState({
            ratingMinNote: event.target.value
@@ -75,19 +76,65 @@ export default class SurveyQuestion extends Component {
         });
     }
 
-    combineRatingStrings = () =>
+    handleChoices = (event) =>
     {
         this.setState({
-           ratingString: this.state.ratingString.concat('min,', this.state.ratingMinNote, ',max,', this.state.ratingMaxNote)
+           choices: event.target.value
         });
     }
 
     resetFields = () => {
         this.setState({
-            subQuestion: '',
-            qstType: '',
+
+          textSub: '',
+          ratingSub: '',
+          subQuestion: '',
+          checkSub: [],
+
+          ratingMinNote: '',
+          ratingMaxNote: '',
+          ratingQuestion: '',
+          ratingString: '',
+
+          choices: ''
+
         })
     }
+
+    handleCloseErrorModal = () => {
+      this.setState({
+          errorModal: false
+      });
+    }
+
+    openErrorModal = () => {
+      this.setState({
+          errorModal: true
+      });
+    }
+
+    handleCloseSuccessModal = () => {
+      this.setState({
+          successModal: false
+      });
+    }
+
+    openSuccessModal = () => {
+      this.setState({
+          successModal: true
+      });
+    }
+
+    handleQuestion = (ques, type, i) => {
+        console.log(ques)
+        const questions = this.state.questions;
+        questions[i] = ques + ' (' + type + ')';
+        this.setState({
+          questions: questions,
+          numQs: this.state.numQs + 1
+        });
+    }
+
 
     viewProject = () => {
       return this.props.history.push({
@@ -101,15 +148,24 @@ export default class SurveyQuestion extends Component {
       {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
-          'notes': this.state.ratingString,
+          'notes': this.state.ratingString.concat('min,', this.state.ratingMinNote, ',max,', this.state.ratingMaxNote),
           'archived': 'No'
       },
       {
           headers: {
             Authorization: 'Bearer ' + this.state.userData.token
           }
-      });
-    }
+      }).then(() => {
+          //this.openSuccessModal();
+          this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
+          this.resetFields();
+        }).catch(() => {
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'Error: Question could not be created!'
+          });
+        });
+      }
 
     submitTextQuestion = () => {
       axios.post('/api/project/submit-question',
@@ -123,8 +179,41 @@ export default class SurveyQuestion extends Component {
           headers: {
             Authorization: 'Bearer ' + this.state.userData.token
           }
-      });
-    }
+        }).then(() => {
+            //this.openSuccessModal();
+            this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
+            this.resetFields();
+          }).catch(() => {
+            this.openErrorModal();
+            this.setState({
+              errorMessage: 'Error: Question could not be created!'
+            });
+          });
+        }
+
+    submitChoicesQuestion = () => {
+      axios.post('/api/project/submit-question',
+      {
+          'text': this.state.subQuestion,
+          'type': this.state.qstType,
+          'notes': this.state.choices,
+          'archived': 'No'
+      },
+      {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
+        }).then(() => {
+            //this.openSuccessModal();
+            this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
+            this.resetFields();
+          }).catch(() => {
+            this.openErrorModal();
+            this.setState({
+              errorMessage: 'Error: Question could not be created!'
+            });
+          });
+        }
 
     handleChange(e) {
       this.setState({ qstType: e.target.value });
@@ -133,9 +222,10 @@ export default class SurveyQuestion extends Component {
     renderQstDropdown() {
       return(
           <Select id="select" label="Type" className="col-md-8 col-offset-4" value={this.state.qstType} onChange={this.handleChange}>
-                   <MenuItem value="Text">Text</MenuItem>
-                  {/* <MenuItem value="Multiple Choice">Multiple Choice</MenuItem> */}
                    <MenuItem value="Rating">Rating</MenuItem>
+                   <MenuItem value="Text">Text</MenuItem>
+                   <MenuItem value="Multiple Choice">Multiple Choice</MenuItem>
+                   <MenuItem value="Check All">Check All That Apply</MenuItem>
          </Select>
        )
     }
@@ -145,18 +235,20 @@ export default class SurveyQuestion extends Component {
           return(
           <Button color='primary'
             id='submit-question'
-            disabled={this.state.subQuestion === ''}
+            disabled={this.state.subQuestion == ''}
             onClick={this.submitTextQuestion}>
           <FontAwesomeIcon icon="check" /> Submit Question</Button>
         )
       }
-
-      // if (this.state.qstType === "Multiple Choice") {
-      //     return(
-      //     <Button color='primary' id='submit-question' onClick={this.checker}><FontAwesomeIcon icon="check" /> Submit Question</Button>
-      //   )
-      // }
-
+      if (this.state.qstType === "Multiple Choice" || this.state.qstType === "Check All") {
+          return(
+          <Button color='primary'
+            id='submit-question'
+            disabled={this.state.choices == '' || this.state.subQuestion == ''}
+            onClick={this.submitChoicesQuestion}>
+          <FontAwesomeIcon icon="check" /> Submit Question</Button>
+        )
+      }
       if (this.state.qstType === "Rating") {
           return(
           <Button color='primary'
@@ -171,51 +263,83 @@ export default class SurveyQuestion extends Component {
     renderResult() {
       if (this.state.qstType === "Text") {
         return(
+          <Container>
+            <Row>
+              <TextField id="text-field"
+                  value={this.state.subQuestion}
+                  onChange={this.handleSubQuestionChange}
+                  label="Free Response Question"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Enter free response question here..."
+                  variant="outlined">
+                </TextField>
+              </Row>
+            </Container>
+        )
+      }
+      if (this.state.qstType === "Multiple Choice") {
+        return(
           <div>
             <Row>
               <TextField id="text-field"
                   value={this.state.subQuestion}
                   onChange={this.handleSubQuestionChange}
-                  label="Text Answer Question"
+                  label="Multiple Choice Question"
                   multiline
                   rows="3"
                   width="400px"
                   margin="normal"
-                  placeholder="check"
+                  placeholder="Enter multiple choice question only here..."
                   variant="outlined">
-                </TextField>
-              </Row>
-            </div>
+              </TextField>
+              <TextField id="text-field"
+                  value={this.state.choices}
+                  onChange={this.handleChoices}
+                  label="Answer Choices (separate with commas)"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Answer Choices (separate with commas)"
+                  variant="outlined">
+              </TextField>
+            </Row>
+          </div>
         )
       }
-      // if (this.state.qstType === "Multiple Choice") {
-      //   return(
-      //     <div>
-      //       <Row>
-      //         <TextField id="text-field"
-      //             value={this.state.subQuestion}
-      //             onChange={this.handleSubQuestionChange}
-      //             label="Text Answer Question"
-      //             multiline
-      //             rows="3"
-      //             width="400px"
-      //             margin="normal"
-      //             placeholder="check"
-      //             variant="outlined">
-      //         </TextField>
-      //         <TextField id="text-field2"
-      //               value={this.state.subQuestion}
-      //               onChange={this.handleSubQuestionChange}
-      //               label="Answer 1"
-      //               width="400px"
-      //               margin="normal"
-      //               placeholder="check"
-      //               variant="outlined">
-      //         </TextField>
-      //       </Row>
-      //     </div>
-      //   )
-      // }
+      if (this.state.qstType === "Check All") {
+        return(
+          <div>
+            <Row>
+              <TextField id="text-field"
+                  value={this.state.subQuestion}
+                  onChange={this.handleSubQuestionChange}
+                  label="Check All That Apply Question"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Enter check all question only here..."
+                  variant="outlined">
+              </TextField>
+              <TextField id="text-field"
+                  value={this.state.choices}
+                  onChange={this.handleChoices}
+                  label="Answer Choices (separate with commas)"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Answer Choices (separate with commas)"
+                  variant="outlined">
+              </TextField>
+            </Row>
+          </div>
+        )
+      }
       if (this.state.qstType === "Rating") {
         return(
           <div>
@@ -223,39 +347,37 @@ export default class SurveyQuestion extends Component {
             <TextField id="text-field"
                 value={this.state.subQuestion}
                 onChange={this.handleSubQuestionChange}
-                label="Text Answer Question"
+                label="Question to Answer on a Scale"
                 multiline
                 rows="3"
                 width="400px"
+                height="100px"
                 margin="normal"
-                placeholder="check"
+                placeholder="Enter question here..."
                 variant="outlined">
             </TextField>
           </Row>
           <Row>
-            <Col>
             <TextField id="text-field2"
                   value={this.state.ratingMinNote}
                   onChange={this.handleRatingMin}
-                  label="Minimum"
+                  label="Label for Minimum (0)"
                   width="400px"
                   margin="normal"
                   placeholder="check"
                   variant="outlined">
             </TextField>
+          </Row>
+          <Row>
             <TextField id="text-field2"
                   value={this.state.ratingMaxNote}
                   onChange={this.handleRatingMax}
-                  label="Maximum"
+                  label="Label for Maximum (10)"
                   width="400px"
                   margin="normal"
                   placeholder="check"
                   variant="outlined">
             </TextField>
-            </Col>
-              <Col>
-                <Button color='primary' id='Set' disabled={this.state.ratingMinNote == '' || this.state.ratingMaxNote == ''} onClick={this.combineRatingStrings}><FontAwesomeIcon icon="check" /> Set</Button>
-              </Col>
           </Row>
           </div>
         )
@@ -293,6 +415,15 @@ export default class SurveyQuestion extends Component {
                       {this.renderSubmitButton()}
                     </p>
                     </Row>
+
+                    <div>
+                    <p><b>Questions Submitted this Session:</b></p>
+                        {
+                            this.state.questions.map(qsn => (
+                              <p className="question-space">{this.state.numQs}. {qsn}</p>
+                        ))
+                        }
+                    </div>
                 </Container>
             </div>
         );

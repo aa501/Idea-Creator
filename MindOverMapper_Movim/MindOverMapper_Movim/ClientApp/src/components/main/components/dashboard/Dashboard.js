@@ -57,7 +57,7 @@ export default class Dashboard extends Component {
             projectUID: '',
             openSuccessSnackBar: false,
             openErrorSnackBar : false,
-            //imageLinks : [require("../../../../static/Beach.jpg"), require(City), require("../../../../static/Coast.jpg"), 
+            //imageLinks : [require("../../../../static/Beach.jpg"), require(City), require("../../../../static/Coast.jpg"),
               //              require("../../../../static/Field.jpg"), require("../../../../static/Mountain.jpg"), require("../../../../static/Underwater.jpg")]
         }
     }
@@ -74,18 +74,18 @@ export default class Dashboard extends Component {
         this.setState({openSuccessSnackBar : true
         })
     }
-    
+
     handleCloseSuccessSnackBar = () =>  {
         this.setState({openSuccessSnackBar : false})
     }
-    
+
     handleOpenErrorSnackBar = () => {
       this.setState({openErrorSnackBar : true})
     }
 
     handleCloseErrorSnackBar = () =>  {
       this.setState({openErrorSnackBar : false})
-    }    
+    }
 
     handleProjectNameChange = (event) => {
         this.setState({
@@ -353,7 +353,7 @@ export default class Dashboard extends Component {
         return (
             <div className='dashboard-container'>
 
-              
+
                 <SideNav
                     onSelect={(selected) => {
                         // Add your code here
@@ -361,10 +361,10 @@ export default class Dashboard extends Component {
                 >
 
                  <SideNav.Toggle />
-                 
+
                     <SideNav.Nav defaultSelected="">
 
-                        
+
                         <NavItem role="menuitem" eventKey="home">
                             <NavIcon>
                                     <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.75em' }} />
@@ -373,7 +373,7 @@ export default class Dashboard extends Component {
                             <NavText id="nav-text" style={{paddingTop: 13, paddingRight: 32, fontSize: 18}}>
                                 Home
                             </NavText>
-                            
+
                         </NavItem>
 
                         <NavItem eventKey="charts">
@@ -440,15 +440,15 @@ export default class Dashboard extends Component {
                         </NavItem>
 
 
-                    </SideNav.Nav>           
-                  
+                    </SideNav.Nav>
+
                </SideNav>
-              
-          
+
+
 
 
                 <div class="row" id="background-projects">
-                    
+
 
 
 
@@ -541,7 +541,7 @@ export default class Dashboard extends Component {
                         </div>
 
 
-                   
+
                 </div>
 
 
@@ -580,8 +580,7 @@ export default class Dashboard extends Component {
                         keepMounted
                         maxWidth='xl'
                         aria-labelledby="alert-dialog-slide-title"
-                        aria-describedby="alert-dialog-slide-description"
-                    >
+                        aria-describedby="alert-dialog-slide-description">
                         <DialogTitle >
                             {"Learn More"}
                         </DialogTitle>

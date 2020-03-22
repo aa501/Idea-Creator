@@ -101,6 +101,8 @@ export default class SurveyBuilder extends Component {
                     </Row>
                 </Container>
             </div>
+
+
         );
     }
 }

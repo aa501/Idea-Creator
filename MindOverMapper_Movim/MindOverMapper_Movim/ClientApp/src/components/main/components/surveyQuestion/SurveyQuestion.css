@@ -136,6 +136,11 @@
     margin-top: 1vh;
 }
 
+.question-space{
+    margin-bottom: 1vh;
+}
+
+
 #projectLink-input{
     height: 20px;
     width: 400px;
