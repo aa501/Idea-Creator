@@ -6,7 +6,7 @@ import { SurveyEnd } from './components/surveyend/SurveyEnd';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminPanel from './components/main/components/admin/AdminPanel';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faCog, faCircleNotch,faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream, faAngleDoubleRight, faArrowRight, faArrowLeft, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faCog, faCircleNotch,faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream, faAngleDoubleRight, faArrowRight, faArrowLeft, faHeart, faCogs, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
   faIgloo,
@@ -48,7 +48,9 @@ library.add(
   faAngleDoubleRight,
   faArrowLeft,
   faArrowRight,
-  faHeart
+  faHeart,
+  faCogs,
+  faQuestion
   )
 
 export default class App extends Component {

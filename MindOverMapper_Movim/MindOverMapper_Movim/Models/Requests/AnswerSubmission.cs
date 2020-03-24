@@ -3,7 +3,7 @@ namespace MindOverMapper_Movim.Models
 {
     public partial class AnswerSubmission
     {
-      public int Qid { get; set; }
-      public string Answer { get; set; }
+      public string Cuid { get; set; }
+      public string[] AnswerList { get; set; }
     }
 }

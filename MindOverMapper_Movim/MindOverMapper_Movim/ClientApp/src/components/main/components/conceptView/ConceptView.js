@@ -37,6 +37,20 @@ function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
+function getIndex(array, value) {
+    console.log(array);
+    for (var i = 0; i < array.length; i+=1)
+    {
+      if (array[i].qid == value)
+      {
+        console.log(i)
+        return i;
+      }
+    }
+    console.log("Search failed")
+    return -1;
+}
+
 export default class ConceptView extends Component {
     constructor(props) {
         super(props);
@@ -44,8 +58,11 @@ export default class ConceptView extends Component {
             projectName: this.props.location.state.projectName,
             userData: this.props.location.state.userData || this.props.userData,
             concepts: this.props.location.state.concepts,
-            shareModal: false,
+            questionModal: false,
+            oldQuestionModal: false,
             learnModal: false,
+            conceptUid: '',
+            conceptName: '',
             newsHeadline: '',
             customer: '',
             customerProblem: '',
@@ -54,32 +71,125 @@ export default class ConceptView extends Component {
             price: '',
             passion: '',
             deathThreats: '',
+            questions: [],
+            answers: [],
+            newAnswers: [],
+            updatedAnswers: [],
+            answerQueue: '',
+            combinedAnswered: [],
+            unansweredQuestions: [],
             openSuccessSnackBar: false,
             openErrorSnackBar : false,
+            completedConcept: false,
             //imageLinks : [require("../../../../static/Beach.jpg"), require(City), require("../../../../static/Coast.jpg"),
               //              require("../../../../static/Field.jpg"), require("../../../../static/Mountain.jpg"), require("../../../../static/Underwater.jpg")]
         }
     }
 
     componentDidMount = () => {
+        this.getQuestions();
         console.log(this.props);
     }
 
-    handleOpenSuccessSnackBar = () => {
-        this.setState({openSuccessSnackBar : true
-        })
+    getQuestions = async () => {
+        const response = await axios.get('/api/project/questions', {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+            }
+        }).then(response => {
+            response = response.data;
+            this.setState({
+                questions: response,
+                test: response.length
+            });
+        });
     }
 
-    handleCloseSuccessSnackBar = () =>  {
-        this.setState({openSuccessSnackBar : false})
+
+    getAnswers = async (uid) => {
+        if (uid != null) {
+            console.log(uid);
+            const response = await axios.get(`/api/project/${uid}/answers`, {
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+                }
+            }).then(response => {
+                response = response.data;
+                this.setState({
+                    answers: response
+                }, () => (console.log(this.state.answers)));
+            });
+        };
     }
 
-    handleOpenErrorSnackBar = () => {
-      this.setState({openErrorSnackBar : true})
+    handleCloseErrorModal = () => {
+      this.setState({
+          errorModal: false,
+          learnModal: false,
+          questionModal: false,
+          oldQuestionModal: false,
+      });
     }
 
-    handleCloseErrorSnackBar = () =>  {
-      this.setState({openErrorSnackBar : false})
+    openErrorModal = () => {
+      this.setState({
+          errorModal: true
+      });
+    }
+
+    handleOpenLearnModal = (concept) => {
+        this.setState({
+            learnModal: true,
+            conceptUid: concept.uid,
+            conceptName: concept.conceptName,
+            newsHeadline: concept.newsHeadline,
+            customer: concept.customer,
+            customerProblem: concept.customerProblem,
+            benefitPromise: concept.promise,
+            proof: concept.proof,
+            price: concept.price,
+            passion: concept.passion,
+            deathThreats: concept.deathThreats,
+            completedConcept: true
+          }, () => {
+          this.getAnswers(concept.uid);
+        });
+      }
+
+    handleOpenQuestionModal = async (concept) => {
+        console.log(this.state.answers);
+        this.computeArrays();
+        this.setState({
+            learnModal: false,
+            questionModal: true,
+        });
+    }
+
+    handleCloseLearnModal = () => {
+        this.setState({
+            learnModal: false,
+            completedConcept: false
+        });
+    }
+
+    handleOpenOldQuestionModal = () => {
+        this.setState({
+            oldQuestionModal: true,
+            questionModal: false
+        });
+    }
+
+    handleCloseOldQuestionModal = () => {
+        this.setState({
+            oldQuestionModal: false,
+        });
+    }
+
+
+    handleCloseQuestionModal = () => {
+        this.setState({
+            questionModal: false
+        });
     }
 
     resetFields = () => {
@@ -141,6 +251,130 @@ export default class ConceptView extends Component {
             deathThreats: event.target.value
         });
     }
+
+    handleAnswer = (event, i) => {
+        console.log(event.target.value)
+        const newAnswers = this.state.newAnswers;
+        newAnswers[i] = event.target.value;
+        this.setState({ newAnswers });
+    }
+
+    handleUpdatedAnswer = (event, i) => {
+        const answers = this.state.answers;
+        console.log(answers);
+        var el = getIndex(answers, i);
+        console.log(el);
+        answers[el].answer = event.target.value;
+        this.setState({ answers });
+        console.log(this.state.answers);
+    }
+
+    computeArrays = () => {
+        var ids = [];
+        var answered = [];
+        var unanswered = [];
+        this.state.answers.forEach(answer => ids.push(answer.qid))
+        console.log(ids);
+        this.state.questions.forEach(function(question) {
+          if (ids.includes(question.id))
+          {
+            console.log("Found: " + question.id + " in answered questions.");
+            answered.push(question);
+          }
+          else
+          {
+            console.log("Didn't find: " + question.id + " in answered questions.");
+            unanswered.push(question);
+          }
+        });
+        console.log(answered);
+        console.log(unanswered);
+
+        var ansQns = this.state.answers.map ( function(x, i){
+          return {"answer": x, "question": answered[i]}
+        }.bind(this));
+
+        this.setAnswered(ansQns, unanswered);
+    }
+
+    setAnswered = (ans, unans) =>
+    {
+        this.setState({
+          combinedAnswered: ans,
+          unansweredQuestions: unans
+        }, () =>
+        console.log(this.state.unansweredQuestions));
+    }
+
+
+    updateConcept = async () => {
+        console.log(this.state.conceptUid)
+
+        axios.put(`/api/project/${this.state.conceptUid}/update-concept`,
+            {
+                'conceptName': this.state.conceptName,
+                'newsHeadline': this.state.newsHeadline,
+                'customer': this.state.customer,
+                'customerProblem': this.state.customerProblem,
+                'promise': this.state.benefitPromise,
+                'proof': this.state.proof,
+                'price': this.state.price,
+                'passion': this.state.passion,
+                'deathThreats': this.state.deathThreats,
+                'projectUid': this.state.projectName.uid,
+                'answerList': [],
+            },
+          {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
+        }
+      ).then(this.handleOpenQuestionModal).catch(() => {
+        this.openErrorModal();
+        this.setState({
+          errorMessage: 'Error: Concept could not be updated!'
+        });
+      });
+    }
+
+
+    submitAnswers = async () => {
+        axios.post(`/api/project/post-answer`,
+              {
+                  'cuid': this.state.conceptUid,
+                  'answerList': this.state.newAnswers,
+              },
+            {
+            headers: {
+              Authorization: 'Bearer ' + this.state.userData.token
+            }
+          }
+        ).then(this.handleOpenOldQuestionModal).catch(() => {
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'Error: Concept could not be updated!'
+          });
+        });
+      }
+
+      updateAnswers = () => {
+          const answers = this.state.answers;
+          answers.forEach(answer =>
+          (
+            axios.put(`/api/project/update-answer`,
+                {
+                    'uid': answer.uid,
+                    'answer': answer.answer,
+                },
+              {
+              headers: {
+                Authorization: 'Bearer ' + this.state.userData.token
+              }
+            }
+          )
+        ));
+        this.handleCloseOldQuestionModal();
+      };
 
 
     copyToClipboard = () => {
@@ -266,16 +500,12 @@ export default class ConceptView extends Component {
                 <div class="row" id="background-concepts">
                         <h3 id="page-title">Concepts for {this.state.projectName.title}</h3>
                         <div className='concept-board-body'>
-                            {this.state.concepts.length === 0 ? (
-                                <img src={noProjectImage} id='no-projects-image' alt="No Concepts Found" />
-
-                            ) : (<div></div>)}
-                            {/* TODO: Have to make this conditional render, render the project tiles */}
                             {this.state.concepts.map((concept, index) => {
                                 return (
                                     <div class='concept-paper-holder'>
                                         <Card style={{ height: 200 }}>
                                             <Paper className='concept-paper'>
+                                                <CardActionArea onClick={() => this.handleOpenLearnModal(concept)}>
                                                     <CardContent id='concept-card-content'>
 
                                                         <Typography gutterBottom variant="h5" component="h2">
@@ -294,6 +524,7 @@ export default class ConceptView extends Component {
                                                             <strong>Promise </strong>{concept.promise}
                                                         </Typography>
                                                     </CardContent>
+                                                </CardActionArea>
                                                 <CardActions>
                                                     <div id='share-learn-container'>
                                                         <Button id='learn-button' size="small" color="info">
@@ -331,8 +562,250 @@ export default class ConceptView extends Component {
                                         </Paper>
                                     </Card>
                                 </div>
+                            </div>
+
+                            <div>
+                                <Dialog id="learn-dialog"
+                                    open={this.state.learnModal}
+                                    TransitionComponent={Transition}
+                                    keepMounted
+                                    maxWidth='xl'
+                                    aria-labelledby="alert-dialog-slide-title"
+                                    aria-describedby="alert-dialog-slide-description">
+                                    <DialogTitle >
+                                        {"Manage Concept"}
+                                    </DialogTitle>
+                                    <DialogContent dividers>
+                                        <Container id='tainer'>
+                                        <div className='concept-name-holder'>
+                                              <TextField id="concept-name-field"
+                                                value={this.state.conceptName}
+                                                onChange={this.handleConceptNameChange}
+                                                label="Name"
+                                                multiline
+                                                margin="dense"
+                                                placeholder="Enter Concept Name..."
+                                                variant="outlined">
+                                               </TextField>
+                                          </div>
+                                          <Row id='r-and-d-col'>
+                                              <Col>
+                                                  <TextField id="full-concept-field"
+                                                      value={this.state.newsHeadline}
+                                                      onChange={this.handleNewsHeadlineChange}
+                                                      label="News Headline"
+                                                      placeholder="Enter the big idea for this concept..."
+                                                      multiline
+                                                      rows="2"
+                                                      margin="normal"
+                                                      variant="outlined">
+                                                  </TextField>
+                                              </Col>
+                                          </Row>
+                                          <Row>
+                                              <Col md={{ span: 6, offset: 0 }} >
+                                                  <TextField id="concept-field"
+                                                      value={this.state.customer}
+                                                      onChange={this.handleCustomerChange}
+                                                      label="Customer"
+                                                      placeholder="Enter your customer for this concept..."
+                                                      multiline
+                                                      rows="2"
+                                                      margin="normal"
+                                                      variant="outlined">
+                                                  </TextField>
+                                              </Col>
+                                              <Col md={{ span: 5, offset: 0 }} >
+                                                  <TextField id="concept-field"
+                                                      value={this.state.customerProblem}
+                                                      onChange={this.handleCustomerProblemChange}
+                                                      label="Customer Problem"
+                                                      placeholder="Enter the customer problem you're trying to solve..."
+                                                      multiline
+                                                      rows="2"
+                                                      margin="normal"
+                                                      variant="outlined">
+                                                  </TextField>
+                                              </Col>
+                                          </Row>
+                                          <Row>
+                                              <Col md={{ span: 6, offset: 0 }} >
+                                                  <TextField id="concept-field"
+                                                      value={this.state.benefitPromise}
+                                                      onChange={this.handleBenefitPromiseChange}
+                                                      label="Benefit Promise"
+                                                      placeholder="Enter what you're promising as a benefit to your customer..."
+                                                      multiline
+                                                      rows="2"
+                                                      margin="normal"
+                                                      variant="outlined">
+                                                  </TextField>
+                                              </Col>
+                                              <Col md={{ span: 5, offset: 0 }} >
+                                                <TextField id="concept-field"
+                                                    value={this.state.proof}
+                                                    onChange={this.handleProofChange}
+                                                    label="Proof"
+                                                    multiline
+                                                    rows="3"
+                                                    margin="normal"
+                                                    placeholder="Enter proof that your concept can work..."
+                                                    variant="outlined">
+                                                </TextField>
+                                              </Col>
+                                            </Row>
+                                            <Row>
+                                              <Col md={{ span: 6, offset: 0 }} >
+                                                <TextField id="concept-field"
+                                                    value={this.state.price}
+                                                    onChange={this.handlePriceChange}
+                                                    label="Price"
+                                                    placeholder="Enter your price for this concept..."
+                                                    multiline
+                                                    rows="2"
+                                                    margin="normal"
+                                                    variant="outlined">
+                                                </TextField>
+                                              </Col>
+                                            <Col md={{ span: 5, offset: 0 }} >
+                                              <TextField id="concept-field"
+                                                  value={this.state.passion}
+                                                  onChange={this.handlePassionChange}
+                                                  label="Passion"
+                                                  multiline
+                                                  rows="3"
+                                                  margin="normal"
+                                                  placeholder="Enter your passion for this concept..."
+                                                  variant="outlined">
+                                              </TextField>
+                                            </Col>
+                                          </Row>
+                                          <Row>
+                                            <Col md={{ span: 6, offset: 0 }} >
+                                              <TextField id="concept-field"
+                                                  value={this.state.deathThreats}
+                                                  onChange={this.handleDeathThreatsChange}
+                                                  label="Death Threats"
+                                                  multiline
+                                                  rows="3"
+                                                  margin="normal"
+                                                  placeholder="Enter any potential threats to the success of this project..."
+                                                  variant="outlined">
+                                                </TextField>
+                                            </Col>
+                                          </Row>
+                                          <Row>
+                                            <Col>
+
+                                            </Col>
+                                          </Row>
+                                        </Container>
+                                    </DialogContent>
+
+
+                                    <DialogActions>
+                                        <Button color="danger" onClick={this.handleCloseLearnModal}>Don't Save</Button>
+                                        <Button color="primary" disabled={this.state.conceptName.length <= 0} onClick={() => { this.updateConcept() }}>Save & Continue</Button>
+                                    </DialogActions>
+                                </Dialog>
                         </div>
-                </div>
+
+                        <div>
+                          <Dialog id="questions-dialog"
+                              open={this.state.questionModal}
+                              TransitionComponent={Transition}
+                              keepMounted
+                              maxWidth='xl'
+                              aria-labelledby="alert-dialog-slide-title"
+                              aria-describedby="alert-dialog-slide-description">
+                          <DialogContent>
+                            <Container>
+                                <h4>Answer all that may apply.</h4>
+                                <div>
+                                {
+                                      this.state.unansweredQuestions.map(qsn => (
+                                      <div>
+                                              <div key={`qText${qsn.id}`}>{qsn.text}</div>
+                                              <TextField key={`qsn${qsn.id}`}
+                                                  onChange={(event) => this.handleAnswer(event, `${qsn.id}`)}
+                                                  multiline
+                                                  rows="3"
+                                                  fullWidth
+                                                  variant="outlined">
+                                              </TextField>
+                                              <p></p>
+                                      </div>
+                                  ))
+                                }
+                                </div>
+                            </Container>
+                          </DialogContent>
+                          <DialogActions>
+                              <Button color="danger" onClick={this.handleCloseQuestionModal}>Don't Save</Button>
+                              <Button color="primary" disabled={this.state.conceptName.length <= 0} onClick={() => { this.submitAnswers() }}>Save & Continue</Button>
+                          </DialogActions>
+                      </Dialog>
+                  </div>
+
+                  <div>
+                    <Dialog id="old-questions-dialog"
+                        open={this.state.oldQuestionModal}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        maxWidth='xl'
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description">
+                    <DialogContent>
+                      <Container>
+                          <h4>Answer all that may apply.</h4>
+                          <div>
+                              {
+                                  this.state.combinedAnswered.map(qsn => (
+                                  <div>
+                                          <div key={`qText${qsn.question.id}`}>{qsn.question.text}</div>
+                                          <TextField key={`qsn${qsn.question.id}`}
+                                              defaultValue={qsn.answer.answer}
+                                              onChange={(event) => this.handleUpdatedAnswer(event, `${qsn.question.id}`)}
+                                              multiline
+                                              rows="3"
+                                              fullWidth
+                                              variant="outlined">
+                                          </TextField>
+                                          <p></p>
+                                  </div>
+                                ))
+                              }
+                          </div>
+                      </Container>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color="danger" onClick={this.handleCloseOldQuestionModal}>Don't Save</Button>
+                        <Button color="primary" disabled={this.state.conceptName.length <= 0} onClick={() => { this.updateAnswers() }}>Save & Finish</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+
+            <div>
+              <Dialog
+                open={this.state.errorModal}
+                TransitionComponent={Transition}
+                keepMounted
+                maxWidth='lg'
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+              >
+                <DialogTitle id="responsibe-alert-dialog-slide-title">
+                  {this.state.errorMessage}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={this.handleCloseErrorModal} color="primary">
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
+
+              </div>
             </div>
 
 
