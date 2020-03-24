@@ -137,6 +137,18 @@ export default class ConceptView extends Component {
       });
     }
 
+    handleCloseSuccessModal = () => {
+      this.setState({
+          successModal: false
+      });
+    }
+
+    openSuccessModal = () => {
+      this.setState({
+          successModal: true
+      });
+    }
+
     handleOpenLearnModal = (concept) => {
         this.setState({
             learnModal: true,
@@ -358,23 +370,35 @@ export default class ConceptView extends Component {
       }
 
       updateAnswers = () => {
-          const answers = this.state.answers;
-          answers.forEach(answer =>
-          (
-            axios.put(`/api/project/update-answer`,
+        try {
+            const answers = this.state.answers;
+            answers.forEach(answer =>
+            (
+              axios.put(`/api/project/update-answer`,
+                  {
+                      'uid': answer.uid,
+                      'answer': answer.answer,
+                  },
                 {
-                    'uid': answer.uid,
-                    'answer': answer.answer,
-                },
-              {
-              headers: {
-                Authorization: 'Bearer ' + this.state.userData.token
+                headers: {
+                  Authorization: 'Bearer ' + this.state.userData.token
+                }
               }
-            }
-          )
-        ));
-        this.handleCloseOldQuestionModal();
-      };
+            )
+          ));
+          this.handleCloseOldQuestionModal();
+          this.openSuccessModal();
+          this.setState({
+            successMessage: 'Concept ' + this.state.conceptName + ' and your questions have successfully been updated!'
+          });
+        }
+        catch (e) {
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'Error: Concept could not be created!'
+          });
+        }
+      }
 
 
     copyToClipboard = () => {
@@ -792,13 +816,31 @@ export default class ConceptView extends Component {
                 keepMounted
                 maxWidth='lg'
                 aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-              >
+                aria-describedby="alert-dialog-slide-description">
                 <DialogTitle id="responsibe-alert-dialog-slide-title">
                   {this.state.errorMessage}
                 </DialogTitle>
                 <DialogActions>
                   <Button onClick={this.handleCloseErrorModal} color="primary">
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
+            <div>
+
+              <Dialog
+                open={this.state.successModal}
+                TransitionComponent={Transition}
+                keepMounted
+                maxWidth='lg'
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description">
+                <DialogTitle id="responsibe-alert-dialog-slide-title">
+                  {this.state.successMessage}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={this.handleCloseSuccessModal} color="primary">
                     Close
                   </Button>
                 </DialogActions>
