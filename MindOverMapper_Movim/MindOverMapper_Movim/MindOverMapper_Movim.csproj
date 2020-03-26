@@ -40,6 +40,10 @@
     <None Remove="Artifacts\wordnet\.data.noun.icloud" />
     <None Remove="Artifacts\wordnet\.index.sense.icloud" />
     <None Remove="Artifacts\wordnet\index.verb" />
+    <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.js" />
+    <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.css" />
+    <None Include="**/*" />
+    <None Include="**/*" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,7 +12,6 @@ import ConceptView from './components/conceptView/ConceptView.js';
 import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 import QuestionEditor from './components/questionEditor/QuestionEditor.js';
 import SurveyQuestion from './components/surveyQuestion/SurveyQuestion.js';
-import SurveyBuilder from './components/surveyBuilder/SurveyBuilder.js';
 import ProjectLandingPage from './components/projectLandingPage/projectLandingPage.js';
 import ProjectPrototype from './components/projectprototype/ProjectPrototype.js';
 
@@ -52,7 +51,6 @@ export class Main extends Component {
                         <Route path='/project-landing-page' component={ProjectLandingPage} />
                         <Route path='/add-prototype' component={ProjectPrototype} />
                         <Route path='/survey-question' component={SurveyQuestion} />
-                        <Route path='/survey-builder' component={SurveyBuilder} />
 
                     </Layout>
                 ): (null)}

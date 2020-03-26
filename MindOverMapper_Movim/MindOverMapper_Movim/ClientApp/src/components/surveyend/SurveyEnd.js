@@ -9,7 +9,10 @@ import Slide from '@material-ui/core/Slide';
 import logo from '../../static/Logo.png';
 import light from '../../static/Light.jpg'
 import './SurveyEnd.css';
+import { Route } from 'react-router';
+import { LayoutS } from './navigation/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SurveyView from './components/surveyView/SurveyView.js';
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
@@ -32,29 +35,14 @@ export class SurveyEnd extends Component {
     }
 
     render() {
-        return (
-            <div id='page-holder'>
-                <img className='background' src={light}/>
-                <div id='login-holder'>
-                    <div id='login-container'>
-                        <div id='logo-holder-logo' class="col-row">
-
-
-                            <img id='login-logo' alt="Login Logo" src={logo} />
-
-
-                        </div>
-
-
-                        <div id='logo-holder-text' class="row-md">
-
-                            <text id='logo-name-text'>Idea Creator</text>
-
-                        </div>
-                        <text id="label_temp">Survey Input/Button</text>
-                    </div>
-                </div>
-            </div>
-        );
+          return (
+              <div>
+                  {this.state ? (
+                      <LayoutS>
+                          <Route exact path='/survey-view' component={SurveyView} />
+                      </LayoutS>
+                  ): (null)}
+              </div>
+              );
     }
 }

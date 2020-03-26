@@ -143,6 +143,13 @@ export default class SurveyQuestion extends Component {
       });
     }
 
+    surveySample = () => {
+      return this.props.history.push({
+          pathname: '/survey-builder',
+          state: this.state
+      });
+    }
+
     submitRatingQuestion = () => {
       axios.post('/api/project/submit-question',
       {
@@ -395,6 +402,11 @@ export default class SurveyQuestion extends Component {
                   <Col md={{ span: 2, offset: 5 }}>
                       <div id="conceptButton" align="right">
                           <Button id="opt" onClick={this.viewProject}><FontAwesomeIcon icon="arrow-left" />  Back to Project</Button>
+                      </div>
+                  </Col>
+                  <Col md={{ span: 2, offset: 0 }}>
+                      <div id="conceptButton" align="right">
+                          <Button id="opt" onClick={this.surveySample}><FontAwesomeIcon /> Formatting Testing</Button>
                       </div>
                   </Col>
               </Row>

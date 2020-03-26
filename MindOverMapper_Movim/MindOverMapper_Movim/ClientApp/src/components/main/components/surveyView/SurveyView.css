@@ -17,6 +17,14 @@
     margin-right: 10%;
 }
 
+.testing{
+    text-align: right;
+}
+
+.rating-div{
+  max-width: 330px;
+}
+
 .project-creator-header{
     flex-direction: row;
     margin-left: 5%;
