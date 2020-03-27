@@ -22,7 +22,11 @@
 }
 
 .rating-div{
-  max-width: 330px;
+  max-width: 364px;
+}
+
+.checktest{
+  text-align: justify;
 }
 
 .project-creator-header{

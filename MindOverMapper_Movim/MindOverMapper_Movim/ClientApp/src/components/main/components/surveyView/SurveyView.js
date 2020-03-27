@@ -87,7 +87,7 @@ export default class SurveyView extends Component {
         return (
             <div className='concept-question-container'>
                 <h3 className="page-title">Create Survey Question</h3>
-                <Container color="black">
+                <Container>
                 The problem with the above occurs when the browser window is smaller than the width of the element. The browser then adds a horizontal scrollbar to the page.
                 <div class="rating-div">
                 <Grid container direction="column" justify="center" alignItems="stretch" spacing={2}>

@@ -39,7 +39,7 @@ export class SurveyEnd extends Component {
               <div>
                   {this.state ? (
                       <LayoutS>
-                          <Route exact path='/survey-view' component={SurveyView} />
+                          <Route exactpath='/survey-view' component={SurveyView} />
                       </LayoutS>
                   ): (null)}
               </div>
