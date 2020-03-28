@@ -32,7 +32,7 @@ export class NavMenuS extends Component {
 
         <Navbar className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-3" dark expand="xl">
           <div id='naviboi'>
-            <NavbarBrand id='nav-text-accru' tag={Link} to={{ pathname: '/survey-view', state: {}}}>
+            <NavbarBrand id='nav-text-accru'>
                 <span id ='title-image'>
                     <img src={logo} width = "50"/>
                 </span>

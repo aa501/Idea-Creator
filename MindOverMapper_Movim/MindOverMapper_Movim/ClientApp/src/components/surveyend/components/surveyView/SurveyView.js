@@ -33,6 +33,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function getStringSection (str, d) {
+  if (str !=  null) {
+    var result = str.split(',');
+    return result[d]
+  }
+}
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 export default class SurveyView extends Component {
     constructor(props) {
@@ -41,13 +51,40 @@ export default class SurveyView extends Component {
             subQuestion: '',
             qstType: '',
             answers: [],
+            ratings: [],
+            questions: [],
             checkedHold: [],
         }
     }
 
     componentDidMount = () => {
-        console.log(this.props)
+        console.log(this.props);
+        this.getQuestions();
     }
+
+    getQuestions = async () => {
+        const response = await axios.get('/api/project/retrieve-survey', {
+        }).then(response => {
+            response = response.data;
+            this.setState({
+                questions: response,
+                test: response.length
+            });
+        });
+    }
+
+    submitAnswers = async () => {
+        axios.post(`/api/project/post-survey-answer`,
+              {
+                  'answerList': this.state.newAnswers,
+              },
+        ).then(this.handleOpenOldQuestionModal).catch(() => {
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'Before submitting we need to figure out our survey submission plans'
+          });
+        });
+      }
 
     resetFields = () => {
         this.setState({
@@ -58,159 +95,130 @@ export default class SurveyView extends Component {
       this.setState({ qstType: event.target.value });
     }
 
-    handleRating = (event) => {
-      this.setState({
-        rating: event.target.value
-      });
+    handleRatingMaster = (event, i) => {
+      this.handleRating(event, i);
+      this.handleAnswer(event, i);
     }
 
-    setRadio = (event) => {
+    handleRating = (event, i) => {
+      console.log(event.target.value)
+      this.setState({
+          rating: event.target.value
+      });
+      const ratings = this.state.ratings;
+      ratings[i] = event.target.value;
+      this.setState({ ratings });
+    }
+
+    handleRadioMaster = (event, i) => {
+      this.handleRadio(event);
+      this.handleAnswer(event, i);
+    }
+
+    handleRadio = (event) => {
       this.setState({
         radio: event.target.value
       });
     }
 
-    setRadio = (event) => {
+    handleAnswer = (event, i) => {
+        this.setState({
+            answerQueue: event.target.value
+        });
+        const answers = this.state.answers;
+        answers[i] = event.target.value;
+        this.setState({ answers }, () =>
+        (console.log(this.state.answers)));
+    }
+
+    handleCloseErrorModal = () => {
       this.setState({
-        radio: event.target.value
+          errorModal: false,
+          learnModal: false,
+          questionModal: false,
+          oldQuestionModal: false,
       });
     }
 
-    handleChecked(e) {
-      const item = e.target.name;
-      const isChecked = e.target.checked;
+    openErrorModal = () => {
+      this.setState({
+          errorModal: true
+      });
+    }
+
+    handleChecked(event, i) {
+      const item = event.target.name;
+      const isChecked = event.target.checked;
       const checkedArray = this.state.checkedHold;
+      const finalArray = [];
 
       if (isChecked == true) {
         checkedArray.push(item)
-        this.setState({ checkedHold: checkedArray });
+        this.setState({ checkedHold: checkedArray }, () =>
+        (this.addCheckedAnswer(checkedArray, i)));
       }
 
       else {
         var newArray = [];
         newArray = checkedArray.filter(el => el !== item)
-        this.setState({ checkedHold: newArray });
-      }
-
-      console.log(this.state.checkedHold)
-    }
-
-    checkVal() {
-      return(
-        <div>{this.state.checkedHold}</div>
-      )
-    }
-
-    renderQstDropdown() {
-      return(
-          <Select id="select" label="Type" className="col-md-8 col-offset-4" value={this.state.qstType} onChange={this.handleChange}>
-                   <MenuItem value="Rating">Rating</MenuItem>
-                   <MenuItem value="Text">Text</MenuItem>
-                   <MenuItem value="Multiple Choice">Multiple Choice</MenuItem>
-                   <MenuItem value="Check All">Check All That Apply</MenuItem>
-         </Select>
-       )
-    }
-
-    renderSubmitButton() {
-      if (this.state.qstType === "Text") {
-          return(
-          <Button color='primary'
-            id='submit-question'
-            disabled={this.state.subQuestion == ''}
-            onClick={this.submitTextQuestion}>
-          <FontAwesomeIcon icon="check" /> Submit Question</Button>
-        )
-      }
-      if (this.state.qstType === "Multiple Choice" || this.state.qstType === "Check All") {
-          return(
-          <Button color='primary'
-            id='submit-question'
-            disabled={this.state.choices == '' || this.state.subQuestion == ''}
-            onClick={this.submitChoicesQuestion}>
-          <FontAwesomeIcon icon="check" /> Submit Question</Button>
-        )
-      }
-      if (this.state.qstType === "Rating") {
-          return(
-          <Button color='primary'
-            id='submit-question'
-            disabled={this.state.ratingMinNote == '' || this.state.ratingMaxNote == '' || this.state.subQuestion == ''}
-            onClick={this.submitRatingQuestion}>
-          <FontAwesomeIcon icon="check" /> Submit Question</Button>
-        )
+        this.setState({ checkedHold: newArray }, () =>
+        (this.addCheckedAnswer(newArray, i)));
       }
     }
 
-    renderResult() {
-      if (this.state.qstType === "Text") {
+    addCheckedAnswer(arr, i) {
+      const answers = this.state.answers;
+      answers[i] = arr;
+      this.setState({ answers }, () =>
+      (console.log(this.state.answers)));
+    }
+
+    renderResult(qsn) {
+      var type = qsn.type;
+      if (type === "Text" || type === "Concept") {
         return(
           <Container>
-            <Row>The problem with the above occurs when the browser window is smaller than the width of the element. The browser then adds a horizontal scrollbar to the page.
-            </Row>
             <Row>
               <TextField id="text-field"
-                  value={this.state.subQuestion}
-                  onChange={this.handleSubQuestionChange}
-                  label="Free Response Question"
+                  onChange={(event) => this.handleAnswer(event, `${qsn.id}`)}
                   multiline
                   rows="3"
                   width="400px"
                   margin="normal"
-                  placeholder="Enter free response question here..."
+                  placeholder="Your answer..."
                   variant="outlined">
                 </TextField>
               </Row>
             </Container>
         )
       }
-      if (this.state.qstType === "Multiple Choice") {
+      if (type === "Multiple Choice") {
         return(
           <div>
-            <Row>
-            The problem with the above occurs when the browser window is smaller than the width of the element. The browser then adds a horizontal scrollbar to the page.
-
-              <RadioGroup defaultValue="female" aria-label="gender" name="customized-radios" value={this.state.radio} onChange={this.setRadio}>
-                <FormControlLabel value="Choice 1" control={<Radio color="primary" />} label="Choice 1" />
-                <FormControlLabel value="Choice 2" control={<Radio color="primary" />} label="Choice 2" />
-                <FormControlLabel value="Choice 3" control={<Radio color="primary" />} label="Choice 3" />
-                <FormControlLabel value="Choice 4" control={<Radio color="primary" />} label="Choice 4" />
-
-              </RadioGroup>
-            </Row>
+            {this.createAnswerChoiceArray(qsn, "mc")}
           </div>
         )
       }
-      if (this.state.qstType === "Check All") {
+      if (type === "Check All") {
         return(
           <div>
-          <Row>The problem with the above occurs when the browser window is smaller than the width of the element. The browser then adds a horizontal scrollbar to the page.</Row>
-          <Row><FormControlLabel control={<Checkbox color="teal" name="Answer1" checked={this.state.checked} onChange={(e) => this.handleChecked(e)}/>}
-                  label="Answer1" labelPlacement="end"/></Row>
-          <Row><FormControlLabel control={<Checkbox color="teal" name="Answer2" checked={this.state.checked} onChange={(e) => this.handleChecked(e)}/>}
-                  label="Answer2" labelPlacement="end"/></Row>
-          <Row><FormControlLabel control={<Checkbox color="teal" name="Answer3" checked={this.state.checked} onChange={(e) => this.handleChecked(e)}/>}
-                  label="Answer3" labelPlacement="end"/></Row>
-          <Row><FormControlLabel control={<Checkbox color="teal" name="Answer4" checked={this.state.checked} onChange={(e) => this.handleChecked(e)}/>}
-                  label="Answer4" labelPlacement="end"/></Row>
+            {this.createAnswerChoiceArray(qsn, "ca")}
           </div>
 
         )
       }
-      if (this.state.qstType === "Rating") {
+      if (type === "Rating") {
         return(
           <div class="rating-div">
-          The problem with the above occurs when the browser window is smaller than the width of the element. The browser then adds a horizontal scrollbar to the page.
-
           <Grid container direction="column" justify="center" alignItems="stretch" spacing={2}>
             <Grid item>
             </Grid>
             <Grid item>
               <div align="center">
                 <ToggleButtonGroup
-                  value={this.state.rating}
+                  value={this.state.ratings[qsn.id]}
                   exclusive
-                  onChange={this.handleRating}
+                  onChange={(event) => this.handleRatingMaster(event, `${qsn.id}`)}
                   aria-label="text alignment">
                     <ToggleButton key={0} value="0">0</ToggleButton>
                     <ToggleButton key={1} value="1">1</ToggleButton>
@@ -228,14 +236,59 @@ export default class SurveyView extends Component {
               </Grid>
                 <Grid item>
                   <Row>
-                    <Col xs="6"><div text-align="left">Minimum Label</div></Col>
-                    <Col xs="6"><div class="testing">Maximum</div></Col>
+                    <Col xs="6"><div text-align="left">{getStringSection(qsn.notes, 1)}</div></Col>
+                    <Col xs="6"><div class="testing">{getStringSection(qsn.notes, 3)}</div></Col>
                   </Row>
                 </Grid>
               </Grid>
               </div>
         )
       }
+    }
+
+    createAnswerChoiceArray(qsn, type) {
+      var choices = qsn.notes;
+      var i = 0;
+      var splitStr = choices.split(',')
+      var newArray = [];
+
+      while (splitStr[i] != null) {
+        newArray.push(splitStr[i]);
+        i++;
+      }
+
+      if (type == "mc") {
+        return (
+          <div>
+            <Row>
+              <RadioGroup defaultValue="female" aria-label="gender" name="customized-radios" value={this.state.radio} onChange={(event) => this.handleRadioMaster(event, `${qsn.id}`)}>
+              {
+                  newArray.map(choice => (
+                  <div>
+                        <FormControlLabel value={choice} control={<Radio color="primary" />} label={choice} />
+                  </div>
+              ))
+              }
+              </RadioGroup>
+            </Row>
+          </div>
+        )
+      }
+
+      if (type == "ca") {
+        return (
+                <div>
+                {
+                    newArray.map(choice => (
+                    <Row>
+                      <FormControlLabel control={<Checkbox color="teal" name={choice} checked={this.state.checked} onChange={(event) => this.handleChecked(event, `${qsn.id}`)}/>}
+                              label={choice} labelPlacement="end"/>
+                    </Row>
+                ))
+                }
+                </div>
+                )
+              }
     }
 
     render() {
@@ -248,22 +301,52 @@ export default class SurveyView extends Component {
               <p></p>
                 <Container>
                     <h4>Survey Question Test View</h4>
-                    <Row>
-                      <Col md={{ span: 3, offset: 0 }} >
-                        Choose Question Type: {this.renderQstDropdown()}
-                      </Col>
-                      <Col md={{ span: 5, offset: 0 }} >
-                        <p>
-                        {this.renderResult()}
-                        </p>
-                        {this.checkVal()}
-                      </Col>
-                      <p>
-                        <Button color='warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
-                        {this.renderSubmitButton()}
-                      </p>
-                    </Row>
                 </Container>
+                <Container>
+                <div>
+                    {
+                        this.state.questions.map(qsn => (
+                        <div>
+                                <div key={`q${qsn.type},${qsn.id}`}>{qsn.text}</div>
+                                {this.renderResult(qsn)}
+                                <p><hr id="hr-3" /></p>
+
+                        </div>
+                    ))
+                    }
+                </div>
+                </Container>
+
+                <Container>
+                <Row>
+                  <Col md={{ span: 7, offset: 0 }}></Col>
+                  <Col md={{ span: 3, offset: 0 }}>
+                    <div id='confirmation-button-holder'>
+                        <Button color='success' id='submit-concept' onClick={this.submitAnswers}><FontAwesomeIcon icon="angle-double-right" /> Submit</Button>
+                    </div>
+                  </Col>
+                </Row>
+                </Container>
+
+                <div>
+                  <Dialog
+                    open={this.state.errorModal}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth='lg'
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                  >
+                    <DialogTitle id="responsibe-alert-dialog-slide-title">
+                      {this.state.errorMessage}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={this.handleCloseErrorModal} color="primary">
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
             </div>
         );
     }

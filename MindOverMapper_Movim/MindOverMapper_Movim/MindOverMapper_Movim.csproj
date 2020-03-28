@@ -44,6 +44,8 @@
     <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.css" />
     <None Include="**/*" />
     <None Include="**/*" />
+    <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\_ViewImports.cshtml.g.cs" />
+    <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\Error.cshtml.g.cs" />
   </ItemGroup>
 
   <ItemGroup>

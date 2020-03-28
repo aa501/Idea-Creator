@@ -145,8 +145,7 @@ export default class SurveyQuestion extends Component {
 
     surveySample = () => {
       return this.props.history.push({
-          pathname: '/survey-builder',
-          state: this.state
+          pathname: '/survey'
       });
     }
 
