@@ -62,6 +62,8 @@ export default class SurveyView extends Component {
         this.getQuestions();
     }
 
+    /* Todo: Change controller to pull only relevant questions based on a unique survey code.
+       Requirements: Change api link in both this file and the controller with {uid} */
     getQuestions = async () => {
         const response = await axios.get('/api/project/retrieve-survey', {
         }).then(response => {
@@ -73,6 +75,7 @@ export default class SurveyView extends Component {
         });
     }
 
+    /* Submits answer list to the controller */
     submitAnswers = async () => {
         axios.post(`/api/project/post-survey-answer`,
               {
@@ -86,41 +89,33 @@ export default class SurveyView extends Component {
         });
       }
 
-    resetFields = () => {
-        this.setState({
-        })
-    }
-
-    handleChange = (event) => {
-      this.setState({ qstType: event.target.value });
-    }
-
+    /* Calls two functions to handle the rating React element and add the answer to the answers array */
     handleRatingMaster = (event, i) => {
       this.handleRating(event, i);
       this.handleAnswer(event, i);
     }
 
+    /* Updates the values for all toggle buttons in a rating question group  */
     handleRating = (event, i) => {
-      console.log(event.target.value)
-      this.setState({
-          rating: event.target.value
-      });
       const ratings = this.state.ratings;
       ratings[i] = event.target.value;
       this.setState({ ratings });
     }
 
+    /* Calls two functions to handle the MC React element and add the answer to the answers array */
     handleRadioMaster = (event, i) => {
       this.handleRadio(event);
       this.handleAnswer(event, i);
     }
 
+    /* Updates the values for all radio buttons in a multiple choice answer group  */
     handleRadio = (event) => {
       this.setState({
         radio: event.target.value
       });
     }
 
+    /* Updates the answers array with new answers (used for all except check questions)  */
     handleAnswer = (event, i) => {
         this.setState({
             answerQueue: event.target.value
@@ -146,6 +141,7 @@ export default class SurveyView extends Component {
       });
     }
 
+    /* Updates the values for all check boxes in a check all answer group  */
     handleChecked(event, i) {
       const item = event.target.name;
       const isChecked = event.target.checked;
@@ -166,6 +162,7 @@ export default class SurveyView extends Component {
       }
     }
 
+    /* Adds checked answers to the answers array  */
     addCheckedAnswer(arr, i) {
       const answers = this.state.answers;
       answers[i] = arr;
@@ -173,7 +170,8 @@ export default class SurveyView extends Component {
       (console.log(this.state.answers)));
     }
 
-    renderResult(qsn) {
+    /* Renders the HTML for each question type  */
+    renderQuestion(qsn) {
       var type = qsn.type;
       if (type === "Text" || type === "Concept") {
         return(
@@ -246,6 +244,7 @@ export default class SurveyView extends Component {
       }
     }
 
+    /* Renders answer choices for either multiple choice or check all questions  */
     createAnswerChoiceArray(qsn, type) {
       var choices = qsn.notes;
       var i = 0;
@@ -308,7 +307,7 @@ export default class SurveyView extends Component {
                         this.state.questions.map(qsn => (
                         <div>
                                 <div key={`q${qsn.type},${qsn.id}`}>{qsn.text}</div>
-                                {this.renderResult(qsn)}
+                                {this.renderQuestion(qsn)}
                                 <p><hr id="hr-3" /></p>
 
                         </div>
