@@ -358,7 +358,7 @@ export default class MindMap extends React.Component {
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id"><CheckCircleIcon /> Newer Changes Detetcted, Loading...</span>}
+          message={<span id="message-id"><CheckCircleIcon /> Newer Changes Detected, Loading...</span>}
           action={[
             <IconButton
               key="close"

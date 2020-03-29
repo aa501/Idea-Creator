@@ -24,6 +24,7 @@ export default class ConceptQuestion extends Component {
         this.state = {
             projectName: this.props.location.state.projectName,
             userData: this.props.location.state.userData || this.props.userData,
+            conceptUid: this.props.location.state.conceptUid,
             conceptName: this.props.location.state.conceptName,
             newsHeadline: this.props.location.state.newsHeadline,
             customer: this.props.location.state.customer,
@@ -44,6 +45,8 @@ export default class ConceptQuestion extends Component {
     componentDidMount = () => {
         console.log(this.props)
         this.getQuestions();
+        if (this.state.completedConcept == true) {
+        }
     }
 
     componentWillMount = () => {
@@ -135,7 +138,6 @@ export default class ConceptQuestion extends Component {
         });
     }
 
-
     handleAnswer = (event, i) => {
         console.log(event.target.value)
         this.setState({
@@ -145,7 +147,6 @@ export default class ConceptQuestion extends Component {
         answers[i] = event.target.value;
         this.setState({ answers });
     }
-
 
     submitConcept = () => {
         console.log(this.state.answers)
@@ -207,17 +208,7 @@ export default class ConceptQuestion extends Component {
 
         return (
             <div className='concept-question-container'>
-
-                <Row>
-                    <Col md={{ span: 3 }}>
-                        <h3 className="page-title">Concept Question</h3>
-                    </Col>
-                    <Col md={{ span: 2, offset: 5 }}>
-                        <div id="conceptButton" align="right">
-                            <Button id="opt" onClick={this.nextPage}><FontAwesomeIcon icon="arrow-left" />  Concept Definition</Button>
-                        </div>
-                    </Col>
-                </Row>
+                <h3 className="page-title">Concept Question</h3>
                 <Container>
                     <h4>Answer all that may apply.</h4>
                     <div>
@@ -232,7 +223,8 @@ export default class ConceptQuestion extends Component {
                                         fullWidth
                                         variant="outlined">
                                     </TextField>
-                            </div>
+                                    <p></p>
+                                </div>
                         ))
                         }
                     </div>
@@ -275,7 +267,7 @@ export default class ConceptQuestion extends Component {
                     </DialogActions>
                   </Dialog>
                 </div>
-                <div >
+                <div>
                   <Dialog
                     open={this.state.successModal}
                     TransitionComponent={Transition}

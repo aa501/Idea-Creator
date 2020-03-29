@@ -18,12 +18,12 @@
 #project-options {
     font-family: 'Exo-2', sans-serif;
     font-weight: 100;
-    margin-top: 44px;
+    margin-top: 160px;
     font-size: 25px;
 }
 
 .page-body-1{
-    margin-top: 40px;
+    margin-top: 0px;
     margin-right: 50px;
 }
 
@@ -99,6 +99,18 @@
     box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
 }
+
+.card-button-5 {
+    height: 130px;
+    width: 150px;
+    background-color: white;
+    border-top: solid;
+    border-top-color: teal;
+    border-top-width: 12px;
+    box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
+    border-radius: 10px;
+}
+
 
 #options-label {
     margin-top: 25%;

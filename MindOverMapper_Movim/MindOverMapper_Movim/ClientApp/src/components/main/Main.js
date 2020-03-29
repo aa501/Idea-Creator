@@ -8,8 +8,10 @@ import AdminPanel from './components/admin/AdminPanel.js';
 import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
 import Concept from './components/concept/Concept.js';
+import ConceptView from './components/conceptView/ConceptView.js';
 import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 import QuestionEditor from './components/questionEditor/QuestionEditor.js';
+import SurveyQuestion from './components/surveyQuestion/SurveyQuestion.js';
 import ProjectLandingPage from './components/projectLandingPage/projectLandingPage.js';
 import ProjectPrototype from './components/projectprototype/ProjectPrototype.js';
 import ProjectSurvey from './components/Surveys/ProjecctSurvey.js';
@@ -47,11 +49,14 @@ export class Main extends Component {
                         <Route path='/project-stimuli' component={ProjectStimuli}/>
                         <Route path='/concept' component={Concept} />
                         <Route path='/concept-question' component={ConceptQuestion}/>
+                        <Route path='/concept-view' component={ConceptView} />
                         <Route path='/question-editor' component={QuestionEditor}/>
                         <Route path='/project-landing-page' component={ProjectLandingPage} />
                         <Route path='/add-prototype' component={ProjectPrototype} />
                         <Route path='/surveys' component={ProjectSurvey} />
                         <Route path='/new-survey' component={NewSurvey} />
+                        <Route path='/survey-question' component={SurveyQuestion} />
+
                     </Layout>
                 ): (null)}
             </div>

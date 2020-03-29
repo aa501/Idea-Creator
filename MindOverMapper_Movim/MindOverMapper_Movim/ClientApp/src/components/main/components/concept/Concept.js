@@ -18,9 +18,9 @@ export default class Concept extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            projectName: this.props.location.state.projectName,
+            projectName: '',
             userData: this.props.location.state.userData || this.props.userData,
-            conceptName: this.props.location.state.projectConcept,
+            conceptName: '',
             newsHeadline: '',
             customer: '',
             customerProblem: '',
@@ -29,12 +29,20 @@ export default class Concept extends Component {
             price: '',
             passion: '',
             deathThreats: '',
-            completedConcept: false
         }
     }
 
     componentDidMount = () => {
-        console.log(this.props)
+      if (this.props.location.state === undefined) {
+          this.props.history.push({
+              pathname: '/'
+          });
+      } else {
+          this.setState({
+              userData: this.props.location.state.userData,
+              projectName: this.props.location.state.projectName,
+          });
+      }
     }
 
     resetFields = () => {
@@ -48,7 +56,6 @@ export default class Concept extends Component {
             price: '',
             passion: '',
             deathThreats: '',
-            completedConcept: false
         })
     }
 
@@ -109,26 +116,17 @@ export default class Concept extends Component {
     render() {
         return (
             <div className='concept-container'>
-
-                <Row>
-                    <Col md={{ span: 3 }}>
-                        <h3 className="page-title">Concept Definition</h3>
-                    </Col>
-                    <Col md={{ span: 2, offset: 5  }}>
-                        <div id="conceptButton" align="right">
-                            <Button id="opt" onClick={this.nextPage}>Concept Question <FontAwesomeIcon icon="arrow-right" /></Button>
-                        </div>
-                    </Col>
-                 </Row>
+                <h3 className="page-title">Concept Definition</h3>
                 <Container>
                     <div className='concept-name-holder'>
-                        <TextField
-                        value={this.state.conceptName}
-                        onChange={this.handleConceptNameChange}
-                        label="Name"
-                        margin="normal"
-                        placeholder="Enter Concept Name..."
-                        variant="outlined">
+                        <TextField id="concept-name-field"
+                          value={this.state.conceptName}
+                          onChange={this.handleConceptNameChange}
+                          label="Name"
+                          multiline
+                          margin="dense"
+                          placeholder="Enter Concept Name..."
+                          variant="outlined">
                          </TextField>
                     </div>
                     <Row id='r-and-d-col'>
@@ -251,7 +249,7 @@ export default class Concept extends Component {
                         <Col md={{ span: 2, offset: 1 }}>
                             <div id='confirmation-button-holder'>
                                 <Button color = 'warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
-                                <Button color = 'primary' id='submit-concept' disabled = {this.state.projectName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
+                                <Button color = 'primary' id='submit-concept' disabled = {this.state.conceptName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
                             </div>
                         </Col>
                     </Row>

@@ -4,18 +4,34 @@
     width: 100%;
 }
 
-#opt{
-    background-color: rgb(139, 90, 180);
-    margin-top: 2%;
-    margin-right: 3%;
-}
-
-.concept-container{
+.concept-question-container{
     width: 100%;
     overflow-y: scroll;
     height: 89vh;
     max-height: 89vh;
     padding-bottom: 1vh;
+}
+
+#opt {
+    background-color: rgb(139, 90, 180);
+    margin-right: 10%;
+}
+
+.testing{
+    text-align: right;
+}
+
+.rating-div{
+  max-width: 364px;
+}
+
+.checktest{
+  text-align: justify;
+}
+
+#text-field{
+    width: 200vw;
+    max-width: 425px;
 }
 
 .project-creator-header{
@@ -46,7 +62,7 @@
 .concept-name-holder{
     display: flex;
     width: 100%;
-    height: 7vh;
+    height: 4vh;
 }
 
 #project-description-holder{
@@ -62,7 +78,7 @@
 
 #project-definition-holder{
     display:flex;
-    flex-direction: rowch;
+    flex-direction: row;
     margin-left: 5%;
     margin-right: 5%;
     width: 90%;
@@ -108,6 +124,12 @@
 
 }
 
+#hr-3 {
+    width: 70%;
+    height: 0.5px;
+    background-color: lightgray;
+}
+
 #concept-container{
     height: 100%;
     width: 100%;
@@ -115,12 +137,6 @@
 
 #r-and-d-col{
     margin-top: 4%;
-}
-
-#concept-name-field{
-    height: 90px;
-    width: 400vw;
-    max-width: 425px;
 }
 
 #full-concept-field{
@@ -202,7 +218,13 @@
     height: 70px;
 }
 
-#submit-project{
+#submit-concept{
     margin-left: 15px;
+    height: 70px;
+}
+
+#submit-question {
+    margin-left: 15px;
+    width: 100px;
     height: 70px;
 }

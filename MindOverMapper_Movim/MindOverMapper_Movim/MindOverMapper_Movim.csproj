@@ -25,7 +25,6 @@
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="ClientApp\src\components\main\components\NewFolder\**" />
     <EmbeddedResource Remove="ClientApp\src\components\main\components\NewFolder\**" />
-    <None Remove="$(SpaRoot)**" />
     <None Remove="ClientApp\src\components\main\components\NewFolder\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     <None Remove="Services\AuthService.css" />
@@ -41,6 +40,12 @@
     <None Remove="Artifacts\wordnet\.data.noun.icloud" />
     <None Remove="Artifacts\wordnet\.index.sense.icloud" />
     <None Remove="Artifacts\wordnet\index.verb" />
+    <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.js" />
+    <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.css" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\_ViewImports.cshtml.g.cs" />
+    <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\Error.cshtml.g.cs" />
   </ItemGroup>
 
   <ItemGroup>
