@@ -73,13 +73,13 @@ export default class ProjectStimuli extends Component {
 
   handleOpenPopover = async (event, string) =>
   {
-    
+
     this.setState({
       anchorEl : event.currentTarget,
       openPopover : true
     })
     await this.pullSyn(string);
-    
+
   }
 
   pullSyn = async (string) => {
@@ -107,7 +107,7 @@ export default class ProjectStimuli extends Component {
         });
         if (unique) cleaned.push(itm);
       })
-      
+
       this.setState({
         popOverText: cleaned,
         popOverLoading: true
@@ -125,13 +125,13 @@ export default class ProjectStimuli extends Component {
       popOverLoading: null
     })
   }
-  
+
   handleCloseErrorModal = () => {
     this.setState({
         errorModal: false
     });
   }
-  
+
   openErrorModal = () => {
     this.setState({
         errorModal: true
@@ -143,14 +143,14 @@ export default class ProjectStimuli extends Component {
         successModal: false
     });
   }
-  
+
   openSuccessModal = () => {
     this.setState({
         successModal: true
     });
   }
-  
-  
+
+
 
   handleStimTitleChange = (event) => {
     this.setState({
@@ -185,7 +185,7 @@ export default class ProjectStimuli extends Component {
       {
         'title': this.state.projectName,
         'description': this.state.projectDescription,
-        'definition' : this.state.projectDefinition,
+        'definition' : this.state.projectDefinition, //project mission
         'problemStatement': {
           'content': this.state.projectName
         },
@@ -239,7 +239,7 @@ export default class ProjectStimuli extends Component {
       });
     });
 
-    
+
 
   }
 
@@ -247,7 +247,7 @@ export default class ProjectStimuli extends Component {
     let stimuli = this.state.stimuli
     let relatedStimuli = [];
     let initStimuli = [];
-    
+
     stimuli.forEach((stimulus) => {
 
       let stimForCall = {
@@ -265,7 +265,7 @@ export default class ProjectStimuli extends Component {
           relatedStimuli.push(stimForCall);
         }
     });
-  
+
     this.setState({
       initStimuli,
       relatedStimuli
@@ -378,7 +378,7 @@ export default class ProjectStimuli extends Component {
               <div id='button-box'>
                 <Button color='danger' id='clearStim' onClick={() => { this.resetAllValues() }}> <FontAwesomeIcon icon="undo" /> Reset</Button>
                 <Button color='primary' id='addStim' disabled = {this.state.stimulusTitle === ''} onClick={() => { this.addStimulus() }}><FontAwesomeIcon icon="plus"/> Add Stimulus</Button>
-                
+
               </div>
             </Col>
             <Col md={{ span: 6 }}>
@@ -490,10 +490,10 @@ export default class ProjectStimuli extends Component {
             return <span>{(x.charAt(0).toUpperCase() + x.slice(1).replace('_'," "))}<br/></span>
           })
             }
-            </div> 
+            </div>
           )
-            
-            
+
+
           : <FontAwesomeIcon id = 'pop-icon' icon="circle-notch" spin /> }</Typography>
         </Popover>
 

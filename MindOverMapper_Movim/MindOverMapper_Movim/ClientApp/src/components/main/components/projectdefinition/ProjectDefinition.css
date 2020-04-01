@@ -51,7 +51,7 @@
     margin-top: 5%;
     width: 90%;
     height: 45vh;
-    
+
 }
 
 #project-definition-holder{
@@ -73,8 +73,8 @@
 }
 
 #research-area-1{
-    
-    margin-left: 5%;    
+
+    margin-left: 5%;
     margin-right: 5%;
     margin-top: 5%;
     width: 90%;
@@ -83,7 +83,7 @@
 }
 
 #research-area-2{
-    
+
     margin-left: 5%;
     margin-right: 5%;
     margin-top: 5%;
@@ -93,18 +93,18 @@
 }
 
 #research-area-3{
-    
+
     margin-left: 5%;
     margin-right: 5%;
     margin-top: 5%;
     width: 90%;
     height: 45vh;
-    
+
 }
 
 #blue-card-container{
     height: 100%;
-    width: 100%; 
+    width: 100%;
 }
 
 #r-and-d-col{
@@ -113,7 +113,7 @@
 
 #projectDescription-input{
     height: 100px;
-    width: 38vw; 
+    width: 38vw;
     max-width: 425px;
 }
 
@@ -172,12 +172,12 @@
 
 #projectName-input{
     height: 5vh;
-    width: 30%; 
+    width: 30%;
 }
 
 #projectId-input{
     height: 5vh;
-    min-width: 300px; 
+    min-width: 300px;
 }
 
 #reset-fields{

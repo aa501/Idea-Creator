@@ -21,8 +21,11 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientApp\src\components\main\components\NewFolder\**" />
     <Content Remove="$(SpaRoot)**" />
-    <None Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\src\components\main\components\NewFolder\**" />
+    <EmbeddedResource Remove="ClientApp\src\components\main\components\NewFolder\**" />
+    <None Remove="ClientApp\src\components\main\components\NewFolder\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     <None Remove="Services\AuthService.css" />
     <Content Remove="Services\Service.json" />
@@ -37,15 +40,21 @@
     <None Remove="Artifacts\wordnet\.data.noun.icloud" />
     <None Remove="Artifacts\wordnet\.index.sense.icloud" />
     <None Remove="Artifacts\wordnet\index.verb" />
+    <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.js" />
+    <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.css" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\_ViewImports.cshtml.g.cs" />
+    <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\Error.cshtml.g.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Models\Requests\" />
     <Folder Include="Controllers\" />
     <Folder Include="Helpers\" />
     <Folder Include="Services\" />
     <Folder Include="Artifacts\" />
+    <Folder Include="ClientApp\src\components\main\components\projectLandingPage\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Artifacts\index.adv">

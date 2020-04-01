@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Login } from './components/login/Login';
 import { Main } from './components/main/Main';
+import { SurveyEnd } from './components/surveyend/SurveyEnd';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminPanel from './components/main/components/admin/AdminPanel';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faCog, faCircleNotch,faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faCog, faCircleNotch,faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream, faAngleDoubleRight, faArrowRight, faArrowLeft, faHeart, faCogs, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
   faIgloo,
@@ -28,9 +29,9 @@ library.add(
   faFile,
   faFileInvoiceDollar,
   faFileExport,
-  faBalanceScale, 
+  faBalanceScale,
   faTimesCircle,
-  faExclamationTriangle, 
+  faExclamationTriangle,
   faCheck,
   faClock,
   faBalanceScale,
@@ -43,20 +44,26 @@ library.add(
   faShareSquare,
   faInfoCircle,
   faProjectDiagram,
-  faStream
-
+  faStream,
+  faAngleDoubleRight,
+  faArrowLeft,
+  faArrowRight,
+  faHeart,
+  faCogs,
+  faQuestion
   )
 
 export default class App extends Component {
-  static displayName = App.name;
+    static displayName = App.name;
 
   render () {
     return (
       <div className="app-routes">
               <Switch>
-                  <Route exact path="/" component={Login} />
-                  <Route exactpath="/home" component={Main} />
-                  <Route exactpath="/admin-panel" component={AdminPanel} />
+                  <Route exact path ="/" component={Login} />
+                  <Route exact path ="/survey" component={SurveyEnd} />
+                  <Route exactpath ="/home" component={Main} />
+                  <Route exactpath ="/admin-panel" component={AdminPanel} />
               </Switch>
           </div>
     );

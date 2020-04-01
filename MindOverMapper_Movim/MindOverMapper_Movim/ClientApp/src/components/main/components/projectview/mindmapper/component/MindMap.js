@@ -5,12 +5,16 @@ import { Toolbar } from "./Toolbar";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import IconButton from '@material-ui/core/IconButton';
 import { Diagram } from "@blink-mind/renderer-react";
+import { Container, Row, Col } from 'react-bootstrap';
+import { Button, Alert, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
+import TextField from '@material-ui/core/TextField';
 import RichTextEditorPlugin from "@blink-mind/plugin-rich-text-editor";
 import { JsonSerializerPlugin } from "@blink-mind/plugin-json-serializer";
 import { ThemeSelectorPlugin } from "@blink-mind/plugin-theme-selector";
 import "@blink-mind/renderer-react/lib/main.css";
 import './MindMap.css';
 import LoadingGIF from '../../../../../../static/Loading3.gif';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Snackbar from '@material-ui/core/Snackbar';
 import { downloadFile, generateSimpleModel } from "../utils";
 
@@ -26,12 +30,17 @@ export default class MindMap extends React.Component {
     this.state = {
       userData: this.props.userData,
       projectInfo: this.props.projectInfo,
+      projectConcept: '',
+      pushBack: '',
       change: false,
       diagramVersion: 0,
       openSuccessSnackBar: false,
       oldState: null,
       newState: null,
       loading: true,
+      visible: true,
+      modalIsOpen: false
+
     };
     // This was adam's idea
     this.timeOutID = null;
@@ -57,13 +66,42 @@ export default class MindMap extends React.Component {
   handleOpenErrorSnackBar = () => {
     this.setState({ openErrorSnackBar: true })
   }
+
   handleCloseErrorSnackBar = () => {
     this.setState({ openErrorSnackBar: false })
+    }
+
+  toggleAlert() {
+      this.setState({
+          visible: !this.state.visible
+      });
   }
+  toggleModal() {
+      this.setState({
+          modalIsOpen: !this.state.modalIsOpen
+      });
+  }
+
+
+  handleProjectConcept = (event) => {
+      this.setState({
+          projectConcept: event.target.value
+      });
+    }
+
+    goToConcept = () => {
+        let projectConcept = this.state.projectConcept;
+        this.props.projectConcept(projectConcept);
+    }
+
+    viewProject = () => {
+      let pushback = "send it";
+      this.props.pushBack(pushback);
+    }
 
   componentDidMount = async () => {
     await this.retrieveMindMap(this.props.projectInfo.uid);
-    this.autoSave(); // Enable auto save 
+    this.autoSave(); // Enable auto save
   };
 
   componentWillUnmount() {
@@ -71,7 +109,7 @@ export default class MindMap extends React.Component {
     {
       clearTimeout(this.timeOutID);
     }
-    
+
 }
 
   autoSave = async () => {
@@ -95,7 +133,7 @@ export default class MindMap extends React.Component {
       headers: {
         Authorization: 'Bearer ' + this.props.userData.token //the token is a variable which holds the token
       }
-    }).then(res => { 
+    }).then(res => {
       this.setState({
         loading: false
       });
@@ -104,7 +142,7 @@ export default class MindMap extends React.Component {
     const props = this.diagram.getDiagramProps();
     const { controller } = props;
     let obj = mindModelConfig.state;
-    let model = controller.run("deserializeModel", { controller, obj });    
+    let model = controller.run("deserializeModel", { controller, obj });
     this.setState({
       model,
       diagramVersion: mindModelConfig.version,
@@ -123,8 +161,8 @@ export default class MindMap extends React.Component {
       data: JSON.stringify({
         "state" : exportyboi,
         "version" : this.state.diagramVersion,
-      }) 
-    }).then(response => { 
+      })
+    }).then(response => {
       // Saved successfully
       this.handleOpenSuccessSnackBar(response.data.version)
     })
@@ -228,7 +266,41 @@ export default class MindMap extends React.Component {
       canUndo,
       canRedo
     };
-    return <Toolbar {...toolbarProps} />;
+    return (
+      <Row>
+      <Col md={{ span: 9 }}>
+        <Toolbar {...toolbarProps} />
+      </Col>
+      <Col md={{ span: 2 }}>
+      <div id="conceptButton" align="right">
+          <Button color="secondary" onClick={this.viewProject}><FontAwesomeIcon icon="arrow-left"/> Back to Project</Button>
+      </div>
+      </Col>
+      <Col md={{ span: 1.5 }}>
+      <div id="conceptButton" align="right">
+          <Button color="primary" onClick={this.toggleModal.bind(this)}><FontAwesomeIcon icon="plus"/> Concept</Button>
+      </div>
+      <Modal isOpen={this.state.modalIsOpen}>
+          <ModalHeader toggle={this.toggleModal.bind(this)}>Concept</ModalHeader>
+          <ModalBody>
+              <div className='project-concept'>
+                  <TextField
+                      value={this.state.projectConcept}
+                      onChange={this.handleProjectConcept}
+                      label="Title"
+                      margin="normal"
+                      placeholder="Enter Title..."
+                      variant="outlined">
+                  </TextField>
+              </div>
+          </ModalBody>
+          <ModalFooter>
+                        <Button color="primary" onClick={this.goToConcept}>Add Concept</Button>
+          </ModalFooter>
+      </Modal>
+      </Col>
+      </Row>
+    );
   }
 
   renderDialog() {}
@@ -247,7 +319,7 @@ export default class MindMap extends React.Component {
           <div >
             <img src={LoadingGIF} className='loading-content' />
           </div>
-           ):( 
+           ):(
           this.renderDiagram())}
         <Snackbar
           anchorOrigin={{
@@ -286,7 +358,7 @@ export default class MindMap extends React.Component {
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id"><CheckCircleIcon /> Newer Changes Detetcted, Loading...</span>}
+          message={<span id="message-id"><CheckCircleIcon /> Newer Changes Detected, Loading...</span>}
           action={[
             <IconButton
               key="close"
@@ -300,6 +372,7 @@ export default class MindMap extends React.Component {
           ]}
         />
       </div>
+
     );
   }
 }
