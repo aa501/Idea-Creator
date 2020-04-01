@@ -744,6 +744,43 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(questions);
         }
 
+        [AllowAnonymous]
+        [HttpGet("retrieve-survey")]
+        public ActionResult GetSurveyQuestions()
+        {
+            var queryString = "concept";
+            var questions = _context.Question;
+
+            return Ok(questions);
+        }
+
+        [Authorize]
+        [HttpGet("{uid}/get-concepts")]
+        public ActionResult GetConcepts(string uid)
+        {
+            Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            var concepts = _context.Concept.Where(c => c.ProjectId == proj.Id);
+            return Ok(concepts);
+        }
+
+        [Authorize]
+        [HttpPut("{uid}/update-concept")]
+        public ActionResult UpdateConcept(string uid, [FromBody] ConceptRequest req)
+        {
+            Concept cpt = _context.Concept.First(c => c.Uid == uid);
+            cpt.ConceptName = req.ConceptName;
+            cpt.NewsHeadline = req.NewsHeadline;
+            cpt.Customer = req.Customer;
+            cpt.CustomerProblem = req.CustomerProblem;
+            cpt.Promise = cpt.Promise;
+            cpt.Proof = cpt.Proof;
+            cpt.Price = cpt.Price;
+            cpt.DeathThreats = cpt.DeathThreats;
+
+            _context.SaveChanges();
+            return Ok(new { message = "Success!" });
+        }
+
         [Authorize]
         [HttpPost("submit-question")]
         public ActionResult CreateConceptQuestion([FromBody] QuestionSubmission req)
@@ -754,12 +791,61 @@ namespace MindOverMapper_Movim.Controllers
                 Uid = Guid.NewGuid().ToString(),
                 Text = req.Text,
                 Type = req.Type,
+                Notes = req.Notes,
                 DateCreated = DateTime.Now,
                 Archived = "No"
             };
 
             _context.Question.Add(qsn);
             _context.SaveChanges();
+            return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
+        [HttpGet("{uid}/answers")]
+        public ActionResult GetConceptAnswers(string uid)
+        {
+          Concept cpt = _context.Concept.Where(c => c.Uid == uid).FirstOrDefault<Concept>();
+          var answers = _context.IdeationAnswers.Where(a => a.Cid == cpt.Id);
+          return Ok(answers);
+        }
+
+        [Authorize]
+        [HttpPut("update-answer")]
+        public ActionResult UpdateAnswer([FromBody] AnswerUpdate req)
+        {
+            IdeationAnswers answer = _context.IdeationAnswers.First(a => a.Uid == req.Uid);
+            answer.Answer = req.Answer;
+
+            _context.SaveChanges();
+
+            return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
+        [HttpPost("post-answer")]
+        public ActionResult PostAnswer([FromBody] AnswerSubmission req)
+        {
+            var answerls = req.AnswerList;
+            Concept cpt = _context.Concept.Where(c => c.Uid == req.Cuid).FirstOrDefault<Concept>();
+
+            foreach (var obj in answerls)
+            {
+                if (obj != null)
+                {
+                    IdeationAnswers ans = new IdeationAnswers
+                    {
+                        Uid = Guid.NewGuid().ToString(),
+                        Cid = cpt.Id,
+                        Qid = Array.IndexOf(answerls, obj),
+                        Answer = obj
+                    };
+
+                    _context.IdeationAnswers.Add(ans);
+                }
+            }
+            _context.SaveChanges();
+
             return Ok(new { message = "Success!" });
         }
     }

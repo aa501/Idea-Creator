@@ -277,7 +277,6 @@ namespace MindOverMapper_Movim.Models
                 .IsUnicode(false);
 
                 entity.Property(e => e.Cid)
-                .IsRequired()
                 .HasColumnName("cid")
                 .IsUnicode(false);
 
@@ -312,6 +311,11 @@ namespace MindOverMapper_Movim.Models
                 entity.Property(e => e.Type)
                 .HasColumnName("type")
                 .HasMaxLength(50)
+                .IsUnicode(false);
+
+                entity.Property(e => e.Notes)
+                .HasColumnName("notes")
+                .HasMaxLength(1000)
                 .IsUnicode(false);
 
                 entity.Property(e => e.DateCreated)

@@ -20,6 +20,7 @@ export default class QuestionEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userData: this.props.location.state.userData || this.props.userData,
             subQuestion: '',
             qstType: '',
         }
@@ -57,6 +58,7 @@ export default class QuestionEditor extends Component {
       {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
+          'notes': '',
           'archived': 'No'
       },
       {

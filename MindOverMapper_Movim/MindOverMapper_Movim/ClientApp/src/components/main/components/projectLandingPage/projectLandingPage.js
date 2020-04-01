@@ -47,12 +47,12 @@ export default class ProjectLandingPage extends Component {
         this.state = {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
-            projectConcept: '',
+            concepts: [],
         }
     }
 
-    componentDidMount() {
-      console.log(this.state);
+    componentDidMount = () => {
+      this.pullConcepts();
         if (this.props.location.state === undefined) {
             this.props.history.push({
                 pathname: '/'
@@ -61,7 +61,6 @@ export default class ProjectLandingPage extends Component {
             this.setState({
                 userData: this.props.location.state.userData,
                 projectName: this.props.location.state.projectName,
-                projectConcept: this.props.location.state.projectConcept
             });
         }
     }
@@ -82,23 +81,35 @@ export default class ProjectLandingPage extends Component {
 
     pushToConcepts = () => {
         this.props.history.push({
-            pathname: '/concept',
+            pathname: '/concept-view',
             state: this.state  // need this for moving to different component
         });
     }
 
     pushToSurveys = () => {
         this.props.history.push({
-            pathname: '/home',
+            pathname: '/survey-question',
             state: this.state  // need this for moving to different component
         });
     }
 
     pushToPrototypes = () => {
         this.props.history.push({
-            pathname: '/prototype',
+            pathname: '/add-prototype',
             state: this.state  // need this for moving to different component
         });
+    }
+
+    pullConcepts = async () => {
+        const response = await axios.get('/api/project/' + this.state.projectName.uid + '/get-concepts', {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token
+              }//the token is a variable which holds the token
+          }).then(response => response.data);
+              this.setState({
+              concepts: response
+          });
+        const test = await console.log(this.state.concepts);
     }
 
     render() {
@@ -219,26 +230,6 @@ export default class ProjectLandingPage extends Component {
                                     </li>
                                 </ul>
                             </div>
-
-                            <div class="col-sm card-holder align-self-center">
-                                <Card class="card">
-                                     <CardActionArea onClick={this.pushToMindMap}>
-                                         <CardMedia
-                                             style={{ height: 0, paddingTop: '56.25%' }}
-                                             image={require("../../../../static/ideaPicture.jpg")}
-                                             title="Add Project"
-                                         />
-                                         <CardContent>
-                                             <Typography variant="h5" component="h2">
-                                                 <center>
-                                                     View Mind-Map
-                                                 </center>
-                                             </Typography>
-                                         </CardContent>
-                                     </CardActionArea>
-                                </Card>
-                            </div>
-
                         </div>
 
                         <h2 id="project-options" >Project Options</h2>
@@ -298,8 +289,19 @@ export default class ProjectLandingPage extends Component {
                                     </CardActionArea>
                                 </Card>
                             </div>
-
-
+                            <div class="col-sm-2">
+                                <Card class="card-button-5">
+                                    <CardActionArea onClick={this.pushToMindMap}>
+                                        <CardContent>
+                                            <Typography id="options-label">
+                                                <center>
+                                                    Mind Map
+                                                 </center>
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>
                         </div>
 
 

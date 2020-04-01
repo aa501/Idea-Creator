@@ -25,7 +25,7 @@ export default class ProjectResearch extends Component {
             projectExclusions: this.props.location.state.projectExclusions,
             projectConstraints: this.props.location.state.projectConstraints,
             projectDescription: this.props.location.state.projectDescription,
-            projectExplorationAreas: this.props.location.state.projectExplorationAreas,  
+            projectExplorationAreas: this.props.location.state.projectExplorationAreas,        
             projectResearch1: '',
             projectResearch2: '',
             projectResearch3: '',
