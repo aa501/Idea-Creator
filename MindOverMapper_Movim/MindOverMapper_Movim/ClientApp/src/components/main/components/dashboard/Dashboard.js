@@ -139,6 +139,18 @@ export default class Dashboard extends Component {
         });
     }
 
+    getBestIdea = async () => {
+      console.log("test")
+      const response = await axios.get(`/api/${this.props.projectInfo.uid}/best-idea`, {
+          headers: {
+              Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+          }
+      }).then(response => response.data);
+      this.setState({
+          bestIdea: response
+      });
+    }
+
     copyToClipboard = () => {
         /* Get the text field */
         var copyText = document.getElementById("myInput");
