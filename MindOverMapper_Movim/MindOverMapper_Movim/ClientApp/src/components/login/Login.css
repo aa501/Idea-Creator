@@ -9,9 +9,6 @@
     display: flex;
     flex-direction: row;
     flex-grow: inherit;
-    height: 101.7vh;
-    overflow-x: hidden;
-    overflow-y: hidden;
 }
 
 .background{

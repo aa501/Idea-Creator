@@ -44,12 +44,22 @@
     <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.css" />
     <None Include="**/*" />
     <None Include="**/*" />
+    <Compile Remove="Migrations\20200330230651_SurveyMigration.cs" />
+    <Compile Remove="Migrations\20200330230651_SurveyMigration.Designer.cs" />
+    <Compile Remove="Models\ConceptSurvey.cs" />
+    <Compile Remove="Models\PrototypeSurvey.cs" />
+    <None Remove="Models\Requests\CreateSurveyRequest.cs" />
+    <None Remove="Models\Requests\EmailSurveyRequest.cs" />
+    <None Remove="Models\Survey.cs" />
     <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\_ViewImports.cshtml.g.cs" />
     <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\Error.cshtml.g.cs" />
+    <None Remove="Surveys\EmailSurvey.cs" />
+    <None Remove="Surveys\ISurvey.cs" />
+    <None Remove="Surveys\SurveyFactory.cs" />
+    <None Remove="Surveys\SurveyTypes.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Requests\" />
     <Folder Include="Controllers\" />
     <Folder Include="Helpers\" />
     <Folder Include="Services\" />

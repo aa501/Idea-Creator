@@ -25,6 +25,7 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<IdeationAnswers> IdeationAnswers { get; set; }
         public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<Prototype> Prototype { get; set; }
+        public virtual DbSet<Survey> Survey { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -119,43 +120,43 @@ namespace MindOverMapper_Movim.Models
                     .HasMaxLength(500)
                     .IsUnicode(false);
             });
-                modelBuilder.Entity<Project>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("id");
+            modelBuilder.Entity<Project>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.DateCreated)
-                    .HasColumnName("date_created")
-                    .HasColumnType("datetime");
+            entity.Property(e => e.DateCreated)
+                .HasColumnName("date_created")
+                .HasColumnType("datetime");
 
-                entity.Property(e => e.Definition)
-                    .HasColumnName("definition")
-                    .HasColumnType("text");
+            entity.Property(e => e.Definition)
+                .HasColumnName("definition")
+                .HasColumnType("text");
 
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasColumnName("description")
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasColumnName("description")
+                .HasMaxLength(500)
+                .IsUnicode(false);
 
-                entity.Property(e => e.OwnerId).HasColumnName("owner_id");
+            entity.Property(e => e.OwnerId).HasColumnName("owner_id");
 
-                entity.Property(e => e.Stimulus)
-                    .IsRequired()
-                    .HasColumnName("stimulus")
-                    .HasColumnType("text");
+            entity.Property(e => e.Stimulus)
+                .IsRequired()
+                .HasColumnName("stimulus")
+                .HasColumnType("text");
 
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasColumnName("title")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasColumnName("title")
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
-                entity.Property(e => e.Uid)
-                    .IsRequired()
-                    .HasColumnName("uid")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
+            entity.Property(e => e.Uid)
+                .IsRequired()
+                .HasColumnName("uid")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
 
             modelBuilder.Entity<ProjectParameters>(entity =>
             {
@@ -354,6 +355,20 @@ namespace MindOverMapper_Movim.Models
                     .IsUnicode(false);
 
             });
+
+            modelBuilder.Entity<Survey>(entity =>
+            {
+                entity.Property(e => e.id).HasColumnName("id");
+
+                entity.Property(e => e.name)
+                .IsRequired()
+                .HasColumnName("name");
+                entity.Property(e => e.idea)
+                    .IsRequired()
+                    .HasColumnName("idea")
+                    .IsUnicode(false);
+            }
+            );
         }
     }
 }
