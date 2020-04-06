@@ -31,12 +31,23 @@ namespace MindOverMapper_Movim.Controllers
         }
 
         [Authorize]
-        [HttpGet("{projectId}")]
-        public ActionResult GetSurveys(int projectId)
+        [HttpGet("{uid}")]
+        public ActionResult GetSurveys(string uid)
         {
             //Do Some code to validate access?
-            var Surveys = _context.Survey.Where(survey => survey.projectId == projectId);
-            return Ok(Surveys);
+            /*var Surveys = from survey in _context.Set<Survey>()
+                          join project in _context.Set<Project>()
+                            on survey.ProjectId equals project.Id
+                          where project.Uid == uid
+                          select new { survey };*/
+            IList<Survey> surveys = new List<Survey>();
+            Survey survey = new Survey();
+            survey.SurveyName = "Harry Killer";
+            survey.Name = false;
+            survey.ProjectId = 1;
+            survey.Package = false;
+            surveys.Add(survey);
+            return Ok(surveys);
         }
 
         [Authorize]
@@ -45,15 +56,15 @@ namespace MindOverMapper_Movim.Controllers
         {
             Survey survey = new Survey();
             survey.SurveyName = req.surveyName;
-            survey.pricingOptionId = req.pricingOptionId;
-            survey.idea = req.idea;
-            survey.package = req.package;
-            survey.product = req.product;
-            survey.name = survey.name;
-            survey.purchaseFrequency = req.purchaseFrequency;
-            survey.purchasePrice = req.purchasePrice;
-            survey.qualitative = req.qualitative;
-            survey.demographics = req.demographics;
+            survey.PricingOptionId = req.pricingOptionId;
+            survey.Idea = req.idea;
+            survey.Package = req.package;
+            survey.Product = req.product;
+            survey.Name = req.name;
+            survey.PurchaseFrequency = req.purchaseFrequency;
+            survey.PurchasePrice = req.purchasePrice;
+            survey.Qualitative = req.qualitative;
+            survey.Demographics = req.demographics;
             _context.Survey.Add(survey);
             return Ok();
         }
@@ -65,6 +76,17 @@ namespace MindOverMapper_Movim.Controllers
 
             ISurvey emailSurvey = SurveyFactory.Build(SurveyTypes.EmailSurvey);
             var survey = _context.Survey.Find(req.SurveyId);
+            emailSurvey.LoadSurvey(survey);
+            emailSurvey.execute();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("/turk")]
+        public ActionResult TurkSurvey([FromBody]CreateTurkSurveyRequest req)
+        {
+            ISurvey emailSurvey = SurveyFactory.Build(SurveyTypes.TurkSurvey);
+            var survey = _context.Survey.Find(req.Id);
             emailSurvey.LoadSurvey(survey);
             emailSurvey.execute();
             return Ok();

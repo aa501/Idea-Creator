@@ -10,8 +10,8 @@ using MindOverMapper_Movim.Models;
 namespace MindOverMapper_Movim.Migrations
 {
     [DbContext(typeof(MovimDbContext))]
-    [Migration("20200330230651_SurveyMigration")]
-    partial class SurveyMigration
+    [Migration("20200405190158_Survey")]
+    partial class Survey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -85,6 +85,25 @@ namespace MindOverMapper_Movim.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Concept");
+                });
+
+            modelBuilder.Entity("MindOverMapper_Movim.Models.ConceptSurvey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ConceptId");
+
+                    b.Property<int>("SurveyId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConceptId");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("ConceptSurvey");
                 });
 
             modelBuilder.Entity("MindOverMapper_Movim.Models.IdeationAnswers", b =>
@@ -277,6 +296,25 @@ namespace MindOverMapper_Movim.Migrations
                     b.ToTable("Prototype");
                 });
 
+            modelBuilder.Entity("MindOverMapper_Movim.Models.PrototypeSurvey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("PrototypeId");
+
+                    b.Property<int>("SurveyId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PrototypeId");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("PrototypeSurvey");
+                });
+
             modelBuilder.Entity("MindOverMapper_Movim.Models.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -355,6 +393,39 @@ namespace MindOverMapper_Movim.Migrations
                     b.ToTable("RecoveryGrant");
                 });
 
+            modelBuilder.Entity("MindOverMapper_Movim.Models.Survey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Demographics");
+
+                    b.Property<bool>("Idea");
+
+                    b.Property<bool>("Name");
+
+                    b.Property<bool>("Package");
+
+                    b.Property<int>("PricingOptionId");
+
+                    b.Property<bool>("Product");
+
+                    b.Property<int>("ProjectId");
+
+                    b.Property<bool>("PurchaseFrequency");
+
+                    b.Property<bool>("PurchasePrice");
+
+                    b.Property<bool>("Qualitative");
+
+                    b.Property<string>("SurveyName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Survey");
+                });
+
             modelBuilder.Entity("MindOverMapper_Movim.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -415,6 +486,32 @@ namespace MindOverMapper_Movim.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("MindOverMapper_Movim.Models.ConceptSurvey", b =>
+                {
+                    b.HasOne("MindOverMapper_Movim.Models.Concept", "Concept")
+                        .WithMany()
+                        .HasForeignKey("ConceptId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MindOverMapper_Movim.Models.Survey", "Survey")
+                        .WithMany()
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MindOverMapper_Movim.Models.PrototypeSurvey", b =>
+                {
+                    b.HasOne("MindOverMapper_Movim.Models.Prototype", "Prototype")
+                        .WithMany()
+                        .HasForeignKey("PrototypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MindOverMapper_Movim.Models.Survey", "Survey")
+                        .WithMany()
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

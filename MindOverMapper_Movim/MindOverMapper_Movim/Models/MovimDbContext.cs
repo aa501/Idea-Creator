@@ -26,7 +26,8 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<Prototype> Prototype { get; set; }
         public virtual DbSet<Survey> Survey { get; set; }
-
+        public virtual DbSet<ConceptSurvey> ConceptSurvey { get; set; }
+        public virtual DbSet<PrototypeSurvey> PrototypeSurvey { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
@@ -356,19 +357,6 @@ namespace MindOverMapper_Movim.Models
 
             });
 
-            modelBuilder.Entity<Survey>(entity =>
-            {
-                entity.Property(e => e.id).HasColumnName("id");
-
-                entity.Property(e => e.name)
-                .IsRequired()
-                .HasColumnName("name");
-                entity.Property(e => e.idea)
-                    .IsRequired()
-                    .HasColumnName("idea")
-                    .IsUnicode(false);
-            }
-            );
         }
     }
 }

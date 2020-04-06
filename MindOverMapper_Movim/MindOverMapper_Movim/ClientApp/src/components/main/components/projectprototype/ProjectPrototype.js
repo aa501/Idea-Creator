@@ -23,6 +23,7 @@ export default class ProjectPrototype extends Component {
             userData: this.props.location.state.userData || this.props.userData,
             prototypeName: '',
             prototypeDescription: '',
+            files: []
         }
     }
 
@@ -51,19 +52,25 @@ export default class ProjectPrototype extends Component {
 
 
     onDrop = (files) => {
-        console.log(files);
+        this.setState({ files: files });
     }
 
 
 
     submitPrototype = () => {
-        axios.post('/api/project', {
+        let formData = new FormData();
+        this.state.files.map(file => {
+            formData.append('Files', file);
+        });
+        formData.append('prototypeName', this.state.prototypeName);
+        formData.append('prototypeDescription', this.state.prototypeDescription);
+        axios.post('/api/prototype',
+            formData,
+            {
             headers: {
-                Authorization: 'Bearer ' + this.state.userData.token
-            },
-            data: {
-                'prototypeName': this.state.prototypeName,
-                'prototypeDescription': this.state.prototypeDescription
+                Authorization: 'Bearer ' + this.state.userData.token,
+                'Content-Type': 'multipart/form-data'
+
             }
         });
     }
@@ -122,7 +129,7 @@ export default class ProjectPrototype extends Component {
                             )}
                         </Dropzone>
                             </div>
-                        <Button variant="primary" type="submit" onClick={this.nextPage}>Upload</Button>
+                        <Button variant="primary" type="submit" onClick={this.submitPrototype}>Upload</Button>
                 </Container>
                 </div>
         );

@@ -61,6 +61,44 @@ export default class NewSurvey extends Component {
         alert('Preview Code');
     }
 
+    saveAndEmail = () => {
+        this.saveSurvey(this.emailSurvey);
+    }
+
+    emailSurvey = (survey) => {
+        axios.post('/api/survey/email', {
+            surveyId: survey.id
+        },
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token
+                }
+            }).then(response => {
+                
+            }).catch(err => {
+
+            });
+    }
+
+    turkSurvey = (survey) => {
+        axios.post('/api/survey/turk', {
+            surveyId: survey.id
+        },
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token
+                }
+            }).then(response => {
+                
+            }).catch(err => {
+
+            });
+    }
+
+    saveAndTurk() {
+        this.saveSurvey(this.turkSurvey);
+    }
+
     buildSurveyPayload = () => {
         let survey = {
             surveyName: this.state.surveyName,
@@ -131,7 +169,6 @@ export default class NewSurvey extends Component {
         this.setState({ idea: evt.value });
     }
 
-
     packageChanged = (evt) => {
         this.setState({ package: evt.value });
     }
@@ -180,7 +217,7 @@ export default class NewSurvey extends Component {
                                     <Alert variant="info">
                                         Please click the proper button below for the format you would like to test your idea as.
                                     </Alert>
-                                    <div class="d-flex flex-wrap justify-content-around">
+                                    <div className="d-flex flex-wrap justify-content-around">
                                         <Button variant="success">
                                             Add a WRITTEN CONCEPT (Yellow Card)
                                         </Button>
@@ -273,8 +310,8 @@ export default class NewSurvey extends Component {
                             <span>
                                 <Button>Save and Exit</Button>
                                 <Button variant="success" onClick={this.saveAndPreview}>Save and Preview Survey</Button>
-                                <Button variant="success">Save and Email</Button>
-                                <Button variant="success">Save and Collect Live</Button>
+                                <Button variant="success" onClick={this.saveAndEmail}>Save and Email</Button>
+                                <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button>
                             </span>
                             
                         </div>

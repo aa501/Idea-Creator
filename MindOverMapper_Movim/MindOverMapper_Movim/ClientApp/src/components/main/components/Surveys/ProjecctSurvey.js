@@ -51,7 +51,7 @@ export default class ProjectSurvey extends Component {
   }
 
     componentDidMount() {
-        axios.get('/api/survey/' + this.state.projectId, {
+        axios.get('/api/survey/' + this.state.projectName.uid, {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token
             }
@@ -87,7 +87,7 @@ export default class ProjectSurvey extends Component {
                     <List subheader={<ListSubheader>Surveys</ListSubheader>} >
                         {this.state.surveys.map((survey) => {
                             return <ListItem>
-                                <ListItemText primary={survey.name} />
+                                <ListItemText primary={survey.surveyName} />
 
                             </ListItem>
                         })

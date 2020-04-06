@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace MindOverMapper_Movim.Models.Requests
 {
@@ -9,5 +10,6 @@ namespace MindOverMapper_Movim.Models.Requests
     {
         public string PrototypeName { get; set; }
         public string PrototypeDescription { get; set; }
+        public List<IFormFile> Files { get; set; }
     }
 }
