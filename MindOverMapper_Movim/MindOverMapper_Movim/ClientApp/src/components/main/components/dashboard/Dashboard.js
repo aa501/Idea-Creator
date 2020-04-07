@@ -478,7 +478,7 @@ export default class Dashboard extends Component {
                             {this.state.projectList.map((project, index) => {
                                 return (
                                     <div class='project-paper-holder'>
-                                        <Card style={{ height: 400 }}>
+                                        <Card style={{height: 400}}>
                                             <Paper className='project-paper'>
                                                 <CardActionArea onClick={() => this.viewProject(project)}>
                                                     <CardMedia
@@ -507,15 +507,10 @@ export default class Dashboard extends Component {
                                                     </CardContent>
                                                 </CardActionArea>
                                                 <CardActions>
-                                                    <div id='share-learn-container'>
-                                                        <Button size="small" color="primary" onClick={this.openShareModal}>
-                                                            Share
-                                    <FontAwesomeIcon id='font-awesome-space' icon="share-square" />
-                                                        </Button>
-
+                                                    <div class="learn">
                                                         <Button id='learn-button' size="small" color="info" onClick={() => this.handleOpenLearnModal(project.uid)}>
                                                             Learn More
-                                    <FontAwesomeIcon id='font-awesome-space' icon="info-circle" />
+                                                            <FontAwesomeIcon id='font-awesome-space' icon="info-circle" />
                                                         </Button>
                                                     </div>
                                                 </CardActions>
