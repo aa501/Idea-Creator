@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using MindOverMapper_Movim.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -847,6 +846,39 @@ namespace MindOverMapper_Movim.Controllers
             _context.SaveChanges();
 
             return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
+        [HttpPost("promising-idea")]
+        public ActionResult AddBestIdea([FromBody] IdeaRequest req)
+        {
+
+            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
+
+            ProjectParameters param = new ProjectParameters
+            {
+                Uid = Guid.NewGuid().ToString(),
+                Type = "b",
+                Content = req.Idea,
+                ProjectId = proj.Id
+            };
+
+            _context.ProjectParameters.Add(param);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
+        [HttpGet("{uid}/promising-idea")]
+        public ActionResult GetPromisingIdea(string uid)
+        {
+
+            Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            var promisingIdea = _context.ProjectParameters.Where(b => b.ProjectId == proj.Id);
+            promisingIdea = _context.ProjectParameters.Where(b => b.Type == "p");
+
+            return Ok(promisingIdea);
         }
     }
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -7,6 +7,7 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <UserSecretsId>c5306c11-d414-480b-95bf-c6b9ecd42ac8</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,7 @@
       <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="Sendgrid" Version="9.12.0" />
     <PackageReference Include="Syn.WordNet" Version="1.0.5" />
   </ItemGroup>
@@ -30,6 +32,7 @@
     <None Remove="Services\AuthService.css" />
     <Content Remove="Services\Service.json" />
     <Content Remove="Models\Requests\ItemRequest.json" />
+    <Content Remove="wwwroot\files\.gitignore" />
     <None Remove="Artifacts\wordnet\.data.adj.icloud" />
     <None Remove="Artifacts\wordnet\.data.verb.icloud" />
     <None Remove="Artifacts\wordnet\data.adv" />
@@ -44,13 +47,28 @@
     <None Include="ClientApp\src\components\surveyend\components\surveyView\surveyView\SurveyView.css" />
     <None Include="**/*" />
     <None Include="**/*" />
+    <Compile Remove="Migrations\20200405181101_Survey.cs" />
+    <Compile Remove="Migrations\20200405181101_Survey.Designer.cs" />
+    <Compile Remove="Migrations\20200405190158_Survey.cs" />
+    <Compile Remove="Migrations\20200405190158_Survey.Designer.cs" />
+    <Compile Remove="Migrations\20200406164827_SurveyTest.cs" />
+    <Compile Remove="Migrations\20200406164827_SurveyTest.Designer.cs" />
+    <None Remove="Controllers\PrototypeController.cs" />
+    <None Remove="Models\ConceptSurvey.cs" />
+    <None Remove="Models\PrototypeSurvey.cs" />
+    <None Remove="Models\Requests\CreateSurveyRequest.cs" />
+    <None Remove="Models\Requests\CreateTurkSurveyRequest.cs" />
+    <None Remove="Models\Requests\EmailSurveyRequest.cs" />
+    <None Remove="Models\Survey.cs" />
     <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\_ViewImports.cshtml.g.cs" />
     <None Remove="obj\Debug\netcoreapp2.2\Razor\Pages\Error.cshtml.g.cs" />
+    <None Remove="Surveys\EmailSurvey.cs" />
+    <None Remove="Surveys\ISurvey.cs" />
+    <None Remove="Surveys\SurveyFactory.cs" />
+    <None Remove="Surveys\SurveyTypes.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Requests\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Helpers\" />
     <Folder Include="Services\" />
     <Folder Include="Artifacts\" />
@@ -103,7 +121,7 @@
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)build\**" />
-      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>

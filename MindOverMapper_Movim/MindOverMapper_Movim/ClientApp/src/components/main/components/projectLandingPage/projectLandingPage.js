@@ -47,12 +47,10 @@ export default class ProjectLandingPage extends Component {
         this.state = {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
-            concepts: [],
         }
     }
 
     componentDidMount = () => {
-      this.pullConcepts();
         if (this.props.location.state === undefined) {
             this.props.history.push({
                 pathname: '/'
@@ -88,7 +86,7 @@ export default class ProjectLandingPage extends Component {
 
     pushToSurveys = () => {
         this.props.history.push({
-            pathname: '/survey-question',
+            pathname: '/surveys',
             state: this.state  // need this for moving to different component
         });
     }
@@ -98,18 +96,6 @@ export default class ProjectLandingPage extends Component {
             pathname: '/add-prototype',
             state: this.state  // need this for moving to different component
         });
-    }
-
-    pullConcepts = async () => {
-        const response = await axios.get('/api/project/' + this.state.projectName.uid + '/get-concepts', {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token
-              }//the token is a variable which holds the token
-          }).then(response => response.data);
-              this.setState({
-              concepts: response
-          });
-        const test = await console.log(this.state.concepts);
     }
 
     render() {
@@ -264,6 +250,19 @@ export default class ProjectLandingPage extends Component {
                                 </Card>
                             </div>
                             <div class="col-sm-2">
+                                <Card class="card-button-5">
+                                    <CardActionArea onClick={this.pushToMindMap}>
+                                        <CardContent>
+                                            <Typography id="options-label">
+                                                <center>
+                                                    Mind Map
+                                                 </center>
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>                            
+                            <div class="col-sm-2">
                                 <Card class="card-button-3">
                                     <CardActionArea onClick={this.pushToPrototypes}>
                                         <CardContent>
@@ -283,19 +282,6 @@ export default class ProjectLandingPage extends Component {
                                             <Typography id="options-label">
                                                 <center>
                                                     Surveys
-                                                 </center>
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </div>
-                            <div class="col-sm-2">
-                                <Card class="card-button-5">
-                                    <CardActionArea onClick={this.pushToMindMap}>
-                                        <CardContent>
-                                            <Typography id="options-label">
-                                                <center>
-                                                    Mind Map
                                                  </center>
                                             </Typography>
                                         </CardContent>
