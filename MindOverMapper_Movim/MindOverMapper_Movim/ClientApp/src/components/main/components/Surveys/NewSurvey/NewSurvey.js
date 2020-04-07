@@ -44,9 +44,9 @@ export default class NewSurvey extends Component {
             }).then(response => {
                 callback(response.data);
             }).catch(err => {
-                
+
          });
-           
+
     }
 
     save = () => {
@@ -74,7 +74,7 @@ export default class NewSurvey extends Component {
                     Authorization: 'Bearer ' + this.state.userData.token
                 }
             }).then(response => {
-                
+
             }).catch(err => {
 
             });
@@ -89,7 +89,7 @@ export default class NewSurvey extends Component {
                     Authorization: 'Bearer ' + this.state.userData.token
                 }
             }).then(response => {
-                
+
             }).catch(err => {
 
             });
@@ -133,7 +133,7 @@ export default class NewSurvey extends Component {
     cancel = () => {
         this.props.history.push({
             pathname: '/surveys',
-            state: { userData: this.state.userData } 
+            state: { userData: this.state.userData }
         });
     }
 
@@ -193,7 +193,7 @@ export default class NewSurvey extends Component {
 
     qualitativeChanged = (evt) => {
         this.setState({demographics: evt.value})
-    }    
+    }
     render() {
         return (
             <div class="mx-auto shadow my-5 p-3">
@@ -205,11 +205,12 @@ export default class NewSurvey extends Component {
                             <TextField id="name" onChange={this.handleSurveyNameChange} fullWidth value={this.state.surveyName} label="1. Survey Name (Respondents will not see this name)" />
                         </FormGroup>
                         <FormGroup>
+                            <h5>2. Check to include Demographics and Categorization Questions</h5>
                             <FormControlLabel
                                 control={<Checkbox checked={this.demographics} onChange={this.demographicsChanged} name="demographics" />}
-                                label="2. Check to include Demographics and Categorization Questions."
+                                label="Check here if your survey will NOT be utilizing Amazon MTurk."
                             />
-                                  
+
                         </FormGroup>
 
                         <FormGroup>
@@ -258,9 +259,10 @@ export default class NewSurvey extends Component {
                                     </RadioGroup>
                                 </FormGroup>
                                 <FormGroup>
+                                    <h5>7. Include additional qualitative questions</h5>
                                     <FormControlLabel
                                         control={<Checkbox checked={this.qualitative} onChange={this.qualitativeChanged} name="qualitative" />}
-                                        label="7. Include additional qualitative questions"
+                                        label="Open Question Bank"
                                     />
                                 </FormGroup>
                                 <FormGroup className="d-flex flex-column">
@@ -303,8 +305,8 @@ export default class NewSurvey extends Component {
                                     <p>Select Projects: The project team will have access to this test.</p>
                                     <p>Hold the control key(windows) or command key (mac) to select multiple</p>
                                 </FormGroup>
-                       
-                         
+
+
                     <div class="d-flex justify-content-around flex-row">
                             <Button onClick={this.cancel} >Cancel</Button>
                             <span>
@@ -313,7 +315,7 @@ export default class NewSurvey extends Component {
                                 <Button variant="success" onClick={this.saveAndEmail}>Save and Email</Button>
                                 <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button>
                             </span>
-                            
+
                         </div>
                         <Dialog open={this.state.questionDialog} >
                             <DialogContent dividers>
@@ -345,10 +347,10 @@ export default class NewSurvey extends Component {
                         </Dialog>
                     </div>
                 </Container>
-               
+
 
             </div>
-            
+
         );
     }
 }
