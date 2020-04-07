@@ -38,12 +38,12 @@ function Transition(props) {
 }
 
 function getIndex(array, value) {
-    console.log(array);
+    console.log("Searching array for " + typeof(value) + " " + value + " to update index:");
     for (var i = 0; i < array.length; i+=1)
     {
-      if (array[i].qid == value)
+      if (array[i].qid.toString() == value)
       {
-        console.log(i)
+        console.log("Search successful")
         return i;
       }
     }
@@ -71,6 +71,7 @@ export default class ConceptView extends Component {
             price: '',
             passion: '',
             deathThreats: '',
+            concepts: [],
             questions: [],
             answers: [],
             newAnswers: [],
@@ -86,9 +87,21 @@ export default class ConceptView extends Component {
         }
     }
 
-    componentDidMount = () => {
-        this.getQuestions();
+    componentDidMount = async () => {
+        this.pullConcepts();
         console.log(this.props);
+    }
+
+    pullConcepts = async () => {
+        const response = await axios.get('/api/project/' + this.state.projectName.uid + '/get-concepts', {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token
+              }//the token is a variable which holds the token
+          }).then(response => response.data);
+              this.setState({
+              concepts: response
+          });
+        const test = await console.log(this.state.concepts);
     }
 
     getQuestions = async () => {
@@ -105,7 +118,6 @@ export default class ConceptView extends Component {
         });
     }
 
-
     getAnswers = async (uid) => {
         if (uid != null) {
             console.log(uid);
@@ -117,9 +129,10 @@ export default class ConceptView extends Component {
                 response = response.data;
                 this.setState({
                     answers: response
-                }, () => (console.log(this.state.answers)));
+                }, () => (console.log("Answers" + this.state.answers)));
             });
-        };
+        }
+        else { console.log("could not load answers") }
     }
 
     handleCloseErrorModal = () => {
@@ -149,7 +162,7 @@ export default class ConceptView extends Component {
       });
     }
 
-    handleOpenLearnModal = (concept) => {
+    handleOpenLearnModal = async (concept) => {
         this.setState({
             learnModal: true,
             conceptUid: concept.uid,
@@ -164,13 +177,14 @@ export default class ConceptView extends Component {
             deathThreats: concept.deathThreats,
             completedConcept: true
           }, () => {
-          this.getAnswers(concept.uid);
+          this.getQuestions();
         });
+        const getA = await this.getAnswers(concept.uid);
       }
 
     handleOpenQuestionModal = async (concept) => {
-        console.log(this.state.answers);
-        this.computeArrays();
+        console.log("Answers: " + this.state.answers);
+        const cA = await this.computeArrays();
         this.setState({
             learnModal: false,
             questionModal: true,
@@ -275,9 +289,11 @@ export default class ConceptView extends Component {
         const answers = this.state.answers;
         console.log(answers);
         var el = getIndex(answers, i);
-        console.log(el);
-        answers[el].answer = event.target.value;
-        this.setState({ answers });
+        console.log("Searched Answer index: " + el);
+        try {
+            answers[el].answer = event.target.value;
+            this.setState({ answers });
+        } catch { console.log("Error!")}
         console.log(this.state.answers);
     }
 
@@ -285,37 +301,46 @@ export default class ConceptView extends Component {
         var ids = [];
         var answered = [];
         var unanswered = [];
-        this.state.answers.forEach(answer => ids.push(answer.qid))
-        console.log(ids);
-        this.state.questions.forEach(function(question) {
-          if (ids.includes(question.id))
-          {
-            console.log("Found: " + question.id + " in answered questions.");
-            answered.push(question);
-          }
-          else
-          {
-            console.log("Didn't find: " + question.id + " in answered questions.");
-            unanswered.push(question);
-          }
+        this.state.answers.forEach(function (answer) {
+            if (!ids.includes(answer.qid)) {
+                ids.push(answer.qid);
+            }
+        });
+
+        console.log("List of IDs" + ids);
+        this.state.questions.forEach(function (question) {
+            if (ids.includes(question.id)) {
+                console.log("Found: " + question.id + " in answered questions.");
+                answered.push(question);
+            }
+            else if (!answered.includes(question)) {
+                console.log("Didn't find: " + question.id + " in answered questions.");
+                unanswered.push(question);
+            }
+            else { console.log("error") }
         });
         console.log(answered);
         console.log(unanswered);
 
-        var ansQns = this.state.answers.map ( function(x, i){
-          return {"answer": x, "question": answered[i]}
+
+
+        var ansQns = this.state.answers.map(function (x, i) {
+            return {"answer": x, "question": answered[i]}
         }.bind(this));
 
         this.setAnswered(ansQns, unanswered);
     }
 
-    setAnswered = (ans, unans) =>
+    setAnswered = async (ans, unans) =>
     {
         this.setState({
-          combinedAnswered: ans,
-          unansweredQuestions: unans
-        }, () =>
-        console.log(this.state.unansweredQuestions));
+            combinedAnswered: ans,
+            unansweredQuestions: unans
+        });
+        const sU = await (console.log("Unanswered: "));
+        console.log(this.state.unansweredQuestions);
+        const sA = await (console.log("Answered: "));
+        console.log(this.state.combinedAnswered);
     }
 
 
@@ -538,10 +563,6 @@ export default class ConceptView extends Component {
                                                         <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="stream" style={{ fontSize: '1.4em' }}/>
                                                             <strong>News Headline</strong> {concept.newsHeadline.slice(0, 58)}...
-                                                        </Typography>
-                                                        <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
-                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" style={{ fontSize: '1.1em' }}/>
-                                                                <strong>ID:</strong> #{concept.uid}
                                                         </Typography>
                                                         <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="heart" style={{ fontSize: '1.4em' }}/>
@@ -785,9 +806,9 @@ export default class ConceptView extends Component {
                           <div>
                               {
                                   this.state.combinedAnswered.map(qsn => (
-                                  <div>
-                                          <div key={`qText${qsn.question.id}`}>{qsn.question.text}</div>
-                                          <TextField key={`qsn${qsn.question.id}`}
+                                      <div>
+                                          <div>{qsn.question.text}</div>
+                                          <TextField
                                               defaultValue={qsn.answer.answer}
                                               onChange={(event) => this.handleUpdatedAnswer(event, `${qsn.question.id}`)}
                                               multiline
