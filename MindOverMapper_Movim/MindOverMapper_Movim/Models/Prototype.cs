@@ -12,5 +12,6 @@ namespace MindOverMapper_Movim.Models
         public int ProjectId { get; set; }
         public string PrototypeDescription { get; set; }
         public string PrototypeName { get; set; }
+        public string PrototypePath { get; set; }
     }
 }

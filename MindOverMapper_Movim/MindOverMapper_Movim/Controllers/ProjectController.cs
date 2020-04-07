@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using MindOverMapper_Movim.Models;
 using Microsoft.AspNetCore.Mvc;
