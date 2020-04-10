@@ -50,38 +50,47 @@ namespace MindOverMapper_Movim.Controllers
         //    return Ok(surveys);
         //}
 
-        //[Authorize]
-        //[HttpPost]
-        //public ActionResult CreateSurvey([FromBody] CreateSurveyRequest  req)
-        //{
-        //    Survey survey = new Survey();
-        //    survey.SurveyName = req.surveyName;
-        //    survey.PricingOptionId = req.pricingOptionId;
-        //    survey.Idea = req.idea;
-        //    survey.Package = req.package;
-        //    survey.Product = req.product;
-        //    survey.Name = req.name;
-        //    survey.PurchaseFrequency = req.purchaseFrequency;
-        //    survey.PurchasePrice = req.purchasePrice;
-        //    survey.Qualitative = req.qualitative;
-        //    survey.Demographics = req.demographics;
-        //    _context.Survey.Add(survey);
-        //    return Ok();
-        //}
+        [Authorize]
+        [HttpPost]
+        public ActionResult CreateSurvey([FromBody] CreateSurveyRequest  req)
+        {
+           Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
+           Prototype proto = _context.Prototype.Where(o => o.Uid == req.PrototypeUid).FirstOrDefault<Prototype>();
+           Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
 
-        //[Authorize]
-        //[HttpPost("/email")]
-        //public ActionResult EmailSurvey([FromBody] EmailSurveyRequest req)
-        //{
 
-        //    ISurvey emailSurvey = SurveyFactory.Build(SurveyTypes.EmailSurvey);
-        //    var survey = _context.Survey.Find(req.SurveyId);
-        //    emailSurvey.LoadSurvey(survey);
-        //    emailSurvey.execute();
-        //    return Ok();
-        //}
+            Survey survey = new Survey
+            {
+                Uid = Guid.NewGuid().ToString(),
+                ProjectId = proj.Id,
+                PrototypeId = proto.Id,
+                ConceptId = cpt.Id,
+                SurveyName = req.SurveyName,
+                Notes = req.Notes,
+                Qualifications = req.Qualifications,
+                Questions = req.Questions,
+                Status = req.Status,
+                EndDate = req.EndDate
+            };
 
-        [AllowAnonymous]
+           _context.Survey.Add(survey);
+           _context.SaveChanges();
+           return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("/email")]
+        public ActionResult EmailSurvey([FromBody] EmailSurveyRequest req)
+        {
+
+           ISurvey emailSurvey = SurveyFactory.Build(SurveyTypes.EmailSurvey);
+           var survey = _context.Survey.Find(req.SurveyId);
+           emailSurvey.LoadSurvey(survey);
+           emailSurvey.execute();
+           return Ok();
+        }
+
+        [Authorize]
         [HttpGet("get-survey-questions")]
         public ActionResult GetSurveyQuestions()
         {
