@@ -251,6 +251,7 @@ namespace MindOverMapper_Movim.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ProjectId")
+                        .IsRequired()
                         .HasColumnName("project_id");
 
                     b.Property<string>("PrototypeDescription")
