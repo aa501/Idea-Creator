@@ -341,8 +341,8 @@ namespace MindOverMapper_Movim.Models
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-                entity.Property(e => e.ProjectId).HasColumnName("project_id");
-                .IsRequired()
+                entity.Property(e => e.ProjectId).HasColumnName("project_id")
+                .IsRequired();
 
                 entity.Property(e => e.PrototypeDescription)
                 .HasColumnName("prototype_description")
