@@ -570,14 +570,6 @@ export default class ConceptView extends Component {
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>
-                                                <CardActions>
-                                                    <div id='share-learn-container'>
-                                                        <Button id='learn-button' size="small" color="info">
-                                                            Edit
-                                                         <FontAwesomeIcon id='font-awesome-space' icon="info-circle" />
-                                                        </Button>
-                                                    </div>
-                                                </CardActions>
                                             </Paper>
                                         </Card>
                                     </div>

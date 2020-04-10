@@ -23,6 +23,7 @@ export default class SurveyQuestion extends Component {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
             questions: [],
+            tags: [],
             numQs: 0,
 
             textSub: '',
@@ -179,6 +180,7 @@ export default class SurveyQuestion extends Component {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
           'notes': 'none',
+          'tags': '',
           'archived': 'No'
       },
       {
@@ -203,6 +205,7 @@ export default class SurveyQuestion extends Component {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
           'notes': this.state.choices,
+          'tags': '',
           'archived': 'No'
       },
       {
@@ -414,7 +417,7 @@ export default class SurveyQuestion extends Component {
                     <h4>Submit new questions for surveys.</h4>
                     <Row>
                     <Col md={{ span: 3, offset: 0 }} >
-                    Choose Question Type: {this.renderQstDropdown()}
+                    <div> Choose Question Type: {this.renderQstDropdown()} </div>
                     </Col>
                     <Col md={{ span: 5, offset: 0 }} >
                     <p>

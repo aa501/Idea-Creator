@@ -10,6 +10,7 @@ namespace MindOverMapper_Movim.Models.Requests
     {
         public string PrototypeName { get; set; }
         public string PrototypeDescription { get; set; }
+        public int ProjectId { get; set; }
         public List<IFormFile> Files { get; set; }
     }
 }

@@ -30,43 +30,52 @@ namespace MindOverMapper_Movim.Controllers
             _service = new SurveyService();
         }
 
-        [Authorize]
-        [HttpGet("{uid}")]
-        public ActionResult GetSurveys(string uid)
-        {
-            //Do Some code to validate access?
-            /*var Surveys = from survey in _context.Set<Survey>()
-                          join project in _context.Set<Project>()
-                            on survey.ProjectId equals project.Id
-                          where project.Uid == uid
-                          select new { survey };*/
-            IList<Survey> surveys = new List<Survey>();
-            Survey survey = new Survey();
-            survey.SurveyName = "Harry Killer";
-            survey.Name = false;
-            survey.ProjectId = 1;
-            survey.Package = false;
-            surveys.Add(survey);
-            return Ok(surveys);
-        }
+        //[Authorize]
+        //[HttpGet("{uid}")]
+        //public ActionResult GetSurveys(string uid)
+        //{
+        //    //Do Some code to validate access?
+        //    /*var Surveys = from survey in _context.Set<Survey>()
+        //                  join project in _context.Set<Project>()
+        //                    on survey.ProjectId equals project.Id
+        //                  where project.Uid == uid
+        //                  select new { survey };*/
+        //    IList<Survey> surveys = new List<Survey>();
+        //    Survey survey = new Survey();
+        //    survey.SurveyName = "Harry Killer";
+        //    survey.Name = false;
+        //    survey.ProjectId = 1;
+        //    survey.Package = false;
+        //    surveys.Add(survey);
+        //    return Ok(surveys);
+        //}
 
         [Authorize]
         [HttpPost]
         public ActionResult CreateSurvey([FromBody] CreateSurveyRequest  req)
         {
-            Survey survey = new Survey();
-            survey.SurveyName = req.surveyName;
-            survey.PricingOptionId = req.pricingOptionId;
-            survey.Idea = req.idea;
-            survey.Package = req.package;
-            survey.Product = req.product;
-            survey.Name = req.name;
-            survey.PurchaseFrequency = req.purchaseFrequency;
-            survey.PurchasePrice = req.purchasePrice;
-            survey.Qualitative = req.qualitative;
-            survey.Demographics = req.demographics;
-            _context.Survey.Add(survey);
-            return Ok();
+           Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
+           Prototype proto = _context.Prototype.Where(o => o.Uid == req.PrototypeUid).FirstOrDefault<Prototype>();
+           Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
+
+
+            Survey survey = new Survey
+            {
+                Uid = Guid.NewGuid().ToString(),
+                ProjectId = proj.Id,
+                PrototypeId = proto.Id,
+                ConceptId = cpt.Id,
+                SurveyName = req.SurveyName,
+                Notes = req.Notes,
+                Qualifications = req.Qualifications,
+                Questions = req.Questions,
+                Status = req.Status,
+                EndDate = req.EndDate
+            };
+
+           _context.Survey.Add(survey);
+           _context.SaveChanges();
+           return Ok();
         }
 
         [Authorize]
@@ -74,45 +83,54 @@ namespace MindOverMapper_Movim.Controllers
         public ActionResult EmailSurvey([FromBody] EmailSurveyRequest req)
         {
 
-            ISurvey emailSurvey = SurveyFactory.Build(SurveyTypes.EmailSurvey);
-            var survey = _context.Survey.Find(req.SurveyId);
-            emailSurvey.LoadSurvey(survey);
-            emailSurvey.execute();
-            return Ok();
+           ISurvey emailSurvey = SurveyFactory.Build(SurveyTypes.EmailSurvey);
+           var survey = _context.Survey.Find(req.SurveyId);
+           emailSurvey.LoadSurvey(survey);
+           emailSurvey.execute();
+           return Ok();
         }
 
         [Authorize]
-        [HttpPost("/turk")]
-        public ActionResult TurkSurvey([FromBody]CreateTurkSurveyRequest req)
+        [HttpGet("get-survey-questions")]
+        public ActionResult GetSurveyQuestions()
         {
-            ISurvey emailSurvey = SurveyFactory.Build(SurveyTypes.TurkSurvey);
-            var survey = _context.Survey.Find(req.Id);
-            emailSurvey.LoadSurvey(survey);
-            emailSurvey.execute();
-            return Ok();
+            var questions = _context.Question.Where(q => q.Type != "concept");
+
+            return Ok(questions);
         }
-        private bool hasPermission(string userUid, string projUid)
-        {
-            var user = _context.User.Where(u => u.Uid == userUid).FirstOrDefault<User>();
 
-            if (user == null)
-            {
-                return false;
-            }
-            else if (user.Type == "admin")
-            {
-                return true;
-            }
+        //[Authorize]
+        //[HttpPost("/turk")]
+        //public ActionResult TurkSurvey([FromBody]CreateTurkSurveyRequest req)
+        //{
+        //    ISurvey emailSurvey = SurveyFactory.Build(SurveyTypes.TurkSurvey);
+        //    var survey = _context.Survey.Find(req.Id);
+        //    emailSurvey.LoadSurvey(survey);
+        //    emailSurvey.execute();
+        //    return Ok();
+        //}
+        //private bool hasPermission(string userUid, string projUid)
+        //{
+        //    var user = _context.User.Where(u => u.Uid == userUid).FirstOrDefault<User>();
 
-            var proj = _context.Project.Where(p => p.Uid == projUid).FirstOrDefault<Project>();
+        //    if (user == null)
+        //    {
+        //        return false;
+        //    }
+        //    else if (user.Type == "admin")
+        //    {
+        //        return true;
+        //    }
 
-            if (proj == null)
-            {
-                return false;
-            }
+        //    var proj = _context.Project.Where(p => p.Uid == projUid).FirstOrDefault<Project>();
 
-            var per = _context.Permissions.Where(p => p.ProjId == proj.Id && p.UserId == user.Id).FirstOrDefault<Permissions>();
-            return per != null;
-        }
+        //    if (proj == null)
+        //    {
+        //        return false;
+        //    }
+
+        //    var per = _context.Permissions.Where(p => p.ProjId == proj.Id && p.UserId == user.Id).FirstOrDefault<Permissions>();
+        //    return per != null;
+        //}
     }
 }
