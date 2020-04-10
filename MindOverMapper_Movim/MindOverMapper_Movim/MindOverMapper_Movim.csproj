@@ -49,10 +49,8 @@
     <None Include="**/*" />
     <Compile Remove="Migrations\20200405181101_Survey.cs" />
     <Compile Remove="Migrations\20200405181101_Survey.Designer.cs" />
-    <Compile Remove="Migrations\20200405190158_Survey.cs" />
-    <Compile Remove="Migrations\20200405190158_Survey.Designer.cs" />
-    <Compile Remove="Migrations\20200406164827_SurveyTest.cs" />
-    <Compile Remove="Migrations\20200406164827_SurveyTest.Designer.cs" />
+    <Compile Remove="Migrations\20200410050326_Initial.cs" />
+    <Compile Remove="Migrations\20200410050326_Initial.Designer.cs" />
     <None Remove="Controllers\PrototypeController.cs" />
     <None Remove="Models\ConceptSurvey.cs" />
     <None Remove="Models\PrototypeSurvey.cs" />
@@ -121,7 +119,7 @@
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)build\**" />
-      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>

@@ -331,6 +331,37 @@ namespace MindOverMapper_Movim.Models
 
             });
 
+            modelBuilder.Entity<Prototype>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Uid)
+                .IsRequired()
+                .HasColumnName("uid")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+                entity.Property(e => e.ProjectId).HasColumnName("project_id");
+
+                entity.Property(e => e.PrototypeDescription)
+                .HasColumnName("prototype_description")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+                entity.Property(e => e.PrototypeName)
+                .IsRequired()
+                .HasColumnName("prototype_name")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+                entity.Property(e => e.PrototypePath)
+                .IsRequired()
+                .HasColumnName("prototype_path")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+            });
+
             modelBuilder.Entity<Survey>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");

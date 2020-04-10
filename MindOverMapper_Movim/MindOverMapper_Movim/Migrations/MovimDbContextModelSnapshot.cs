@@ -85,25 +85,6 @@ namespace MindOverMapper_Movim.Migrations
                     b.ToTable("Concept");
                 });
 
-            modelBuilder.Entity("MindOverMapper_Movim.Models.ConceptSurvey", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ConceptId");
-
-                    b.Property<int>("SurveyId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConceptId");
-
-                    b.HasIndex("SurveyId");
-
-                    b.ToTable("ConceptSurvey");
-                });
-
             modelBuilder.Entity("MindOverMapper_Movim.Models.IdeationAnswers", b =>
                 {
                     b.Property<int>("Id")
@@ -269,21 +250,25 @@ namespace MindOverMapper_Movim.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ProjectId");
+                    b.Property<int>("ProjectId")
+                        .HasColumnName("project_id");
 
                     b.Property<string>("PrototypeDescription")
-                        .IsRequired()
-                        .HasColumnName("description")
-                        .HasMaxLength(500)
+                        .HasColumnName("prototype_description")
+                        .HasMaxLength(1000)
                         .IsUnicode(false);
 
                     b.Property<string>("PrototypeName")
                         .IsRequired()
-                        .HasColumnName("name")
-                        .HasMaxLength(50)
+                        .HasColumnName("prototype_name")
+                        .HasMaxLength(1000)
                         .IsUnicode(false);
 
-                    b.Property<string>("PrototypePath");
+                    b.Property<string>("PrototypePath")
+                        .IsRequired()
+                        .HasColumnName("prototype_path")
+                        .HasMaxLength(1000)
+                        .IsUnicode(false);
 
                     b.Property<string>("Uid")
                         .IsRequired()
@@ -294,25 +279,6 @@ namespace MindOverMapper_Movim.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Prototype");
-                });
-
-            modelBuilder.Entity("MindOverMapper_Movim.Models.PrototypeSurvey", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PrototypeId");
-
-                    b.Property<int>("SurveyId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PrototypeId");
-
-                    b.HasIndex("SurveyId");
-
-                    b.ToTable("PrototypeSurvey");
                 });
 
             modelBuilder.Entity("MindOverMapper_Movim.Models.Question", b =>
@@ -335,11 +301,6 @@ namespace MindOverMapper_Movim.Migrations
                     b.Property<string>("Notes")
                         .HasColumnName("notes")
                         .HasMaxLength(1000)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Tags")
-                        .HasColumnName("tags")
-                        .HasColumnType("nvarchar(max)")
                         .IsUnicode(false);
 
                     b.Property<string>("Text")
@@ -402,66 +363,52 @@ namespace MindOverMapper_Movim.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Demographics");
-
-                    b.Property<bool>("Idea");
-
-                    b.Property<bool>("Name");
-
-                    b.Property<bool>("Package");
-
-                    b.Property<int>("PricingOptionId");
-
-                    b.Property<bool>("Product");
-
-                    b.Property<int>("ProjectId");
-
-                    b.Property<bool>("PurchaseFrequency");
-
-                    b.Property<bool>("PurchasePrice");
-
-                    b.Property<bool>("Qualitative");
-
-                    b.Property<string>("SurveyName");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Survey");
-                });
-
-            modelBuilder.Entity("MindOverMapper_Movim.Models.Tag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Archived")
-                        .IsRequired()
-                        .HasColumnName("archived")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
+                    b.Property<int>("ConceptId")
+                        .HasColumnName("concept_id");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnName("date_created")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("Description")
-                        .HasColumnName("description")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnName("name")
-                        .HasMaxLength(1000)
+                    b.Property<string>("EndDate")
+                        .HasColumnName("end_date")
+                        .HasMaxLength(20)
                         .IsUnicode(false);
 
                     b.Property<string>("Notes")
                         .HasColumnName("notes")
-                        .HasMaxLength(1000)
+                        .HasMaxLength(2000)
+                        .IsUnicode(false);
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnName("project_id");
+
+                    b.Property<int>("PrototypeId")
+                        .HasColumnName("prototype_id");
+
+                    b.Property<string>("Qualifications")
+                        .HasColumnName("qualifications")
+                        .HasColumnType("nvarchar(4000)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("Questions")
+                        .HasColumnName("questions")
+                        .HasColumnType("nvarchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnName("status")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SurveyName")
+                        .IsRequired()
+                        .HasColumnName("name")
+                        .HasMaxLength(50)
                         .IsUnicode(false);
 
                     b.Property<string>("Uid")
@@ -472,7 +419,7 @@ namespace MindOverMapper_Movim.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Survey");
                 });
 
             modelBuilder.Entity("MindOverMapper_Movim.Models.User", b =>
@@ -535,32 +482,6 @@ namespace MindOverMapper_Movim.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("MindOverMapper_Movim.Models.ConceptSurvey", b =>
-                {
-                    b.HasOne("MindOverMapper_Movim.Models.Concept", "Concept")
-                        .WithMany()
-                        .HasForeignKey("ConceptId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MindOverMapper_Movim.Models.Survey", "Survey")
-                        .WithMany()
-                        .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MindOverMapper_Movim.Models.PrototypeSurvey", b =>
-                {
-                    b.HasOne("MindOverMapper_Movim.Models.Prototype", "Prototype")
-                        .WithMany()
-                        .HasForeignKey("PrototypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MindOverMapper_Movim.Models.Survey", "Survey")
-                        .WithMany()
-                        .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

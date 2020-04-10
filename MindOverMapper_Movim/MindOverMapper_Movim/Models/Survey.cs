@@ -16,7 +16,7 @@ namespace MindOverMapper_Movim.Models
         public string Notes { get; set; }
         public string Qualifications { get; set; }
         public string Questions { get; set; }
-        public string DateCreated { get; set; }
+        public DateTime DateCreated { get; set; }
         public string Status { get; set; }
         public string EndDate { get; set; }
     }
