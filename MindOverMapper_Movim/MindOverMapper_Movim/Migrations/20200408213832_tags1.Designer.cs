@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MindOverMapper_Movim.Models;
 
 namespace MindOverMapper_Movim.Migrations
 {
     [DbContext(typeof(MovimDbContext))]
-    partial class MovimDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200408213832_tags1")]
+    partial class tags1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -145,7 +145,14 @@ export default class SurveyView extends Component {
     handleChecked(event, i) {
       const item = event.target.name;
       const isChecked = event.target.checked;
-      const checkedArray = this.state.checkedHold;
+      var checkedArray;
+
+      if (this.state.answers[i] == null) {
+        checkedArray = this.state.checkedHold;
+      }
+      else {
+        checkedArray = this.state.answers[i];
+      }
       const finalArray = [];
 
       if (isChecked == true) {
@@ -160,6 +167,8 @@ export default class SurveyView extends Component {
         this.setState({ checkedHold: newArray }, () =>
         (this.addCheckedAnswer(newArray, i)));
       }
+
+      this.setState({checkedHold: []});
     }
 
     /* Adds checked answers to the answers array  */
@@ -276,18 +285,18 @@ export default class SurveyView extends Component {
 
       if (type == "ca") {
         return (
-                <div>
-                {
-                    newArray.map(choice => (
-                    <Row>
+          <div>
+            {
+                newArray.map(choice => (
+                  <Row>
                       <FormControlLabel control={<Checkbox color="teal" name={choice} checked={this.state.checked} onChange={(event) => this.handleChecked(event, `${qsn.id}`)}/>}
                               label={choice} labelPlacement="end"/>
-                    </Row>
-                ))
-                }
-                </div>
+                  </Row>
+               ))
+            }
+          </div>
                 )
-              }
+      }
     }
 
     render() {

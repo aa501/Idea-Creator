@@ -26,8 +26,6 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<Prototype> Prototype { get; set; }
         public virtual DbSet<Survey> Survey { get; set; }
-        public virtual DbSet<ConceptSurvey> ConceptSurvey { get; set; }
-        public virtual DbSet<PrototypeSurvey> PrototypeSurvey { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
@@ -333,7 +331,7 @@ namespace MindOverMapper_Movim.Models
 
             });
 
-            modelBuilder.Entity<Prototype>(entity =>
+            modelBuilder.Entity<Survey>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -343,16 +341,47 @@ namespace MindOverMapper_Movim.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PrototypeName)
+                entity.Property(e => e.SurveyName)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PrototypeDescription)
+                entity.Property(e => e.ProjectId).HasColumnName("project_id");
+
+                entity.Property(e => e.PrototypeId).HasColumnName("prototype_id");
+
+                entity.Property(e => e.ConceptId).HasColumnName("concept_id");
+
+                entity.Property(e => e.Notes)
+                    .HasColumnName("notes")
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Qualifications)
+                    .HasColumnName("qualifications")
+                    .HasColumnType("nvarchar(4000)")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Questions)
+                    .HasColumnName("questions")
+                    .HasColumnType("nvarchar(max)")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DateCreated)
                     .IsRequired()
-                    .HasColumnName("description")
-                    .HasMaxLength(500)
+                    .HasColumnName("date_created")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasColumnName("status")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EndDate)
+                    .HasColumnName("end_date")
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
             });

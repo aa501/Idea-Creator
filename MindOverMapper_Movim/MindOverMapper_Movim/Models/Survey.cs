@@ -8,17 +8,16 @@ namespace MindOverMapper_Movim.Models
     public class Survey
     {
         public int Id { get; set; }
-        public int ProjectId { get; set; }
+        public string Uid { get; set; }
         public string SurveyName { get; set; }
-        public int PricingOptionId { get; set; }
-        public Boolean Idea { get; set; }
-        public Boolean Package { get; set; }
-        public Boolean Product { get; set; }
-        public Boolean Name { get; set; }
-        public Boolean PurchaseFrequency { get; set; }
-        public Boolean PurchasePrice { get; set; }
-        public Boolean Qualitative { get; set; }
-        public Boolean Demographics { get; set; }
+        public int ProjectId { get; set; }
+        public int PrototypeId { get; set; }
+        public int ConceptId { get; set; }
+        public string Notes { get; set; }
+        public string Qualifications { get; set; }
+        public string Questions { get; set; }
+        public string DateCreated { get; set; }
+        public string Status { get; set; }
+        public string EndDate { get; set; }
     }
-
 }

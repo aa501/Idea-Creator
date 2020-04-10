@@ -1,9 +1,18 @@
 ﻿import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
-import { Container, Row, Col, FormGroup, InputGroup, Form, Input, Button, Card, Alert } from 'react-bootstrap';
-import { List, ListSubheader, ListItem, ListItemText, Select, MenuItem, Dialog, DialogContent, DialogActions, Checkbox, RadioGroup, FormControlLabel, Radio, TextareaAutosize } from '@material-ui/core';
+import { Container, Row, Col, FormGroup, InputGroup, Form, Button, Card, Alert } from 'react-bootstrap';
+import { Input } from 'reactstrap';
+import { Chip, List, ListSubheader, ListItem, ListItemText, Select, MenuItem, Dialog, DialogContent, DialogActions, Checkbox, RadioGroup, FormControlLabel, Radio, TextareaAutosize, CircularProgress } from '@material-ui/core';
 import axios from 'axios';
+import Slide from '@material-ui/core/Slide';
+import './NewSurvey.css';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 export default class NewSurvey extends Component {
 
@@ -12,8 +21,12 @@ export default class NewSurvey extends Component {
         this.state = {
             userData: this.props.location.state.userData || this.props.userData,
             projectName: this.props.location.state.projectName,
+            loading: false,
             surveyName: '',
             questions: [],
+            pulledQuestions: [],
+            chosenQuestions: [],
+            finalQuestionSet: [],
             concepts: [],
             prototypes: [],
             questionDialog: false,
@@ -27,8 +40,172 @@ export default class NewSurvey extends Component {
             purchaseFrequency: false,
             purchasePrice: false,
             qualitative: false,
-            demographics: false
+            demographics: false,
+
+            numQs: 0,
+
+            textSub: '',
+            ratingSub: '',
+            qstType: '',
+
+            ratingMinNote: '',
+            ratingMaxNote: '',
+            ratingQuestion: '',
+            ratingString: '',
+
+            choices: '',
         }
+    }
+
+    componentDidMount = () => {
+        console.log(this.props);
+    }
+
+    getQuestions = async () => {
+        const response = await axios.get('/api/survey/get-survey-questions', {
+        }).then(response => {
+            response = response.data;
+            this.setState({
+                pulledQuestions: response,
+                test: response.length
+            });
+        });
+    }
+
+    submitRatingQuestion = () => {
+      axios.post('/api/project/submit-question',
+      {
+          'text': this.state.subQuestion,
+          'type': this.state.qstType,
+          'notes': this.state.ratingString.concat('min,', this.state.ratingMinNote, ',max,', this.state.ratingMaxNote),
+          'archived': 'No'
+      },
+      {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
+      }).then(() => {
+          //this.openSuccessModal();
+          this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
+          this.resetFields();
+        }).catch(() => {
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'Error: Question could not be created!'
+          });
+        });
+      }
+
+    submitTextQuestion = () => {
+      axios.post('/api/project/submit-question',
+      {
+          'text': this.state.subQuestion,
+          'type': this.state.qstType,
+          'notes': 'none',
+          'archived': 'No'
+      },
+      {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
+        }).then(() => {
+            //this.openSuccessModal();
+            this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
+            this.resetFields();
+          }).catch(() => {
+            this.openErrorModal();
+            this.setState({
+              errorMessage: 'Error: Question could not be created!'
+            });
+          });
+        }
+
+    submitChoicesQuestion = () => {
+      axios.post('/api/project/submit-question',
+      {
+          'text': this.state.subQuestion,
+          'type': this.state.qstType,
+          'notes': this.state.choices,
+          'archived': 'No'
+      },
+      {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
+        }).then(() => {
+            //this.openSuccessModal();
+            this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
+            this.resetFields();
+          }).catch(() => {
+            this.openErrorModal();
+            this.setState({
+              errorMessage: 'Error: Question could not be created!'
+            });
+          });
+        }
+
+    handleRatingMin = (event) => {
+      this.setState({ ratingMinNote: event.target.value });
+    }
+
+    handleRatingMax = (event) => {
+      this.setState({ ratingMaxNote: event.target.value });
+    }
+
+    handleChoices = (event) => {
+      this.setState({choices: event.target.value});
+    }
+
+    handleChange(e) {
+      this.setState({ qstType: e.target.value });
+    }
+
+    handleCloseErrorModal = () => {
+      this.setState({
+          errorModal: false
+      });
+    }
+
+    openErrorModal = () => {
+      this.setState({
+          errorModal: true
+      });
+    }
+
+    handleCloseSuccessModal = () => {
+      this.setState({
+          successModal: false
+      });
+    }
+
+    openSuccessModal = () => {
+      this.setState({
+          successModal: true
+      });
+    }
+
+    handleQuestion = (ques, type, i) => {
+        console.log(ques)
+        const questions = this.state.questions;
+        questions[i] = ques + ' (' + type + ')';
+        this.setState({
+          questions: questions,
+          numQs: this.state.numQs + 1
+        });
+    }
+
+
+    viewProject = () => {
+      return this.props.history.push({
+          pathname: '/project-landing-page',
+          state: this.state
+      });
+    }
+
+    surveySample = () => {
+      return this.props.history.push({
+          pathname: '/survey'
+      });
     }
 
     saveSurvey = (callback) => {
@@ -124,10 +301,15 @@ export default class NewSurvey extends Component {
 
         return false;
     }
+
     handleSurveyNameChange = (event) => {
         this.setState({
             surveyName: event.target.value
         });
+    }
+
+    setLoading = (value) => {
+      this.setState({ loading: value })
     }
 
     cancel = () => {
@@ -137,12 +319,8 @@ export default class NewSurvey extends Component {
         });
     }
 
-    addQuestion = () => {
-        this.setState({ questionDialog: true });
-    }
-
     questionDialogClose = () => {
-        this.setState({ questionDialog: false });
+        this.setState({ questionDialog: false});
     }
 
     addConcept = () => {
@@ -166,43 +344,274 @@ export default class NewSurvey extends Component {
     }
 
     ideaChanged = (evt) => {
-        this.setState({ idea: evt.value });
+        this.setState({ idea: !this.state.ideaChanged });
     }
 
     packageChanged = (evt) => {
-        this.setState({ package: evt.value });
+        this.setState({ package: !this.state.packageChanged });
     }
+
     productChanged = (evt) => {
-        this.setState({ product: evt.value });
+        this.setState({ product: !this.state.productChanged });
     }
+
     nameChanged = (evt) => {
-        this.setState({ name: evt.value });
+        this.setState({ name: !this.state.nameChanged });
     }
 
     purchaseFrequencyChanged = (evt) => {
-        this.setState({ purchaseFrequency: evt.value });
+        this.setState({ purchaseFrequency: !this.state.purchaseFrequency });
     }
 
     purchasePriceChanged = (evt) => {
-        this.setState({ purchasePrice: evt.value });
+        this.setState({ purchasePrice: !this.state.purchasePrice });
     }
 
     demographicsChanged = (evt) => {
-        this.setState({ demographics: evt.value });
+        this.setState({ demographics: !this.state.demographics });
     }
 
-    qualitativeChanged = (evt) => {
-        this.setState({demographics: evt.value})
+    openQuestionBank = async (event) => {
+        await this.setLoading(true);
+        await this.getQuestions();
+        await this.setState({ questionDialog: true});
+        await this.setLoading(false);
     }
+
+    openQuestionEditorModal = (event) => {
+        this.setState({ questionEditorModal: true })
+    }
+
+    closeQuestionEditorModal= () => {
+        this.setState({ questionEditorModal: false });
+    }
+
+    handleSubQuestionChange = (event) => {
+        this.setState({
+           subQuestion: event.target.value
+        });
+    }
+
+    bindChosen = (arr) => {
+      this.setState({ chosenQuestions: arr }, () => (this.finalizeSurvey(arr)));
+    }
+
+    finalizeSurvey(arr) {
+      console.log(this.state.pulledQuestions)
+      var pulledQuestions = this.state.pulledQuestions;
+      var finalArray = [];
+          arr.forEach(function(id){
+          console.log("Searching for: " + typeof(id) + " " + id)
+          const found = pulledQuestions.filter(obj => {return obj.id === parseInt(id)})
+          finalArray.push(found);
+        });
+      this.setState({ finalQuestionSet: finalArray}, () => (console.log(this.state.finalQuestionSet)));
+    }
+
+
+    checkChosenArray(id) {
+      var result = this.state.chosenQuestions.includes(id.toString());
+      if (result == true)
+      {
+        return true;
+      }
+      return false;
+    }
+
+    handleChecked(event, i) {
+      const item = event.target.name;
+      const isChecked = event.target.checked;
+      const checkedArray = this.state.chosenQuestions;
+      var chosenQuestions = [];
+
+      if (isChecked == true) {
+        checkedArray.push(item)
+        chosenQuestions = checkedArray;
+      }
+
+      else {
+        var newArray = [];
+        newArray = checkedArray.filter(el => el !== item)
+        chosenQuestions = newArray;
+      }
+
+      this.bindChosen(chosenQuestions);
+    }
+
+    renderQstDropdown() {
+      return(
+          <Select id="select" label="Type" className="col-md-8 col-offset-4" value={this.state.qstType} onChange={(e) => this.handleChange(e)}>
+                   <MenuItem value="Rating">Rating</MenuItem>
+                   <MenuItem value="Text">Text</MenuItem>
+                   <MenuItem value="Multiple Choice">Multiple Choice</MenuItem>
+                   <MenuItem value="Check All">Check All That Apply</MenuItem>
+         </Select>
+       )
+    }
+
+    renderSubmitButton() {
+      if (this.state.qstType === "Text") {
+          return(
+          <Button color='primary'
+            id='submit-question'
+            disabled={this.state.subQuestion == ''}
+            onClick={this.submitTextQuestion}>
+          <FontAwesomeIcon icon="check" /> Submit Question</Button>
+        )
+      }
+      if (this.state.qstType === "Multiple Choice" || this.state.qstType === "Check All") {
+          return(
+          <Button color='primary'
+            id='submit-question'
+            disabled={this.state.choices == '' || this.state.subQuestion == ''}
+            onClick={this.submitChoicesQuestion}>
+          <FontAwesomeIcon icon="check" /> Submit Question</Button>
+        )
+      }
+      if (this.state.qstType === "Rating") {
+          return(
+          <Button color='primary'
+            id='submit-question'
+            disabled={this.state.ratingMinNote == '' || this.state.ratingMaxNote == '' || this.state.subQuestion == ''}
+            onClick={this.submitRatingQuestion}>
+          <FontAwesomeIcon icon="check" /> Submit Question</Button>
+        )
+      }
+    }
+
+    renderResult() {
+      if (this.state.qstType === "Text") {
+        return(
+          <Container>
+            <Row>
+              <TextField id="text-field"
+                  value={this.state.subQuestion}
+                  onChange={this.handleSubQuestionChange}
+                  label="Free Response Question"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Enter free response question here..."
+                  variant="outlined">
+                </TextField>
+              </Row>
+            </Container>
+        )
+      }
+      if (this.state.qstType === "Multiple Choice") {
+        return(
+          <div>
+            <Row>
+              <TextField id="text-field"
+                  value={this.state.subQuestion}
+                  onChange={this.handleSubQuestionChange}
+                  label="Multiple Choice Question"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Enter multiple choice question only here..."
+                  variant="outlined">
+              </TextField>
+              <TextField id="text-field"
+                  value={this.state.choices}
+                  onChange={this.handleChoices}
+                  label="Answer Choices (separate with commas)"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Answer Choices (separate with commas)"
+                  variant="outlined">
+              </TextField>
+            </Row>
+          </div>
+        )
+      }
+      if (this.state.qstType === "Check All") {
+        return(
+          <div>
+            <Row>
+              <TextField id="text-field"
+                  value={this.state.subQuestion}
+                  onChange={this.handleSubQuestionChange}
+                  label="Check All That Apply Question"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Enter check all question only here..."
+                  variant="outlined">
+              </TextField>
+              <TextField id="text-field"
+                  value={this.state.choices}
+                  onChange={this.handleChoices}
+                  label="Answer Choices (separate with commas)"
+                  multiline
+                  rows="3"
+                  width="400px"
+                  margin="normal"
+                  placeholder="Answer Choices (separate with commas)"
+                  variant="outlined">
+              </TextField>
+            </Row>
+          </div>
+        )
+      }
+      if (this.state.qstType === "Rating") {
+        return(
+          <div>
+          <Row>
+            <TextField id="text-field"
+                value={this.state.subQuestion}
+                onChange={this.handleSubQuestionChange}
+                label="Question to Answer on a Scale"
+                multiline
+                rows="3"
+                width="400px"
+                height="100px"
+                margin="normal"
+                placeholder="Enter question here..."
+                variant="outlined">
+            </TextField>
+          </Row>
+          <Row>
+            <TextField id="text-field2"
+                  value={this.state.ratingMinNote}
+                  onChange={this.handleRatingMin}
+                  label="Label for Minimum (0)"
+                  width="400px"
+                  margin="normal"
+                  placeholder="check"
+                  variant="outlined">
+            </TextField>
+          </Row>
+          <Row>
+            <TextField id="text-field2"
+                  value={this.state.ratingMaxNote}
+                  onChange={this.handleRatingMax}
+                  label="Label for Maximum (10)"
+                  width="400px"
+                  margin="normal"
+                  placeholder="check"
+                  variant="outlined">
+            </TextField>
+          </Row>
+          </div>
+        )
+      }
+    }
+
     render() {
         return (
             <div class="mx-auto shadow my-5 p-3">
                 <Container>
                     <div class="d-flex align-content-between flex-column">
-                        <h3>Rapid Test Start Survey Set Up</h3>
+                        <h3>Survey Builder</h3>
 
                         <FormGroup>
-                            <TextField id="name" onChange={this.handleSurveyNameChange} fullWidth value={this.state.surveyName} label="1. Survey Name (Respondents will not see this name)" />
+                            <TextField id="name" variant="outlined" onChange={this.handleSurveyNameChange} fullWidth value={this.state.surveyName} label="1. Survey Name (Respondents will not see this name)" />
                         </FormGroup>
                         <FormGroup>
                             <h5>2. Check to include Demographics and Categorization Questions</h5>
@@ -214,7 +623,7 @@ export default class NewSurvey extends Component {
                         </FormGroup>
 
                         <FormGroup>
-                               <h3>3.  Add Concepts</h3>
+                               <h5>3. Add Concepts</h5>
                                     <Alert variant="info">
                                         Please click the proper button below for the format you would like to test your idea as.
                                     </Alert>
@@ -228,75 +637,20 @@ export default class NewSurvey extends Component {
                                     </div>
                                 </FormGroup>
                                 <FormGroup>
-                                    <h5>
-                                        4. Is price included in the concept(s)?
-                                    </h5>
-                                    <p>Important that this selection is correct, so the proper questions can be asked.</p>
-                                    <RadioGroup name="pricing_option" value={this.pricingOptionId} onChange={this.pricingOptionChanged}>
-                                        <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                                        <FormControlLabel value="no" control={<Radio />} label="No" />
-                                        <FormControlLabel value="donate" control={<Radio />} label="No, but we want to know if they will donate. (non-profits)" />
-                                    </RadioGroup>
-
+                                    <h5>4. Add Questions</h5>
+                                    <Alert variant="info">
+                                        Please click any button below to add questions to your survey.
+                                    </Alert>
+                                    <div className="d-flex flex-wrap justify-content-around">
+                                      <Button variant="warning" onClick={this.openQuestionBank}><FontAwesomeIcon icon="upload" /> Load Existing Survey</Button>
+                                      <Button variant="warning" onClick={this.openQuestionBank}><FontAwesomeIcon icon="cogs" /> Add Existing Questions</Button>
+                                      <Button variant="warning" onClick={this.openQuestionEditorModal}><FontAwesomeIcon icon="plus" /> Create New Question</Button>
+                                    </div>
                                 </FormGroup>
                                 <FormGroup>
-                                    <h5>
-                                        5. Type of Test - Concept and/or Experience
-                                    </h5>
-                                    <RadioGroup name="test_type" value={this.testTypeId} onChange={this.testTypeChanged}>
-                                        <FormControlLabel value="concept" control={<Radio />} label="One Step - Test concept only" />
-                                        <FormControlLabel value="experience" control={<Radio />} label="One Step - Test experience only" />
-                                        <FormControlLabel value="both" control={<Radio />} label="Two Steps - Test concept AND experience offering" />
-                                    </RadioGroup>
-                                </FormGroup>
-                                <FormGroup>
-                                    <h5>
-                                        6. How would you like to test the concepts?
-                                    </h5>
-                                    <RadioGroup name="comparison" value={this.comparisonTypeId} onChange={this.comparisonTypeChanged}>
-                                        <FormControlLabel value="single" control={<Radio />} label="Single Concept Test" />
-                                        <FormControlLabel value="paired" control={<Radio />} label="Paired Comparison Test (only if testing 2 concepts)" />
-                                    </RadioGroup>
-                                </FormGroup>
-                                <FormGroup>
-                                    <h5>7. Include additional qualitative questions</h5>
-                                    <FormControlLabel
-                                        control={<Checkbox checked={this.qualitative} onChange={this.qualitativeChanged} name="qualitative" />}
-                                        label="Open Question Bank"
-                                    />
-                                </FormGroup>
-                                <FormGroup className="d-flex flex-column">
-                                    <h5>8. Select Specific Likes and Dislikes</h5>
-                                    <p>These will be asked for each idea tested</p>
-                                    <FormControlLabel
-                                            control={<Checkbox checked={this.idea} onChange={this.ideaChanged} name="idea" />}
-                                            label="Idea"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={this.package} onChange={this.packageChanged} name="package" />}
-                                        label="Package"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={this.product} onChange={this.productChanged} name="product" />}
-                                        label="Product"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={this.name} onChange={this.nameChanged} name="name" />}
-                                        label="Name"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={this.purchaseFrequency} onChange={this.purchaseFrequencyChanged} name="purchase_frequency" />}
-                                        label="Purchase Frequency"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={this.purchasePrice} onChange={this.purchasePriceChanged} name="purchase_price" />}
-                                        label="Purchase Price"
-                                    />
-                                </FormGroup>
-                                <FormGroup>
-                                    <h5>9. Survey Comments (Optional)</h5>
+                                    <h5>5. Survey Comments (Optional)</h5>
                                         <p>This space is here to record any notes you might have such as who will respond or how the data will be collected</p>
-                                        <TextField fullWidth label="Survey Comments" multiline rows={3} placeholder="Examples:
+                                        <TextField variant="outlined" fullWidth label="Survey Comments" multiline rows={3} placeholder="Examples:
     How and/or where responses will be collected
     More information on the ideas and/or products tested." />
                                 </FormGroup>
@@ -311,20 +665,78 @@ export default class NewSurvey extends Component {
                             <Button onClick={this.cancel} >Cancel</Button>
                             <span>
                                 <Button>Save and Exit</Button>
-                                <Button variant="success" onClick={this.saveAndPreview}>Save and Preview Survey</Button>
+                                <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
                                 <Button variant="success" onClick={this.saveAndEmail}>Save and Email</Button>
                                 <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button>
                             </span>
-
                         </div>
-                        <Dialog open={this.state.questionDialog} >
+                    <Dialog
+                    open={this.state.questionDialog}
+                    maxWidth='xl' >
                             <DialogContent dividers>
-                                <h3>Question List</h3>
+                                <div><h5>Check all questions that you would like to include in your survey.</h5></div>
+                                <div>
+                                    {
+                                        this.state.pulledQuestions.map(qsn => (
+                                        <div>
+                                          <Row>
+                                              <Chip size="small" label={qsn.type} />
+                                          </Row>
+                                          <Row>
+                                              <FormControlLabel control={<Checkbox name={qsn.id} color="primary" checked={this.checkChosenArray(qsn.id)} onChange={(event) => this.handleChecked(event, qsn)} />}
+                                                label={qsn.text}/>
+                                          </Row>
+                                          <hr id="hr-3" />
+                                        </div>
+                                    ))
+                                    }
+                                </div>
                             </DialogContent>
                             <DialogActions>
+                                <Button color="warning" onClick={() => (console.log("Chosen Questions: " + this.state.chosenQuestions))}>Check</Button>
                                 <Button onClick={this.questionDialogClose}>Close</Button>
                             </DialogActions>
                     </Dialog>
+
+
+                    <Dialog id="question-editor-modal"
+                          open={this.state.questionEditorModal}
+                          TransitionComponent={Transition}
+                          maxWidth='xl'
+                          fullWidth
+                          keepMounted
+                          aria-labelledby="alert-dialog-slide-title"
+                          aria-describedby="alert-dialog-slide-description">
+                      <DialogContent>
+                        <Container>
+                            <h4>Submit new questions for surveys.</h4>
+                            <Row>
+                              <Col md={{ span: 3, offset: 0 }} >
+                                <div> Choose Question Type: {this.renderQstDropdown()} </div>
+                              </Col>
+                              <Col md={{ span: 5, offset: 0 }} >
+                                <p> {this.renderResult()} </p>
+                              </Col>
+                                <p>
+                                  <Button variant='warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
+                                  {this.renderSubmitButton()}
+                                </p>
+                              </Row>
+                                <div>
+                                {"   "}
+                                <p><b>Questions Submitted this Session:</b></p>
+                                    {
+                                        this.state.questions.map(qsn => (
+                                          <p className="question-space">{this.state.numQs}. {qsn}</p>
+                                    ))
+                                    }
+                                </div>
+                        </Container>
+                      </DialogContent>
+                      <DialogActions>
+                          <Button color="danger" onClick={this.closeQuestionEditorModal}>Don't Save</Button>
+                      </DialogActions>
+                  </Dialog>
 
                     <Dialog open={this.state.conceptDialog} >
                         <DialogContent dividers>
@@ -348,7 +760,11 @@ export default class NewSurvey extends Component {
                     </div>
                 </Container>
 
-
+                <Dialog open={this.state.loading}
+                style={{backgroundColor: 'transparent'}}
+                maxWidth="lg">
+                {"   "}<CircularProgress/>{"   "}
+                </Dialog>
             </div>
 
         );
