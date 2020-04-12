@@ -747,7 +747,6 @@ namespace MindOverMapper_Movim.Controllers
         [HttpGet("retrieve-survey")]
         public ActionResult GetSurveyQuestions()
         {
-            var queryString = "concept";
             var questions = _context.Question;
 
             return Ok(questions);

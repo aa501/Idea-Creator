@@ -30,6 +30,30 @@ namespace MindOverMapper_Movim.Controllers
             _service = new SurveyService();
         }
 
+        private bool hasPermission(string userUid, string projUid)
+        {
+            var user = _context.User.Where(u => u.Uid == userUid).FirstOrDefault<User>();
+
+            if (user == null)
+            {
+                return false;
+            }
+            else if (user.Type == "admin")
+            {
+                return true;
+            }
+
+            var proj = _context.Project.Where(p => p.Uid == projUid).FirstOrDefault<Project>();
+
+            if (proj == null)
+            {
+                return false;
+            }
+
+            var per = _context.Permissions.Where(p => p.ProjId == proj.Id && p.UserId == user.Id).FirstOrDefault<Permissions>();
+            return per != null;
+        }
+        
         //[Authorize]
         //[HttpGet("{uid}")]
         //public ActionResult GetSurveys(string uid)

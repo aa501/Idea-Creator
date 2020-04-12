@@ -357,9 +357,6 @@ export default class MindMap extends React.Component {
                   </TextField>
               </div>
           </ModalBody>
-          <ModalFooter>
-              <Button color="primary" onClick={this.setBestIdea}>Promising Idea</Button>
-          </ModalFooter>
       </Modal>
       </div>
     );

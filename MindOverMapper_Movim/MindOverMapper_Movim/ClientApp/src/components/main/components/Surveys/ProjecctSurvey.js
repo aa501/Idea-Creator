@@ -46,11 +46,12 @@ export default class ProjectSurvey extends Component {
       userData: this.props.location.state.userData || this.props.userData,
         projectName: this.props.location.state.projectName,
         surveys: []
-      
+
     }
   }
 
     componentDidMount() {
+      try{
         axios.get('/api/survey/' + this.state.projectName.uid, {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token
@@ -59,6 +60,7 @@ export default class ProjectSurvey extends Component {
         ).then(response => {
             this.setState({ surveys: response.data });
         });
+      } catch {}
     }
 
   returnToDashboard = () => {

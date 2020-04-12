@@ -256,12 +256,13 @@ export default class SurveyView extends Component {
     /* Renders answer choices for either multiple choice or check all questions  */
     createAnswerChoiceArray(qsn, type) {
       var choices = qsn.notes;
+      var convertString = JSON.parse(choices);
+      console.log(convertString);
       var i = 0;
-      var splitStr = choices.split(',')
       var newArray = [];
 
-      while (splitStr[i] != null) {
-        newArray.push(splitStr[i]);
+      while (convertString[i] != null) {
+        newArray.push(convertString[i]);
         i++;
       }
 
@@ -269,7 +270,7 @@ export default class SurveyView extends Component {
         return (
           <div>
             <Row>
-              <RadioGroup defaultValue="female" aria-label="gender" name="customized-radios" value={this.state.radio} onChange={(event) => this.handleRadioMaster(event, `${qsn.id}`)}>
+              <RadioGroup name="customized-radios" value={this.state.radio} onChange={(event) => this.handleRadioMaster(event, `${qsn.id}`)}>
               {
                   newArray.map(choice => (
                   <div>
