@@ -201,7 +201,7 @@ export default class NewSurvey extends Component {
               errorMessage: 'Error: Question could not be created!'
             });
           });
-        }
+      }
 
     handleRatingMin = (event) => {
       this.setState({ ratingMinNote: event.target.value });
@@ -268,21 +268,25 @@ export default class NewSurvey extends Component {
       });
     }
 
-    saveSurvey = (callback) => {
-        this.validateSurvey();
-        let survey = this.buildSurveyPayload();
+    saveSurvey = () => {
+        //this.validateSurvey();
+        //let survey = this.buildSurveyPayload();
         axios.post('/api/survey', {
-             survey
+             'surveyName': this.state.surveyName,
+             'projectUid': this.state.projectName.uid,
+             'prototypeUid': this.state.chosenPrototype.uid,
+             'conceptUid': '',
+             'notes': '',
+             'qualifications': '',
+             'questions': JSON.stringify(this.state.finalQuestionSet),
+             'status': 'Written',
+             'EndDate': '20200501'
             },
             {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token
             }
-            }).then(response => {
-                callback(response.data);
-            }).catch(err => {
-
-         });
+          });
 
     }
 
@@ -434,6 +438,7 @@ export default class NewSurvey extends Component {
     openQuestionBank = async (event) => {
         await this.setLoading(true);
         await this.getQuestions();
+        // await this.addNewQuestions();
         await this.setState({ questionDialog: true});
         await this.setLoading(false);
     }
@@ -462,7 +467,7 @@ export default class NewSurvey extends Component {
     choosePrototype = (choice) => {
       this.setState({
         chosenPrototype: choice
-      });
+      }, () => (console.log(this.state.chosenPrototype)));
     }
 
     resetPrototype = () => {
@@ -534,6 +539,9 @@ export default class NewSurvey extends Component {
           </div>
         )
       }
+    }
+
+    addNewQuestions () {
     }
 
     handleChecked(event, i) {
@@ -806,9 +814,8 @@ export default class NewSurvey extends Component {
                     <div class="d-flex justify-content-around flex-row">
                             <Button onClick={this.cancel} >Cancel</Button>
                             <span>
-                                <Button>Save and Exit</Button>
+                                <Button onClick={this.saveSurvey}>Save and Exit</Button>
                                 <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
-                                <Button variant="success" onClick={this.saveAndEmail}>Save and Email</Button>
                                 <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button>
                             </span>
                         </div>
@@ -874,8 +881,8 @@ export default class NewSurvey extends Component {
                                 {"   "}
                                 <p><b>Questions Submitted this Session:</b></p>
                                     {
-                                        this.state.questions.map(qsn => (
-                                          <p className="question-space">{this.state.numQs}. {qsn}</p>
+                                        this.state.questions.map((qsn, i) => (
+                                          <p className="question-space">{i+1}. {qsn}</p>
                                     ))
                                     }
                                 </div>
@@ -915,7 +922,7 @@ export default class NewSurvey extends Component {
                                 </TableHead>
                                 <TableBody>
                                   {this.state.prototypes.map((file) => (
-                                    <TableRow hover onClick={() => this.choosePrototype(file.prototypeName)} key={file.prototypeName}>
+                                    <TableRow hover onClick={() => this.choosePrototype(file)} key={file.prototypeName}>
                                       {/* <TableCell style={{maxWidth:"50px"}}><Checkbox name={file.id} color="primary" checked={this.checkChosenArray(qsn.id)} onChange={(event) => this.handleChecked(event, qsn)/></TableCell> */}
                                       <TableCell component="th" scope="row" style={{maxWidth:"120px", wordWrap: 'break-word'}}>
                                         {file.prototypeName}
@@ -928,7 +935,7 @@ export default class NewSurvey extends Component {
                               </Table>
                             </TableContainer>
                             <hr />
-                          <div hidden={this.state.chosenPrototype==''}><p>Chosen Prototype: {this.state.chosenPrototype}</p></div>
+                          <div hidden={this.state.chosenPrototype==''}><p>Chosen Prototype: {this.state.chosenPrototype.prototypeName}</p></div>
                         </DialogContent>
                         <DialogActions>
                             <Button variant='warning' onClick={this.resetPrototype}><FontAwesomeIcon icon="undo" /> Reset</Button>

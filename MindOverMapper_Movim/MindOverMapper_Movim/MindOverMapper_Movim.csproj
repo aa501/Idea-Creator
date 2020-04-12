@@ -64,6 +64,24 @@
     <None Remove="Surveys\ISurvey.cs" />
     <None Remove="Surveys\SurveyFactory.cs" />
     <None Remove="Surveys\SurveyTypes.cs" />
+    <None Include="node_modules\react-transition-group\package.json" />
+    <None Include="node_modules\react-transition-group\package.json" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="node_modules\react-transition-group\LICENSE" />
+    <None Include="node_modules\react-transition-group\LICENSE" />
+    <None Include="node_modules\jss-plugin-rule-value-function\dist\jss-plugin-rule-value-function.bundle.js" />
+    <None Include="node_modules\jss-plugin-rule-value-function\dist\jss-plugin-rule-value-function.bundle.js" />
+    <None Include="node_modules\jss-plugin-rule-value-function\LICENSE" />
+    <None Include="node_modules\jss-plugin-rule-value-function\LICENSE" />
+    <None Include="node_modules\react-transition-group\README.md" />
+    <None Include="node_modules\react-transition-group\README.md" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -119,7 +137,7 @@
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)build\**" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>

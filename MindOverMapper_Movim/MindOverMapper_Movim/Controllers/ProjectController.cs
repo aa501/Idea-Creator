@@ -878,6 +878,6 @@ namespace MindOverMapper_Movim.Controllers
             promisingIdea = _context.ProjectParameters.Where(b => b.Type == "p");
 
             return Ok(promisingIdea);
-        }
+        }    
     }
 }

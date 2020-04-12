@@ -53,7 +53,7 @@ namespace MindOverMapper_Movim.Controllers
             var per = _context.Permissions.Where(p => p.ProjId == proj.Id && p.UserId == user.Id).FirstOrDefault<Permissions>();
             return per != null;
         }
-        
+
         //[Authorize]
         //[HttpGet("{uid}")]
         //public ActionResult GetSurveys(string uid)
@@ -76,26 +76,26 @@ namespace MindOverMapper_Movim.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult CreateSurvey([FromBody] CreateSurveyRequest  req)
+        public ActionResult CreateSurvey([FromBody] CreateSurveyRequest req)
         {
            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
            Prototype proto = _context.Prototype.Where(o => o.Uid == req.PrototypeUid).FirstOrDefault<Prototype>();
            Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
 
 
-            Survey survey = new Survey
-            {
-                Uid = Guid.NewGuid().ToString(),
-                ProjectId = proj.Id,
-                PrototypeId = proto.Id,
-                ConceptId = cpt.Id,
-                SurveyName = req.SurveyName,
-                Notes = req.Notes,
-                Qualifications = req.Qualifications,
-                Questions = req.Questions,
-                Status = req.Status,
-                EndDate = req.EndDate
-            };
+            Survey survey = new Survey();
+            survey.Uid = Guid.NewGuid().ToString();
+            survey.ProjectId = proj.Id;
+            survey.PrototypeId = proto.Id;
+            if (cpt != null)
+            survey.ConceptId = cpt.Id;
+            survey.SurveyName = req.SurveyName;
+            survey.Notes = req.Notes;
+            survey.Qualifications = req.Qualifications;
+            survey.DateCreated = DateTime.Now;
+            survey.Questions = req.Questions;
+            survey.Status = req.Status;
+            survey.EndDate = req.EndDate;
 
            _context.Survey.Add(survey);
            _context.SaveChanges();
