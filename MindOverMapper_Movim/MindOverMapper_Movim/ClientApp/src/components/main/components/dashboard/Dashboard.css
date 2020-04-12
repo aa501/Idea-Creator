@@ -4,7 +4,7 @@
     overflow-y: scroll;
     height: 95vh;
     max-height: 95vh;
-    
+
 }
 
 .dashboard-header{
@@ -23,7 +23,7 @@
 
 .dashboard-body {
     display: flex;
-    height: 100vh;
+    height: 40vh;
     margin-left: 26%;
     margin-right: 5%;
     width: 90%;
@@ -33,16 +33,15 @@
 }
 
 .project-paper-holder{
-    height: 30%;
+    height: 50%;
     width: 35%;
     margin-right: 60px;
-    margin-top: 10px; 
-    margin-bottom: 260px;
+    margin-top: 10px;
+    margin-bottom: 400px;
 }
 
 .project-paper{
     width: 100%;
-    height: 90%;
 }
 
 #no-projects-image{
@@ -56,8 +55,12 @@
   height: auto;
 }
 
+#project-card{
+  height: 400
+}
+
 #project-card-content{
-    min-height: 15%;
+    min-height: 10%;
 }
 
 #font-awesome-space{
@@ -79,17 +82,16 @@
 
 #projectId-input-ds{
     height: 5vh;
-    min-width: 325px; 
+    min-width: 325px;
 }
 
 #save-changes{
     margin-top: 50px;
 }
 
-#share-learn-container{  
-    margin: auto;
-    margin-top: 0%;
-
+.learn{
+    text-align: center;
+    align-content: center;
 }
 
 #learn-button{
@@ -108,8 +110,3 @@
 .sidenav{
     background: black;
 }
-
-
-
-
-

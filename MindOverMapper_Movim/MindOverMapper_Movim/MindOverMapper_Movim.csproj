@@ -56,6 +56,8 @@
     <Compile Remove="Migrations\20200405190158_Survey.cs" />
     <Compile Remove="Migrations\20200405190158_Survey.Designer.cs" />
     <Compile Remove="Surveys\TurkQuestionBuilder.cs" />
+    <Compile Remove="Migrations\20200406164827_SurveyTest.cs" />
+    <Compile Remove="Migrations\20200406164827_SurveyTest.Designer.cs" />
     <None Remove="Controllers\PrototypeController.cs" />
     <None Remove="Models\ConceptSurvey.cs" />
     <None Remove="Models\PrototypeSurvey.cs" />
