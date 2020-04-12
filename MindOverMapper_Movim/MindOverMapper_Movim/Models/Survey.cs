@@ -19,6 +19,7 @@ namespace MindOverMapper_Movim.Models
         public Boolean PurchasePrice { get; set; }
         public Boolean Qualitative { get; set; }
         public Boolean Demographics { get; set; }
+        public String Reward { get; set; }
     }
 
 }
