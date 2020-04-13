@@ -806,7 +806,7 @@ export default class NewSurvey extends Component {
                                       {/*  <Button variant="success">
                                             Add a WRITTEN CONCEPT (Yellow Card)
                                         </Button> */}
-                                        <Button onClick={this.getPrototypes} variant="success">
+                                        <Button onClick={this.getPrototypes} variant="primary">
                                             Add Concept Prototype Image
                                         </Button>
                                     </div>
@@ -844,11 +844,11 @@ export default class NewSurvey extends Component {
                                     <p>Hold the control key(windows) or command key (mac) to select multiple</p>
                                 </FormGroup>
                     <div class="d-flex justify-content-around flex-row">
-                            <Button onClick={this.cancel} >Cancel</Button>
+                            <Button variant="danger" onClick={this.cancel} >Cancel</Button>
                             <span>
-                                <Button onClick={this.saveSurvey}>Save and Exit</Button>
-                                <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
-                                <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button>
+                                <Button variant="success" onClick={this.saveSurvey}>Save and Exit</Button>
+                              {/*  <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
+                                <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button> */}
                             </span>
                         </div>
                     <Dialog
