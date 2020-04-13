@@ -54,25 +54,13 @@ namespace MindOverMapper_Movim.Controllers
             return per != null;
         }
 
-        //[Authorize]
-        //[HttpGet("{uid}")]
-        //public ActionResult GetSurveys(string uid)
-        //{
-        //    //Do Some code to validate access?
-        //    /*var Surveys = from survey in _context.Set<Survey>()
-        //                  join project in _context.Set<Project>()
-        //                    on survey.ProjectId equals project.Id
-        //                  where project.Uid == uid
-        //                  select new { survey };*/
-        //    IList<Survey> surveys = new List<Survey>();
-        //    Survey survey = new Survey();
-        //    survey.SurveyName = "Harry Killer";
-        //    survey.Name = false;
-        //    survey.ProjectId = 1;
-        //    survey.Package = false;
-        //    surveys.Add(survey);
-        //    return Ok(surveys);
-        //}
+        [Authorize]
+        [HttpGet("{uid}")]
+        public ActionResult GetSurveys(string uid) { 
+            Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            var surveys = _context.Survey.Where(s => s.ProjectId == proj.Id);
+            return Ok(surveys);
+        }
 
         [Authorize]
         [HttpPost]
@@ -84,7 +72,7 @@ namespace MindOverMapper_Movim.Controllers
 
 
             Survey survey = new Survey();
-            survey.Uid = Guid.NewGuid().ToString();
+            survey.Uid = req.UniqueId;
             survey.ProjectId = proj.Id;
             survey.PrototypeId = proto.Id;
             if (cpt != null)

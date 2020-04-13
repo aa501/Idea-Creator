@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import { Container, Row, Col, FormGroup, InputGroup, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Input } from 'reactstrap';
-import { Chip, List, ListSubheader, ListItem, ListItemText, Select, MenuItem, Dialog, DialogContent, DialogActions } from '@material-ui/core';
+import { Chip, List, ListSubheader, ListItem, ListItemText, Select, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import { Checkbox, RadioGroup, FormControlLabel, Radio, TextareaAutosize, CircularProgress } from '@material-ui/core';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -31,6 +31,7 @@ export default class NewSurvey extends Component {
         this.state = {
             userData: this.props.location.state.userData || this.props.userData,
             projectName: this.props.location.state.projectName,
+            uniqueId: 'IP' + Math.floor(Math.random() * 10000000).toString(),
             loading: false,
             surveyName: '',
             questions: [],
@@ -39,6 +40,7 @@ export default class NewSurvey extends Component {
             finalQuestionSet: [],
             concepts: [],
             prototypes: [],
+            warning: '',
             chosenPrototype: '',
             questionDialog: false,
             conceptDialog: false,
@@ -62,7 +64,7 @@ export default class NewSurvey extends Component {
             ratingMinNote: '',
             ratingMaxNote: '',
             ratingQuestion: '',
-            ratingString: '',
+            ratingArray: [],
 
             choices: '',
             choiceArray: [],
@@ -112,6 +114,13 @@ export default class NewSurvey extends Component {
       });
     }
 
+    returnToDashboard = () => {
+        this.props.history.push({
+            pathname: '/surveys',
+            state: this.props.location.state
+        })
+    }
+
     resetFields = () => {
         this.setState({
 
@@ -123,7 +132,7 @@ export default class NewSurvey extends Component {
           ratingMinNote: '',
           ratingMaxNote: '',
           ratingQuestion: '',
-          ratingString: '',
+          ratingArray: [],
           numOptions: 0,
           choices: '',
           choiceArray: []
@@ -131,36 +140,27 @@ export default class NewSurvey extends Component {
         })
     }
 
-    submitRatingQuestion = () => {
-      axios.post('/api/project/submit-question',
+    submitNewQuestion = () => {
+      var notes;
+
+      if (this.state.qstType === "Text")
       {
-          'text': this.state.subQuestion,
-          'type': this.state.qstType,
-          'notes': this.state.ratingString.concat('min,', this.state.ratingMinNote, ',max,', this.state.ratingMaxNote),
-          'archived': 'No'
-      },
+        notes = "none"
+      }
+      if (this.state.qstType === "Multiple Choice" || this.state.qstType === "Check All")
       {
-          headers: {
-            Authorization: 'Bearer ' + this.state.userData.token
-          }
-      }).then(() => {
-          //this.openSuccessModal();
-          this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
-          this.resetFields();
-        }).catch(() => {
-          this.openErrorModal();
-          this.setState({
-            errorMessage: 'Error: Question could not be created!'
-          });
-        });
+        notes = JSON.stringify(this.state.choiceArray)
+      }
+      if (this.state.qstType === "Rating")
+      {
+        notes = JSON.stringify(this.state.ratingArray)
       }
 
-    submitTextQuestion = () => {
       axios.post('/api/project/submit-question',
       {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
-          'notes': 'none',
+          'notes': notes,
           'archived': 'No'
       },
       {
@@ -169,46 +169,76 @@ export default class NewSurvey extends Component {
           }
         }).then(() => {
             //this.openSuccessModal();
-            this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
+            this.handleQuestion(this.state.subQuestion, this.state.qstType);
             this.resetFields();
+            this.getQuestions();
+            this.addNewQuestions();
           }).catch(() => {
             this.openErrorModal();
             this.setState({
               errorMessage: 'Error: Question could not be created!'
             });
+          });
+    }
+
+    saveSurvey = () => {
+        var test = this.validateSurvey();
+        if (test == false) {
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'You are missing a parts of your survey!'
           });
         }
 
-    submitChoicesQuestion = () => {
-      axios.post('/api/project/submit-question',
-      {
-          'text': this.state.subQuestion,
-          'type': this.state.qstType,
-          'notes': JSON.stringify(this.state.choiceArray),
-          'archived': 'No'
-      },
-      {
-          headers: {
-            Authorization: 'Bearer ' + this.state.userData.token
-          }
-        }).then(() => {
-            //this.openSuccessModal();
-            this.handleQuestion(this.state.subQuestion, this.state.qstType, this.state.numQs);
-            this.resetFields();
-          }).catch(() => {
-            this.openErrorModal();
-            this.setState({
-              errorMessage: 'Error: Question could not be created!'
+        if (test == true) {
+        //let survey = this.buildSurveyPayload();
+        axios.post('/api/survey', {
+             'surveyName': this.state.surveyName,
+             'uniqueId': this.state.uniqueId,
+             'projectUid': this.state.projectName.uid,
+             'prototypeUid': this.state.chosenPrototype.uid,
+             'conceptUid': '',
+             'notes': '',
+             'qualifications': '',
+             'questions': JSON.stringify(this.state.finalQuestionSet),
+             'status': 'Written',
+             'EndDate': '20200501'
+            },
+            {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token
+            }
+          }).then(() => {
+              //this.openSuccessModal();
+              this.openSuccessModal();
+              this.setState({
+                successMessage: 'Survey' + ' ' + this.state.surveyName + ' was saved!'
+              }, () => (this.returnToDashboard()));
+            }).catch(() => {
+              this.openErrorModal();
+              this.setState({
+                errorMessage: 'Error: Survey could not be saved!'
+              });
             });
-          });
-      }
+        }
+    }
+
+    resetNewQuestions = () => {
+      this.setState({ questions: [] })
+    }
 
     handleRatingMin = (event) => {
       this.setState({ ratingMinNote: event.target.value });
+      const ratingArray = this.state.ratingArray;
+      ratingArray[0] = event.target.value;
+      this.setState({ ratingArray });
     }
 
     handleRatingMax = (event) => {
       this.setState({ ratingMaxNote: event.target.value });
+      const ratingArray = this.state.ratingArray;
+      ratingArray[1] = event.target.value;
+      this.setState({ ratingArray });
     }
 
     handleChoices = (event) => {
@@ -243,14 +273,17 @@ export default class NewSurvey extends Component {
       });
     }
 
-    handleQuestion = (ques, type, i) => {
+    handleQuestion = (ques, type) => {
         this.getQuestions();
         console.log(ques)
         const questions = this.state.questions;
-        questions[i] = ques + ' (' + type + ')';
+        var form = {
+          question: ques,
+          type: type
+        }
+        questions.push(form);
         this.setState({
           questions: questions,
-          numQs: this.state.numQs + 1
         });
     }
 
@@ -266,28 +299,6 @@ export default class NewSurvey extends Component {
       return this.props.history.push({
           pathname: '/survey'
       });
-    }
-
-    saveSurvey = () => {
-        //this.validateSurvey();
-        //let survey = this.buildSurveyPayload();
-        axios.post('/api/survey', {
-             'surveyName': this.state.surveyName,
-             'projectUid': this.state.projectName.uid,
-             'prototypeUid': this.state.chosenPrototype.uid,
-             'conceptUid': '',
-             'notes': '',
-             'qualifications': '',
-             'questions': JSON.stringify(this.state.finalQuestionSet),
-             'status': 'Written',
-             'EndDate': '20200501'
-            },
-            {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token
-            }
-          });
-
     }
 
     save = () => {
@@ -340,27 +351,8 @@ export default class NewSurvey extends Component {
         this.saveSurvey(this.turkSurvey);
     }
 
-    buildSurveyPayload = () => {
-        let survey = {
-            surveyName: this.state.surveyName,
-            concepts: this.state.concepts,
-            prototypes: this.state.prototypes,
-            idea: this.state.idea,
-            package: this.state.package,
-            product: this.state.product,
-            name: this.state.name,
-            purchaseFrequency: this.state.purchaseFrequency,
-            qualitative: this.state.qualitative,
-            demographics: this.state.demographics
-        };
-        return survey;
-    }
     validateSurvey = () => {
-        if (
-            this.state.surveyName &&
-            (this.state.prototypes.length > 0 || this.state.concepts.length > 0) &&
-            this.state.pricingOptionId
-        )
+        if (this.state.surveyName && this.state.chosenPrototype)
             return true;
 
         return false;
@@ -432,13 +424,13 @@ export default class NewSurvey extends Component {
     }
 
     demographicsChanged = (evt) => {
-        this.setState({ demographics: !this.state.demographics });
+        this.setState({ dedmographics: !this.state.demographics });
     }
 
     openQuestionBank = async (event) => {
         await this.setLoading(true);
         await this.getQuestions();
-        // await this.addNewQuestions();
+        await this.addNewQuestions();
         await this.setState({ questionDialog: true});
         await this.setLoading(false);
     }
@@ -476,14 +468,30 @@ export default class NewSurvey extends Component {
       });
     }
 
+    copyToClipboard = () => {
+        /* Get the text field */
+        var copyText = document.getElementById("surveyId");
+
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+        /* Copy the text inside the text field */
+        document.execCommand("copy");
+
+        /* Alert the copied text */
+    }
+
     finalizeSurvey = () => {
       var chosenQuestions = this.state.chosenQuestions;
       var pulledQuestions = this.state.pulledQuestions;
       var finalArray = [];
       chosenQuestions.forEach(function(id){
+          var tracker = 0;
           console.log("Searching for: " + typeof(id) + " " + id)
           const found = pulledQuestions.filter(obj => {return obj.id === parseInt(id)})
-          finalArray.push(found);
+          finalArray.push(found[0]);
+          tracker += 1;
         });
       if (chosenQuestions.length > 0) {
         this.setState({
@@ -523,8 +531,8 @@ export default class NewSurvey extends Component {
             <div>
               <p>
               <Row>
-              <Col xs={2}><Chip size="sm" label={obj[0].type}/></Col>
-              <Col>{"   "}{obj[0].text}</Col>
+              <Col xs={2}><Chip size="sm" label={obj.type}/></Col>
+              <Col>{"   "}{obj.text}</Col>
               </Row>
               </p>
             </div>
@@ -541,7 +549,27 @@ export default class NewSurvey extends Component {
       }
     }
 
-    addNewQuestions () {
+    addNewQuestions = async () => {
+      const pulledQuestions = this.state.pulledQuestions;
+      const chosenQuestions = this.state.chosenQuestions;
+      var questions = this.state.questions;
+      var cutQuestions = [];
+
+      questions.forEach(function(item) {
+        console.log(item.question);
+        cutQuestions.push(item.question);
+      })
+
+      pulledQuestions.forEach(function(qsn) {
+        if (cutQuestions.includes(qsn.text) && !chosenQuestions.includes(qsn.id.toString()))
+        {
+          chosenQuestions.push(qsn.id.toString());
+          console.log(chosenQuestions);
+        }
+      });
+
+      await this.setState({ chosenQuestions }, () => (this.finalizeSurvey()));
+      await this.finalizeSurvey();
     }
 
     handleChecked(event, i) {
@@ -580,7 +608,7 @@ export default class NewSurvey extends Component {
           return(
           <Button color='primary'
             disabled={this.state.subQuestion == ''}
-            onClick={this.submitTextQuestion}>
+            onClick={this.submitNewQuestion}>
           <FontAwesomeIcon icon="check" /> Submit Question</Button>
         )
       }
@@ -588,7 +616,7 @@ export default class NewSurvey extends Component {
           return(
           <Button color='primary'
             disabled={this.state.choices == '' || this.state.subQuestion == ''}
-            onClick={this.submitChoicesQuestion}>
+            onClick={this.submitNewQuestion}>
           <FontAwesomeIcon icon="check" /> Submit Question</Button>
         )
       }
@@ -596,7 +624,7 @@ export default class NewSurvey extends Component {
           return(
           <Button color='primary'
             disabled={this.state.ratingMinNote == '' || this.state.ratingMaxNote == '' || this.state.subQuestion == ''}
-            onClick={this.submitRatingQuestion}>
+            onClick={this.submitNewQuestion}>
           <FontAwesomeIcon icon="check" /> Submit Question</Button>
         )
       }
@@ -756,15 +784,16 @@ export default class NewSurvey extends Component {
                         <h3>Survey Builder</h3>
                         <hr id="hr-3" />
                         <FormGroup>
+                            Unique Survey ID: <h5>{this.state.uniqueId}</h5>
+                          {/*  <Button variant="primary" onClick={this.copyToClipboard}><FontAwesomeIcon icon="share-square" /> Share Link</Button> */}
+                        </FormGroup>
+                        <FormGroup>
                             <h5>1. Name Your Survey</h5>
                             <TextField id="name" variant="outlined" onChange={this.handleSurveyNameChange} fullWidth value={this.state.surveyName} label="Survey Name (Respondents will not see this name)" />
                         </FormGroup>
                         <FormGroup>
-                            <h5>2. Check to include Demographics and Categorization Questions</h5>
-                            <FormControlLabel
-                                control={<Checkbox checked={this.demographics} onChange={this.demographicsChanged} name="demographics" />}
-                                label="Check here if your survey will NOT be utilizing Amazon MTurk."
-                            />
+                            <h5>2. If using MTurk, add demographics here.</h5>
+                            <TextField variant="outlined" fullWidth label="Survey Demographics" multiline rows={3} placeholder="Survey comments" />
 
                         </FormGroup>
 
@@ -773,13 +802,16 @@ export default class NewSurvey extends Component {
                                 {/*    <Alert variant="info">
                                         Please click the proper button below for the format you would like to test your idea as.
                                     </Alert> */}
-                                    <div>
+                                    <div className="d-flex flex-wrap justify-content-around">
                                       {/*  <Button variant="success">
                                             Add a WRITTEN CONCEPT (Yellow Card)
                                         </Button> */}
                                         <Button onClick={this.getPrototypes} variant="success">
                                             Add Concept Prototype Image
                                         </Button>
+                                    </div>
+                                    <div className="d-flex flex-wrap justify-content-around">
+                                      <div hidden={!this.state.chosenPrototype}><b><i>Prototype chosen!</i></b></div>
                                     </div>
                                 </FormGroup>
                                 <FormGroup>
@@ -882,7 +914,7 @@ export default class NewSurvey extends Component {
                                 <p><b>Questions Submitted this Session:</b></p>
                                     {
                                         this.state.questions.map((qsn, i) => (
-                                          <p className="question-space">{i+1}. {qsn}</p>
+                                          <p className="question-space">{i+1}. {qsn.question}</p>
                                     ))
                                     }
                                 </div>
@@ -948,8 +980,47 @@ export default class NewSurvey extends Component {
                 <Dialog open={this.state.loading}
                 style={{backgroundColor: 'transparent'}}
                 maxWidth="lg">
-                {"   "}<CircularProgress/>{"   "}
+                <div style={{overflow: 'hidden'}}>{"   "}<CircularProgress/>{"   "}</div>
                 </Dialog>
+
+                <div>
+                  <Dialog
+                    open={this.state.errorModal}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth='lg'
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                  >
+                    <DialogTitle id="responsibe-alert-dialog-slide-title">
+                      {this.state.errorMessage}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={this.handleCloseErrorModal} color="primary">
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
+                <div>
+                  <Dialog
+                    open={this.state.successModal}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    maxWidth='lg'
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                  >
+                    <DialogTitle id="responsibe-alert-dialog-slide-title">
+                      {this.state.successMessage}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={this.handleCloseSuccessModal} color="primary">
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
             </div>
 
         );

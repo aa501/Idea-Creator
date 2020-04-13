@@ -243,14 +243,29 @@ export default class SurveyView extends Component {
               </Grid>
                 <Grid item>
                   <Row>
-                    <Col xs="6"><div text-align="left">{getStringSection(qsn.notes, 1)}</div></Col>
-                    <Col xs="6"><div class="testing">{getStringSection(qsn.notes, 3)}</div></Col>
+                    <Col xs="6"><div text-align="left">{this.getRatingParam(qsn.notes, 0)}</div></Col>
+                    <Col xs="6"><div class="testing">{this.getRatingParam(qsn.notes, 1)}</div></Col>
                   </Row>
                 </Grid>
               </Grid>
               </div>
         )
       }
+    }
+
+    getRatingParam(arr, end) {
+      var choices = arr;
+      var convertString = JSON.parse(choices);
+      console.log(convertString);
+      var i = 0;
+      var newArray = [];
+
+      while (convertString[i] != null) {
+        newArray.push(convertString[i]);
+        i++;
+      }
+
+      return (newArray[end])
     }
 
     /* Renders answer choices for either multiple choice or check all questions  */
