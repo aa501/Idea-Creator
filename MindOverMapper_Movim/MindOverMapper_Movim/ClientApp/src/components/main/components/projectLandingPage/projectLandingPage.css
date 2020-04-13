@@ -10,6 +10,7 @@
 
 #page-holder {
     height: 100%;
+    background-color: transparent;
 }
 
 
@@ -20,10 +21,11 @@
 
 }
 
-.landing-page-body{
-    margin-left: 120px;
+.landing-page-body {
+    margin-left: 20%;
     margin-top: 50px;
     margin-right: 20px;
+    background-color: transparent;
 }
 
 #project-name {
@@ -151,4 +153,8 @@ ul {
 html, body {
     height: 100%;
     
+}
+
+Sidenav{
+    background-color: white;
 }

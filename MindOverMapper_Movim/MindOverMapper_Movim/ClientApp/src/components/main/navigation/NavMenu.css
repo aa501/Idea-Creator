@@ -1,12 +1,16 @@
-﻿a.navbar-brand {
+﻿navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
-  
+  margin-left: 50%;
+}
+
+#dash-icon{
+   
 }
 .navbar-expand-sm {
-  background-color: #FFFFFF;
-  height: 60px;
+    background: linear-gradient(100deg, #0292D1, #0373ae);
+    height: 60px;
 }
 
 html {
@@ -23,7 +27,7 @@ box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 #nav-text-accru {
-margin-left: 60px;
+
 }
 
 #home-icon{

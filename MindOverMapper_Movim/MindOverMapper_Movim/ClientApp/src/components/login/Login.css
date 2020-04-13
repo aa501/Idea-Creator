@@ -141,7 +141,7 @@ body {
 }
 
 #remember-me {
-    margin-left: 0%;
+    margin-left: 2%;
     margin-bottom: 3%;
     color: black;
     margin-right: 57%;
@@ -150,7 +150,7 @@ body {
 
 #forgot-pass {
     margin-bottom: -2%;
-    margin-right: 70%;
+    margin-right: 80%;
     text-align: left;
 }
 
@@ -206,7 +206,7 @@ body {
 .form-check-label {
     margin-bottom: 0px;
     margin-top: 2%;
-    -webkit-text-fill-color: aliceblue;
+    -webkit-text-fill-color: #000725;
 }
 @keyframes slideInFromTop {
     0% {

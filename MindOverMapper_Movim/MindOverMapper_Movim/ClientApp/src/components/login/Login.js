@@ -287,9 +287,9 @@ export class Login extends Component {
                         </div>
 
 
-                        <div class="form-check" id='remember-me'>
+                            <div class="form-check" style={{ fontColor: "black" }} id='remember-me'>
                             <input type="checkbox" class="form-check-input" id="rememberme-check" />
-                            <label class="form-check-label" for="rememberme-check">Remember Me?</label>
+                                <label class="form-check-label" style={{fontColor: "black"}} for="rememberme-check">Remember Me?</label>
                         </div>
 
                             <button type="submit" style={{ width: "100%", backgroundColor: "#0292D1" }} class="btn btn-lg" id='submit-button'
