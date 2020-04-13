@@ -70,7 +70,7 @@ export default class ProjectView extends Component {
     getBestIdea = async () => {
       console.log(this.state.projectName.uid);
       var uid = this.state.projectName.uid;
-      const response = await axios.get(`/api/${uid}/promising-idea`, {
+      const response = await axios.get(`/api/project/${uid}/promising-idea`, {
           headers: {
               Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
           }
