@@ -10,7 +10,7 @@
 
 #page-holder {
     height: 100%;
-    background-color: transparent;
+    background-color: #ebf2f2;
 }
 
 
@@ -22,15 +22,14 @@
 }
 
 .landing-page-body {
-    margin-left: 20%;
-    margin-top: 50px;
+    margin-left: 22%;
+    margin-top: 3%;
     margin-right: 20px;
     background-color: transparent;
 }
 
 #project-name {
-    font-family: 'Exo-2', sans-serif;
-    font-weight: 100;
+   
 }
 
 #project-options {

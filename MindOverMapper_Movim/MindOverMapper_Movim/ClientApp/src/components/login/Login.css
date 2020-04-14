@@ -14,7 +14,7 @@ body {
     font-weight: 400;
 }
 
-#page-holder {
+#page-holders {
     display: flex;
     flex-direction: row;
     flex-grow: inherit;
@@ -203,10 +203,9 @@ body {
     justify-content: center;
 }
 
-.form-check-label {
-    margin-bottom: 0px;
-    margin-top: 2%;
-    -webkit-text-fill-color: #000725;
+.form-label {
+   
+    -webkit-text-fill-color: #001333;
 }
 @keyframes slideInFromTop {
     0% {

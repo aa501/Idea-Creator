@@ -261,7 +261,7 @@ export class Login extends Component {
 
     render() {
         return (
-            <div id='page-holder' class="container">
+            <div id='page-holders' class="container">
                         
                 <div id='display' class=" text-center">
 
@@ -272,7 +272,7 @@ export class Login extends Component {
                         </div>
 
                         <div class="col text-center" style={{ background: "white", margin: "0%" }}>
-                            <div id='text' style={{ marginTop: "18px", fontSize: "18px", fontWeight: "600", color: "#606060" }}>Login to Idea Creator</div>
+                            <div id='text' style={{ marginTop: "18px", fontSize: "18px", fontWeight: "600", color: "#606060" }}>Login to IP Creator</div>
 
                             <div id='username-field' style={{ width: "100%" }}>
 
@@ -289,7 +289,7 @@ export class Login extends Component {
 
                             <div class="form-check" style={{ fontColor: "black" }} id='remember-me'>
                             <input type="checkbox" class="form-check-input" id="rememberme-check" />
-                                <label class="form-check-label" style={{fontColor: "black"}} for="rememberme-check">Remember Me?</label>
+                                <label class="form-label" style={{fontColor: "black"}} for="rememberme-check">Remember Me?</label>
                         </div>
 
                             <button type="submit" style={{ width: "100%", backgroundColor: "#0292D1" }} class="btn btn-lg" id='submit-button'
@@ -297,11 +297,11 @@ export class Login extends Component {
                         </button>
 
 
-                        <Button color="link" id='forgot-pass' onClick={this.handleClickOpenForgotPassword}>Forgot
+                            <Button style={{marginRight: 20}} color="link" id='forgot-pass' onClick={this.handleClickOpenForgotPassword}>Forgot
                             password?</Button>
 
 
-                        <Button color="link" id='register' onClick={this.openRegisterAccount}>Create
+                            <Button style={{ marginRight: 20 }} color="link" id='register' onClick={this.openRegisterAccount}>Create
                             Account <FontAwesomeIcon icon="user-plus" /></Button>
 
 
