@@ -243,8 +243,8 @@ export default class SurveyView extends Component {
               </Grid>
                 <Grid item>
                   <Row>
-                    <Col xs="6"><div text-align="left">{getStringSection(qsn.notes, 1)}</div></Col>
-                    <Col xs="6"><div class="testing">{getStringSection(qsn.notes, 3)}</div></Col>
+                    <Col xs="6"><div text-align="left">{this.getRatingParam(qsn.notes, 0)}</div></Col>
+                    <Col xs="6"><div class="testing">{this.getRatingParam(qsn.notes, 1)}</div></Col>
                   </Row>
                 </Grid>
               </Grid>
@@ -253,15 +253,31 @@ export default class SurveyView extends Component {
       }
     }
 
+    getRatingParam(arr, end) {
+      var choices = arr;
+      var convertString = JSON.parse(choices);
+      console.log(convertString);
+      var i = 0;
+      var newArray = [];
+
+      while (convertString[i] != null) {
+        newArray.push(convertString[i]);
+        i++;
+      }
+
+      return (newArray[end])
+    }
+
     /* Renders answer choices for either multiple choice or check all questions  */
     createAnswerChoiceArray(qsn, type) {
       var choices = qsn.notes;
+      var convertString = JSON.parse(choices);
+      console.log(convertString);
       var i = 0;
-      var splitStr = choices.split(',')
       var newArray = [];
 
-      while (splitStr[i] != null) {
-        newArray.push(splitStr[i]);
+      while (convertString[i] != null) {
+        newArray.push(convertString[i]);
         i++;
       }
 
@@ -269,7 +285,7 @@ export default class SurveyView extends Component {
         return (
           <div>
             <Row>
-              <RadioGroup defaultValue="female" aria-label="gender" name="customized-radios" value={this.state.radio} onChange={(event) => this.handleRadioMaster(event, `${qsn.id}`)}>
+              <RadioGroup name="customized-radios" value={this.state.radio} onChange={(event) => this.handleRadioMaster(event, `${qsn.id}`)}>
               {
                   newArray.map(choice => (
                   <div>

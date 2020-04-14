@@ -228,3 +228,7 @@
     width: 100px;
     height: 70px;
 }
+
+#ToggleButton {
+  min-width: 50px;
+}

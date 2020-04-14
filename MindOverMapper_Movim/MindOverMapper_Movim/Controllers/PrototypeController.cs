@@ -23,7 +23,7 @@ namespace MindOverMapper_Movim.Controllers
     public class PrototypeController : Controller
     {
         private readonly MovimDbContext _context;
-        private readonly ProjectService _service;
+       // private readonly PrototypeService _service;
         private readonly AppSettings _appSettings;
         private readonly IHostingEnvironment _env;
 
@@ -38,6 +38,7 @@ namespace MindOverMapper_Movim.Controllers
         [HttpPost]
         public ActionResult UploadPrototype([FromForm] CreatePrototypeRequest req)
         {
+            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
 
             string path = Path.Combine(_env.WebRootPath, "files");
             IList<string> filePaths = new List<string>();
@@ -50,13 +51,24 @@ namespace MindOverMapper_Movim.Controllers
             }
             Prototype prototype = new Prototype();
             prototype.Uid = Guid.NewGuid().ToString();
-            prototype.ProjectId = req.ProjectId;
+            prototype.ProjectId = proj.Id;
             prototype.PrototypeName = req.PrototypeName;
-            prototype.PrototypeDescription = req.PrototypeName;
+            prototype.PrototypeDescription = req.PrototypeDescription;
             prototype.PrototypePath = Newtonsoft.Json.JsonConvert.SerializeObject(filePaths);
             _context.Prototype.Add(prototype);
             _context.SaveChanges();
             return Ok();
+
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet("{uid}")]
+        public ActionResult GetPrototypes(string uid)
+        {
+
+          Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+          var prototypes = _context.Prototype.Where(r => r.ProjectId == proj.Id);
+          return Ok(prototypes);
 
         }
     }

@@ -23,7 +23,6 @@ export default class SurveyQuestion extends Component {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
             questions: [],
-            tags: [],
             numQs: 0,
 
             textSub: '',
@@ -34,8 +33,8 @@ export default class SurveyQuestion extends Component {
             ratingMinNote: '',
             ratingMaxNote: '',
             ratingQuestion: '',
-            ratingString: '',
-
+            ratingString: [],
+            numOptions: 0,
             choices: ''
         }
 
@@ -96,7 +95,7 @@ export default class SurveyQuestion extends Component {
           ratingMaxNote: '',
           ratingQuestion: '',
           ratingString: '',
-
+          numOptions: 0,
           choices: ''
 
         })
@@ -180,7 +179,6 @@ export default class SurveyQuestion extends Component {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
           'notes': 'none',
-          'tags': '',
           'archived': 'No'
       },
       {
@@ -205,7 +203,6 @@ export default class SurveyQuestion extends Component {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
           'notes': this.state.choices,
-          'tags': '',
           'archived': 'No'
       },
       {

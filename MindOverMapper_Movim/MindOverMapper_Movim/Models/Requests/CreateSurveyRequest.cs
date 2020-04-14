@@ -7,6 +7,7 @@ namespace MindOverMapper_Movim.Models.Requests
     public partial class CreateSurveyRequest
     {
         public string SurveyName { get; set; }
+        public string UniqueId { get; set; }
         public string ProjectUid { get; set; }
         public string PrototypeUid { get; set; }
         public string ConceptUid { get; set; }

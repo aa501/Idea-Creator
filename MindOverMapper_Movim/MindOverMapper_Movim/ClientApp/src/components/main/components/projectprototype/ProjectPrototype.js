@@ -65,7 +65,7 @@ export default class ProjectPrototype extends Component {
         });
         formData.append('prototypeName', this.state.prototypeName);
         formData.append('prototypeDescription', this.state.prototypeDescription);
-        formData.append('projectId', this.state.projectName.uid);
+        formData.append('projectUid', this.state.projectName.uid);
         axios.post('/api/prototype',
             formData,
             {
