@@ -73,7 +73,7 @@ export default class ProjectSurvey extends Component {
     newSurvey = () => {
         this.props.history.push({
             pathname: '/new-survey',
-            state: this.props.location.state
+            state: this.state
         })
     }
 
