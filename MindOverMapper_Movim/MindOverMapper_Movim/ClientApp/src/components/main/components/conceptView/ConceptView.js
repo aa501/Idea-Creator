@@ -29,7 +29,6 @@ import noProjectImage from "../../../../static/NoProjectsFound.png";
 import addProject from "../../../../static/addProject.jpg";
 import City from "../../../../static/City.jpg";
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
-
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
 
@@ -451,55 +450,48 @@ export default class ConceptView extends Component {
 
 
         return (
-            <div className='dashboard-container'>
+            <div className='concept-container'>
 
-                <SideNav
+                <SideNav expanded="true" style={{
+                    backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"
+                }}
                     onSelect={(selected) => {
                         // Add your code here
                     }}
                 >
 
-                 <SideNav.Toggle />
+
 
                     <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem role="menuitem" eventKey="home">
+                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home">
                             <NavIcon>
-                                    <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{paddingTop: 13, paddingRight: 32, fontSize: 18}}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 20, fontSize: 16 }}>
                                 Home
                             </NavText>
 
                         </NavItem>
 
-                        <NavItem eventKey="charts">
+                        <NavItem role="menuitem" eventKey="project">
                             <NavIcon>
-                                    <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
-                            <NavText style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Add Project
                             </NavText>
-                            <NavItem eventKey="charts/linechart">
-                                <NavText>
-                                    Line Chart
-                                </NavText>
-                            </NavItem>
-                            <NavItem eventKey="charts/barchart">
-                                <NavText>
-                                    Bar Chart
-                                </NavText>
-                            </NavItem>
+
                         </NavItem>
 
                         <NavItem role="menuitem" eventKey="settings">
                             <NavIcon>
-                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Settings
                             </NavText>
 
@@ -507,10 +499,10 @@ export default class ConceptView extends Component {
 
                         <NavItem role="menuitem" eventKey="info">
                             <NavIcon>
-                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 About
                             </NavText>
 
@@ -518,10 +510,10 @@ export default class ConceptView extends Component {
 
                         <NavItem role="menuitem" eventKey="help">
                             <NavIcon>
-                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Help
                             </NavText>
 
@@ -529,10 +521,10 @@ export default class ConceptView extends Component {
 
                         <NavItem role="menuitem" eventKey="logout">
                             <NavIcon>
-                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Logout
                             </NavText>
 
@@ -541,13 +533,16 @@ export default class ConceptView extends Component {
 
                     </SideNav.Nav>
 
-               </SideNav>
+                </SideNav>
 
 
-
-
-                <div class="row" id="background-concepts">
-                        <h3 id="page-title">Concepts for {this.state.projectName.title}</h3>
+                <div id="concept-main-content">
+                    <div>
+                        <h3>Concepts for {this.state.projectName.title}</h3>
+                        <hr style={{ width: "30%" }} id="hr-1" />
+                    </div>
+                   <div class="row" id="background-concepts">
+                        
                         <div className='concept-board-body'>
                             {this.state.concepts.map((concept, index) => {
                                 return (
@@ -792,12 +787,12 @@ export default class ConceptView extends Component {
                         maxWidth='xl'
                         aria-labelledby="alert-dialog-slide-title"
                         aria-describedby="alert-dialog-slide-description">
-                    <DialogContent>
-                      <Container>
-                          <h4>Answer all that may apply.</h4>
-                          <div>
-                              {
-                                  this.state.combinedAnswered.map(qsn => (
+                        <DialogContent>
+                             <Container>
+                                <h4>Answer all that may apply.</h4>
+                                <div>
+                                    {
+                                     this.state.combinedAnswered.map(qsn => (
                                       <div>
                                           <div>{qsn.question.text}</div>
                                           <TextField
@@ -809,20 +804,20 @@ export default class ConceptView extends Component {
                                               variant="outlined">
                                           </TextField>
                                           <p></p>
-                                  </div>
-                                ))
-                              }
-                          </div>
-                      </Container>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button color="danger" onClick={this.handleCloseOldQuestionModal}>Don't Save</Button>
-                        <Button color="primary" disabled={this.state.conceptName.length <= 0} onClick={() => { this.updateAnswers() }}>Save & Finish</Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-
-            <div>
+                                     </div>
+                                     ))
+                                     }
+                                </div>
+                             </Container>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button color="danger" onClick={this.handleCloseOldQuestionModal}>Don't Save</Button>
+                            <Button color="primary" disabled={this.state.conceptName.length <= 0} onClick={() => { this.updateAnswers() }}>Save & Finish</Button>
+                        </DialogActions>
+                    </Dialog>
+                  </div>
+                </div>
+                <div>
               <Dialog
                 open={this.state.errorModal}
                 TransitionComponent={Transition}

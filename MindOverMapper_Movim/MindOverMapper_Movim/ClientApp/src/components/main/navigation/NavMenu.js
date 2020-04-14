@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Col } from 'react-bootstrap';
 import './NavMenu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import logo from '../../../static/Logo.png';
+import logo from '../../../static/new-logo-crop-wide.jpg';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -39,15 +39,14 @@ export class NavMenu extends Component {
     render() {
     return (
      
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-3" dark expand="xl">
-          <div id='naviboi'>
-            <NavbarBrand id='nav-text-accru' tag={Link} to={{ pathname: '/home', state: {userData: this.props.userData} }}>
-                <span id ='title-image'>
-                    <img src={logo} width = "50"/>
+        <Navbar className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-3" dark expand="xl" >
+            <div id='naviboi'>
+               
+                <NavbarBrand style={{marginLeft: "-15px"}} id='nav-text-accru' tag={Link} to={{ pathname: '/home', state: {userData: this.props.userData} }}>
+                    <span id='title-image'>
+                        <img src={logo} width="90" height="58" />
                 </span>
-                <span id='name-span'>
-                <h id='app-name'>Idea Creator</h>
-                </span>
+                
             </NavbarBrand>
 
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
@@ -55,7 +54,7 @@ export class NavMenu extends Component {
               <ul className="navbar-nav flex-grow">
                 <NavItem>
                     <UncontrolledDropdown nav inNavbar >
-                      <DropdownToggle nav caret className="text-dark">
+                      <DropdownToggle nav caret className="text-light">
                           Hello, {this.props.userData.firstName}! <FontAwesomeIcon icon="user-circle" />
                       </DropdownToggle>
                           <DropdownMenu right>

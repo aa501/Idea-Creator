@@ -1,5 +1,16 @@
 @import url(https://fonts.googleapis.com/css?family=Exo+2:400,700,500,300);
 
+#prototype-container {
+    width: 80%;
+    overflow-y: scroll;
+    height: 89vh;
+    max-height: 89vh;
+    padding-bottom: 1vh;
+}
+#prototype-main-content{
+    margin-left: 27%;
+    margin-top: 3%;
+}
 .project-creator-container {
     display: flex;
     flex-direction: column;

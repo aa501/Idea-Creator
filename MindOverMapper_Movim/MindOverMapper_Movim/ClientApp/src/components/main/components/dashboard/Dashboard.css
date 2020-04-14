@@ -24,20 +24,20 @@
 .dashboard-body {
     display: flex;
     height: 40vh;
-    margin-left: 26%;
-    margin-right: 5%;
-    width: 90%;
+    margin-left: 40%;
+   
+    width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .project-paper-holder{
-    height: 50%;
-    width: 35%;
-    margin-right: 60px;
+    height: 30%;
+    width: 10%;
+    margin-right: 20px;
     margin-top: 10px;
-    margin-bottom: 400px;
+    margin-bottom: 170px;
 }
 
 .project-paper{
@@ -56,11 +56,11 @@
 }
 
 #project-card{
-  height: 400
+  height: 400px;
 }
 
 #project-card-content{
-    min-height: 10%;
+   
 }
 
 #font-awesome-space{
@@ -103,10 +103,23 @@
 }
 
 #dash-icon {
-    color: white;
+    color: black;
+
 }
 
 
-.sidenav{
-    background: black;
+Sidenav {
+    background: white;
+    border-right: solid;
+    border-right-color: #0278B6;
+}
+
+#nav-text{
+    color: black;
+}
+
+#hr-1 {
+    width: 38%;
+    height: 1px;
+    background-color: darkgray;
 }
