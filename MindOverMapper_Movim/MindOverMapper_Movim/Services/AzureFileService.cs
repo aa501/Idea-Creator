@@ -16,30 +16,32 @@ namespace MindOverMapper_Movim
         private AppSettings _appSettings;
         private string Credentials;
         private CloudStorageAccount storageAccount;
-        public AzureFileService(IOptions<AppSettings> appSettings)
+        public AzureFileService(AppSettings appSettings)
         {
-            this._appSettings = appSettings.Value;
+            this._appSettings = appSettings;
             this.Credentials = this._appSettings.AzureFileStoreConnectionString;
             this.storageAccount = CloudStorageAccount.Parse(this.Credentials);
         }
 
-        public void storeFile(String path, String fileName)
+        public void storeFile(String path, String fileName, String uploadFile)
         {
             CloudFileClient fileClient = this.storageAccount.CreateCloudFileClient();
-            CloudFileShare fileShare = fileClient.GetShareReference("files");
+            CloudFileShare fileShare = fileClient.GetShareReference(this._appSettings.AzureFIleStoreName);
 
             if(fileShare.Exists())
             {
                 CloudFileDirectory root = fileShare.GetRootDirectoryReference();
-                CloudFileDirectory folder = root.GetDirectoryReference("files");
-                if (folder.Exists()) {
-                    CloudFile file = folder.GetFileReference(fileName);
-                    using(AutoResetEvent waitHandle = new AutoResetEvent(false))
-                    {
-                        ICancellableAsyncResult result = file.BeginUploadFromFile(path, ar => waitHandle.Set() , new object());
-                        waitHandle.WaitOne();
-                        file.EndUploadFromFile(result);
-                    }
+                CloudFileDirectory folder = root.GetDirectoryReference(path);
+                if (!folder.Exists())
+                {
+                    folder.Create();
+                }
+                CloudFile file = folder.GetFileReference(fileName);
+                using(AutoResetEvent waitHandle = new AutoResetEvent(false))
+                {
+                    ICancellableAsyncResult result = file.BeginUploadFromFile(uploadFile, ar => waitHandle.Set() , new object());
+                    waitHandle.WaitOne();
+                    file.EndUploadFromFile(result);
                 }
 
             }

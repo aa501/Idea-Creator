@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
+import { Dialog, Card, CardContent } from '@material-ui/core';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import { Label, Input } from 'reactstrap';
+import { Label, Input, CardTitle, Row } from 'reactstrap';
 import Slide from '@material-ui/core/Slide';
 import { Container, Form, Button, FormGroup} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
@@ -23,11 +23,16 @@ export default class ProjectPrototype extends Component {
             userData: this.props.location.state.userData || this.props.userData,
             prototypeName: '',
             prototypeDescription: '',
-            files: []
+            files: [],
+            prototypes: []
         }
     }
 
     componentDidMount = () => {
+        axios.get('/api/prototype/', this.state.projectName.uid)
+            .then(response => {
+                this.setState({ prototypes: response.data });
+            })
         console.log(this.props)
     }
 
@@ -62,17 +67,21 @@ export default class ProjectPrototype extends Component {
         this.state.files.map(file => {
             formData.append('Files', file);
         });
+        formData.append('ProjectId', this.state.projectName.uid);
         formData.append('prototypeName', this.state.prototypeName);
         formData.append('prototypeDescription', this.state.prototypeDescription);
         axios.post('/api/prototype',
             formData,
             {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token,
-                'Content-Type': 'multipart/form-data'
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token,
+                    'Content-Type': 'multipart/form-data'
 
-            }
-        });
+                }
+            })
+            .then(response => {
+                this.setState({ prototypes: [response.data, ...this.state.prototypes] });
+            });
     }
 
 
@@ -129,8 +138,29 @@ export default class ProjectPrototype extends Component {
                             )}
                         </Dropzone>
                             </div>
-                        <Button variant="primary" type="submit" onClick={this.submitPrototype}>Upload</Button>
+                    <Button variant="primary" type="submit" onClick={this.submitPrototype}>Upload</Button>
+                    <Row>
+                        {
+                            this.state.prototypes.map(Item => 
+                                <Card>
+                                    <CardTitle>{Item.PrototypeName}</CardTitle>
+                                    <CardContent>{Item.Description}
+                                        <ul>
+                                            { Item.PrototypePath.map(file => 
+                                                <li>{file}</li>
+                                            )
+                                            }
+                                        </ul>
+                                    </CardContent>
+                                    
+                                </Card>       
+                            )
+                        }
+                        
+                    </Row>
+
                 </Container>
+
                 </div>
         );
     }

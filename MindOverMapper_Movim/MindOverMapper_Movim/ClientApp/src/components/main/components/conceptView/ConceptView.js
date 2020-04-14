@@ -293,7 +293,7 @@ export default class ConceptView extends Component {
         try {
             answers[el].answer = event.target.value;
             this.setState({ answers });
-        } catch { console.log("Error!")}
+        } catch(e) { console.log("Error!")}
         console.log(this.state.answers);
     }
 

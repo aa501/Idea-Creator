@@ -419,6 +419,8 @@ namespace MindOverMapper_Movim.Migrations
 
                     b.Property<bool>("Qualitative");
 
+                    b.Property<string>("Reward");
+
                     b.Property<string>("SurveyName");
 
                     b.HasKey("Id");

@@ -10,5 +10,6 @@ namespace MindOverMapper_Movim.Helpers
         public string awsAccessKey { get; set; }
         public string awsRegion { get; set; }
         public string AzureFileStoreConnectionString { get; set; }
+        public string AzureFIleStoreName { get; set; }
     }
 }
