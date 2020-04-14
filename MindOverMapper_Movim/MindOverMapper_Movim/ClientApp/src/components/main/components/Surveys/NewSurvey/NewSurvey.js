@@ -31,9 +31,11 @@ export default class NewSurvey extends Component {
         this.state = {
             userData: this.props.location.state.userData || this.props.userData,
             projectName: this.props.location.state.projectName,
+            surveys: this.props.location.state.surveys,
             uniqueId: 'IP' + Math.floor(Math.random() * 10000000).toString(),
             loading: false,
             surveyName: '',
+            templateQuestions: [],
             questions: [],
             pulledQuestions: [],
             chosenQuestions: [],
@@ -41,19 +43,12 @@ export default class NewSurvey extends Component {
             concepts: [],
             prototypes: [],
             warning: '',
+            template: [],
             chosenPrototype: '',
             questionDialog: false,
             conceptDialog: false,
             prototypeDialog: false,
-            pricingOptionId: null,
-            idea: false,
-            package: false,
-            product: false,
-            name: false,
-            purchaseFrequency: false,
-            purchasePrice: false,
-            qualitative: false,
-            demographics: false,
+            demographics: '',
 
             numQs: 0,
 
@@ -85,7 +80,7 @@ export default class NewSurvey extends Component {
             this.setState({
                 pulledQuestions: response,
                 test: response.length
-            });
+            }, () => (console.log(this.state.pulledQuestions)))
         }).catch(() => {
           console.log("oops");
         });
@@ -358,6 +353,13 @@ export default class NewSurvey extends Component {
         return false;
     }
 
+    handleTemplateChange = (survey) => {
+        this.setState({
+            template: survey,
+            loadSurveyDialog: false
+        }, () => (this.loadTemplateQuestions()));
+    }
+
     handleSurveyNameChange = (event) => {
         this.setState({
             surveyName: event.target.value
@@ -385,6 +387,15 @@ export default class NewSurvey extends Component {
 
     addPrototype = () => {
         this.setState({ prototypeDialog: true });
+    }
+
+    openSurveyDialog = () => {
+        this.getQuestions();
+        this.setState({ loadSurveyDialog: true });
+    }
+
+    closeSurveyDialog = () => {
+        this.setState({ loadSurveyDialog: false });
     }
 
     conceptDialogClose = () => {
@@ -430,7 +441,6 @@ export default class NewSurvey extends Component {
     openQuestionBank = async (event) => {
         await this.setLoading(true);
         await this.getQuestions();
-        await this.addNewQuestions();
         await this.setState({ questionDialog: true});
         await this.setLoading(false);
     }
@@ -439,8 +449,10 @@ export default class NewSurvey extends Component {
         this.setState({ questionEditorModal: true })
     }
 
-    closeQuestionEditorModal= () => {
-        this.resetFields();
+    closeQuestionEditorModal = async () => {
+        await this.resetFields();
+        await this.getQuestions();
+        await this.addNewQuestions();
         this.setState({ questionEditorModal: false });
     }
 
@@ -482,26 +494,53 @@ export default class NewSurvey extends Component {
         /* Alert the copied text */
     }
 
+    loadTemplateQuestions = async () => {
+      var templateQuestions = this.state.templateQuestions;
+      const template = this.state.template.questions;
+      const parsedTemplate = JSON.parse(template);
+      const finalQuestionSet = this.state.finalQuestionSet;
+      const pulledQuestions = this.state.pulledQuestions;
+
+      const chosenQuestions = this.state.chosenQuestions;
+
+      parsedTemplate.forEach(function(qsn) {
+        var index = qsn.id.toString();
+        console.log(index);
+        if (!chosenQuestions.includes(index) && pulledQuestions.includes(qsn)) {
+          console.log(finalQuestionSet);
+          chosenQuestions.push(qsn.id.toString());
+          console.log(chosenQuestions);
+        }
+      });
+
+      await this.setState({ chosenQuestions }, () => (console.log(this.state.chosenQuestions)));
+      await this.finalizeSurvey();
+    }
+
     finalizeSurvey = () => {
       var chosenQuestions = this.state.chosenQuestions;
       var pulledQuestions = this.state.pulledQuestions;
       var finalArray = [];
-      chosenQuestions.forEach(function(id){
-          var tracker = 0;
-          console.log("Searching for: " + typeof(id) + " " + id)
-          const found = pulledQuestions.filter(obj => {return obj.id === parseInt(id)})
-          finalArray.push(found[0]);
-          tracker += 1;
-        });
-      if (chosenQuestions.length > 0) {
-        this.setState({
-             finalQuestionSet: finalArray
-          }, () => (console.log(this.state.finalQuestionSet)));
-      }
-      else {
-        this.setState({
-             finalQuestionSet: []
-          }, () => (console.log(this.state.finalQuestionSet)));
+        try {
+        chosenQuestions.forEach(function(id){
+            var convertedInt = parseInt(id)
+            console.log("Searching for: " + typeof(convertedInt) + " " + convertedInt)
+            const found = pulledQuestions.filter(obj => {return obj.id === parseInt(convertedInt)})
+            console.log(found);
+            finalArray.push(found[0]);
+          });
+        if (finalArray.length > 0) {
+          this.setState({
+               finalQuestionSet: finalArray
+            }, () => (console.log(this.state.finalQuestionSet)));
+        }
+        else {
+          this.setState({
+               finalQuestionSet: []
+            }, () => (console.log(this.state.finalQuestionSet)));
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
 
@@ -525,21 +564,34 @@ export default class NewSurvey extends Component {
     renderQuestions = () => {
       const finalQuestionSet = this.state.finalQuestionSet;
       if (finalQuestionSet.length > 0) {
-        return (
-          finalQuestionSet.map(obj => {
           return (
             <div>
               <p>
-              <Row>
-              <Col xs={2}><Chip size="sm" label={obj.type}/></Col>
-              <Col>{"   "}{obj.text}</Col>
-              </Row>
+              <TableContainer component={Paper}>
+                <Table size="small" aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {finalQuestionSet.map((qsn) => (
+                      <TableRow hover key={qsn.uid}>
+                        <TableCell style={{maxWidth:"40px"}}>
+                          <Checkbox name={qsn.id} color="primary" checked={this.checkChosenArray(qsn.id)} onChange={(event) => this.handleChecked(event, qsn)} />
+                        </TableCell>
+                        <TableCell component="th" scope="row" style={{maxWidth:"130px", wordWrap: 'break-word'}}>
+                          <Chip size="sm" label={qsn.type}></Chip>
+                        </TableCell>
+                        <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{qsn.text}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
               </p>
             </div>
             )
-          })
-        )
-      }
+          }
       else {
         return (
           <div>
@@ -778,7 +830,7 @@ export default class NewSurvey extends Component {
 
     render() {
         return (
-            <div class="mx-auto shadow my-5 p-3">
+            <div class="mx-auto shadow my-5 p-3" style={{width: "60%"}}>
                 <Container>
                     <div class="d-flex align-content-between flex-column">
                         <h3>Survey Builder</h3>
@@ -820,7 +872,7 @@ export default class NewSurvey extends Component {
                                         Please click any button below to add questions to your survey.
                                     </Alert>
                                     <div className="d-flex flex-wrap justify-content-around">
-                                      <Button variant="warning" onClick={this.openQuestionBank}><FontAwesomeIcon icon="upload" /> Load Survey</Button>
+                                      <Button variant="warning" onClick={this.openSurveyDialog}><FontAwesomeIcon icon="upload" /> Load Survey</Button>
                                       <Button variant="warning" onClick={this.openQuestionBank}><FontAwesomeIcon icon="wrench" /> Choose Questions</Button>
                                       <Button variant="warning" onClick={this.openQuestionEditorModal}><FontAwesomeIcon icon="pen" /> Create Question</Button>
                                       <Button variant="primary" onClick={this.handleViewProgress}><FontAwesomeIcon icon="list" /> View Current </Button>
@@ -946,10 +998,9 @@ export default class NewSurvey extends Component {
                               <Table size="small" aria-label="a dense table">
                                 <TableHead>
                                   <TableRow>
-                                  {/*  <TableCell></TableCell> */}
-                                    <TableCell >Prototype Name</TableCell>
-                                    <TableCell>Description</TableCell>
-                                    <TableCell >Type</TableCell>
+                                    <TableCell><b>Name</b></TableCell>
+                                    <TableCell><b>Description</b></TableCell>
+                                    <TableCell><b>Type</b></TableCell>
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -974,6 +1025,36 @@ export default class NewSurvey extends Component {
                             <Button variant='success' onClick={this.prototypeDialogClose}>Save</Button>
                         </DialogActions>
                       </Dialog>
+
+                      <Dialog
+                          open={this.state.loadSurveyDialog}
+                          maxWidth='xl'>
+                          <DialogContent dividers>
+                              <h6>Click on a survey to load questions.</h6>
+                              <TableContainer component={Paper}>
+                                <Table size="small" aria-label="a dense table">
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell>Survey</TableCell>
+                                      <TableCell># Qs</TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {this.state.surveys.map((survey) => (
+                                      <TableRow onClick={() => this.handleTemplateChange(survey)} hover key={survey.surveyName}>
+                                        <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{survey.surveyName}</TableCell>
+                                        <TableCell style={{maxWidth:"120px", wordWrap: 'break-word'}}>type</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                          </DialogContent>
+                          <DialogActions>
+                              <Button variant='primary' onClick={this.closeSurveyDialog}>Close</Button>
+                          </DialogActions>
+                        </Dialog>
+
                     </div>
                 </Container>
 
