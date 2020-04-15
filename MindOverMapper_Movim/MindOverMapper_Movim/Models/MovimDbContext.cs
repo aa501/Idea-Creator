@@ -26,8 +26,9 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<Prototype> Prototype { get; set; }
         public virtual DbSet<Survey> Survey { get; set; }
-        public virtual DbSet<ConceptSurvey> ConceptSurvey { get; set; }
-        public virtual DbSet<PrototypeSurvey> PrototypeSurvey { get; set; }
+        public virtual DbSet<SurveyQuestion> SurveyQuestion { get; set; }
+        public virtual DbSet<SurveyPrototype> SurveyPrototype { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
@@ -338,25 +339,118 @@ namespace MindOverMapper_Movim.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Uid)
+                .IsRequired()
+                .HasColumnName("uid")
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+                entity.Property(e => e.ProjectId).HasColumnName("project_id")
+                .IsRequired();
+
+                entity.Property(e => e.PrototypeDescription)
+                .HasColumnName("prototype_description")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+                entity.Property(e => e.PrototypeName)
+                .IsRequired()
+                .HasColumnName("prototype_name")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+                entity.Property(e => e.PrototypePath)
+                .IsRequired()
+                .HasColumnName("prototype_path")
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+            });
+
+            modelBuilder.Entity<Survey>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Uid)
                     .IsRequired()
                     .HasColumnName("uid")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PrototypeName)
+                entity.Property(e => e.SurveyName)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PrototypeDescription)
-                    .IsRequired()
-                    .HasColumnName("description")
-                    .HasMaxLength(500)
+                entity.Property(e => e.ProjectId).HasColumnName("project_id");
+
+                entity.Property(e => e.Prototypes)
+                    .HasColumnName("prototypes")
+                    .HasColumnType("nvarchar(4000)")
                     .IsUnicode(false);
 
+                entity.Property(e => e.ConceptId).HasColumnName("concept_id");
+
+                entity.Property(e => e.Notes)
+                    .HasColumnName("notes")
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Qualifications)
+                    .HasColumnName("qualifications")
+                    .HasColumnType("nvarchar(4000)")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Questions)
+                    .HasColumnName("questions")
+                    .HasColumnType("nvarchar(max)")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DateCreated)
+                    .IsRequired()
+                    .HasColumnName("date_created")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasColumnName("status")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EndDate)
+                    .HasColumnName("end_date")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Reward)
+                    .HasColumnName("reward")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
             });
 
+            modelBuilder.Entity<SurveyQuestion>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id")
+                    .IsRequired();
+
+                entity.Property(e => e.QuestionId).HasColumnName("question_id")
+                    .IsRequired();
+
+                entity.Property(e => e.SurveyId).HasColumnName("survey_id")
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<SurveyPrototype>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id")
+                    .IsRequired();
+
+                entity.Property(e => e.PrototypeId).HasColumnName("prototype_id")
+                    .IsRequired();
+
+                entity.Property(e => e.SurveyId).HasColumnName("survey_id")
+                    .IsRequired();
+            });
         }
     }
 }

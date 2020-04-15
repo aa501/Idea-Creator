@@ -53,12 +53,6 @@
     <Compile Remove="AzureFileService.cs" />
     <Compile Remove="Migrations\20200405181101_Survey.cs" />
     <Compile Remove="Migrations\20200405181101_Survey.Designer.cs" />
-    <Compile Remove="Migrations\20200405190158_Survey.cs" />
-    <Compile Remove="Migrations\20200405190158_Survey.Designer.cs" />
-    <Compile Remove="Migrations\20200413213250_prototype-files.Designer.cs" />
-    <Compile Remove="Surveys\TurkQuestionBuilder.cs" />
-    <Compile Remove="Migrations\20200406164827_SurveyTest.cs" />
-    <Compile Remove="Migrations\20200406164827_SurveyTest.Designer.cs" />
     <None Remove="Controllers\PrototypeController.cs" />
     <None Remove="Migrations\20200413213250_prototype-files.cs" />
     <None Remove="Models\ConceptSurvey.cs" />
@@ -73,7 +67,24 @@
     <None Remove="Surveys\ISurvey.cs" />
     <None Remove="Surveys\SurveyFactory.cs" />
     <None Remove="Surveys\SurveyTypes.cs" />
-    <None Remove="Surveys\TurkSurvey.cs" />
+    <None Include="node_modules\react-transition-group\package.json" />
+    <None Include="node_modules\react-transition-group\package.json" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="node_modules\react-transition-group\LICENSE" />
+    <None Include="node_modules\react-transition-group\LICENSE" />
+    <None Include="node_modules\jss-plugin-rule-value-function\dist\jss-plugin-rule-value-function.bundle.js" />
+    <None Include="node_modules\jss-plugin-rule-value-function\dist\jss-plugin-rule-value-function.bundle.js" />
+    <None Include="node_modules\jss-plugin-rule-value-function\LICENSE" />
+    <None Include="node_modules\jss-plugin-rule-value-function\LICENSE" />
+    <None Include="node_modules\react-transition-group\README.md" />
+    <None Include="node_modules\react-transition-group\README.md" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
   </ItemGroup>
 
   <ItemGroup>

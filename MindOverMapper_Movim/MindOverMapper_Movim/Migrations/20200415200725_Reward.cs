@@ -2,21 +2,23 @@
 
 namespace MindOverMapper_Movim.Migrations
 {
-    public partial class PrototypeFiles : Migration
+    public partial class Reward : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "PrototypePath",
-                table: "Prototype",
+                name: "reward",
+                table: "Survey",
+                unicode: false,
+                maxLength: 20,
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PrototypePath",
-                table: "Prototype");
+                name: "reward",
+                table: "Survey");
         }
     }
 }

@@ -19,11 +19,11 @@ using System.Collections.Generic;
 namespace MindOverMapper_Movim.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    //[ApiController]
     public class PrototypeController : Controller
     {
         private readonly MovimDbContext _context;
-        private readonly ProjectService _service;
+       // private readonly PrototypeService _service;
         private readonly AppSettings _appSettings;
         private readonly IHostingEnvironment _env;
 
@@ -31,7 +31,6 @@ namespace MindOverMapper_Movim.Controllers
         {
             _context = context;
             _appSettings = appSettings.Value;
-            _service = new ProjectService();
             _env = env;
         }
 
@@ -39,6 +38,8 @@ namespace MindOverMapper_Movim.Controllers
         [HttpPost]
         public ActionResult UploadPrototype([FromForm] CreatePrototypeRequest req)
         {
+            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
+
             string path = Path.Combine(_env.WebRootPath, "files");
             IList<string> filePaths = new List<string>();
             foreach(IFormFile file in req.Files)

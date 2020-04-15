@@ -13,7 +13,8 @@ import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
 import './ProjectPrototype.css';
-
+import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
 export default class ProjectPrototype extends Component {
     constructor(props) {
@@ -70,6 +71,7 @@ export default class ProjectPrototype extends Component {
         formData.append('ProjectId', this.state.projectName.uid);
         formData.append('prototypeName', this.state.prototypeName);
         formData.append('prototypeDescription', this.state.prototypeDescription);
+        formData.append('projectUid', this.state.projectName.uid);
         axios.post('/api/prototype',
             formData,
             {
@@ -81,8 +83,10 @@ export default class ProjectPrototype extends Component {
             })
             .then(response => {
                 this.setState({ prototypes: [response.data, ...this.state.prototypes] });
-            });
-    }
+            }).catch(() => {
+          console.log("Failure");
+          });
+        }
 
 
     nextPage = () => {
@@ -95,31 +99,118 @@ export default class ProjectPrototype extends Component {
 
     render() {
         return (
-            <div className='blue-card-container'>
-                <h3 className="page-title">Prototypes</h3>
-                <Container>
-                        <div className='project-definition-holder'>
-                        <TextField
-                            value={this.state.prototypetName}
-                            onChange={this.handlePrototypeNameChange}
-                            label="Name"
-                            margin="normal"
-                            placeholder="Enter Name..."
-                            variant="outlined">
-                        </TextField>
-                        </div>
-                    <div className='project-definition-holder'>
-                        <TextField
-                            value={this.state.prototypeDescription}
-                            onChange={this.handlePrototypeDescriptionChange}
-                            label="Description"
-                            margin="normal"
-                            rows="4"
-                            multiline
-                            placeholder="Enter Description..."
-                             variant="outlined">
-                                </TextField>
+
+            <div id="prototype-container">
+
+                <SideNav expanded="true" style={{
+                    backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"
+                }}
+                    onSelect={(selected) => {
+                        // Add your code here
+                    }}
+                >
+
+                    <SideNav.Nav defaultSelected="">
+
+
+                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 20, fontSize: 16 }}>
+                                Home
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="project">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Add Project
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="settings">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Settings
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="info">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                About
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="help">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Help
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="logout">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Logout
+                            </NavText>
+
+                        </NavItem>
+
+
+                    </SideNav.Nav>
+
+                </SideNav>
+
+                <div id="prototype-main-content">
+                    <div>
+                        <h3 id="subtitle">Prototypes</h3>
+                        <hr style={{ width: "30%" }} id="hr-1" />
+                    </div>
+                
+                            <div className='project-definition-holder'>
+                            <TextField
+                                value={this.state.prototypetName}
+                                onChange={this.handlePrototypeNameChange}
+                                label="Name"
+                                margin="normal"
+                                placeholder="Enter Name..."
+                                variant="outlined">
+                            </TextField>
                             </div>
+                        <div className='project-definition-holder'>
+                            <TextField
+                                value={this.state.prototypeDescription}
+                                onChange={this.handlePrototypeDescriptionChange}
+                                label="Description"
+                                margin="normal"
+                                rows="4"
+                                multiline
+                                placeholder="Enter Description..."
+                                 variant="outlined">
+                                    </TextField>
+                                </div>
                     <h4>Upload your files</h4>
                     <div className = "zone">
                     <Dropzone onDrop={this.onDrop} multiple>
@@ -156,12 +247,9 @@ export default class ProjectPrototype extends Component {
                                 </Card>       
                             )
                         }
-                        
                     </Row>
-
                 </Container>
-
-                </div>
+          </div>
         );
     }
 }

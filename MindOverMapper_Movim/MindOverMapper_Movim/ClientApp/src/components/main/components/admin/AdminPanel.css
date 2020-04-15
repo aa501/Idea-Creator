@@ -5,6 +5,8 @@
     
 }
 
+
+
 .dashboard-header{
     flex-direction: row;
     margin-left: 5%;
@@ -25,7 +27,7 @@
     
     margin-left: 13%;
     margin-right: 10%;
-    margin-top: 5%;
+    margin-top: -230px;
     width: 80%;
     flex-direction: row;
     flex-wrap: wrap;
@@ -48,9 +50,9 @@
 }
 .project-paper-holder{
     height: 25%;
-    width: 40%;
-    margin-right: 32px;
-    margin-left: 32px;
+    width: 28%;
+    margin-right: 2%;
+    margin-left: 2%;
     margin-top: 2px;
 }
 
@@ -69,4 +71,14 @@
 
 #project-card-content {
     height: 10%;
+}
+
+#dash-icon {
+    color: black;
+}
+
+#hr-1 {
+    width: 38%;
+    height: 1px;
+    background-color: darkgray;
 }

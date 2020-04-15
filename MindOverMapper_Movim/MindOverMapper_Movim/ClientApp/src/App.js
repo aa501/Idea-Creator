@@ -6,10 +6,16 @@ import { SurveyEnd } from './components/surveyend/SurveyEnd';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminPanel from './components/main/components/admin/AdminPanel';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faCog, faCircleNotch,faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream, faAngleDoubleRight, faArrowRight, faArrowLeft, faHeart, faCogs, faQuestion } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faTimes, faEraser, faWrench, faPen, faList, faUpload, faCog, faCogs, faCircleNotch,faHome, faIgloo, faTasks, faTrashAlt, faTrash, faUndo, faInfoCircle, faFileDownload, faFile, faScroll, faFileInvoice, faTimesCircle, faExclamationTriangle, faCheck, faClock, faBalanceScale, faFileExport, faFileInvoiceDollar, faEdit, faCalculator, faFileAlt, faTools, faUserPlus, faUserEdit, faSignInAlt, faUserCircle, faSignOutAlt, faUserLock, faCalendar, faShareSquare, faProjectDiagram, faStream, faAngleDoubleRight, faArrowRight, faArrowLeft, faHeart, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
   faIgloo,
+  faTimes,
+  faEraser,
+  faWrench,
+  faPen,
+  faList,
+  faUpload,
   faHome,
   faTrash,
   faTasks,
@@ -18,6 +24,7 @@ library.add(
   faUndo,
   faPlus,
   faCog,
+  faCogs,
   faUserPlus,
   faUserEdit,
   faUserCircle,
@@ -49,7 +56,6 @@ library.add(
   faArrowLeft,
   faArrowRight,
   faHeart,
-  faCogs,
   faQuestion
   )
 

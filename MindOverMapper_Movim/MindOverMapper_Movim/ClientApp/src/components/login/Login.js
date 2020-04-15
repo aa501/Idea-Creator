@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
 import Slide from '@material-ui/core/Slide';
-import logo from '../../static/Logo.png';
+import logo from '../../static/new-logo-crop-wide.jpg';
 import background from '../../static/background.mp4';
 import './Login.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -261,56 +261,47 @@ export class Login extends Component {
 
     render() {
         return (
-            <div id='page-holder'>
-                <video className='background' autoPlay loop muted>
-                    <source src={background} type='video/mp4' />
-                </video>
-                <div id='login-holder'>
-                    <div id='login-container'>
-                        <div id='logo-holder-logo' class="col-row">
+            <div id='page-holders' class="container">
+                        
+                <div id='display' class=" text-center">
 
+                    <div id='login-container' style={{ boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",background: "white", width: "100%", height: "380px", marginLeft: "15%"}} class="row text-center">
 
-                            <img id='login-logo' alt="Login Logo" src={logo} />
-
-
+                        <div class="col" style={{ height: "100%", margin: "0%", padding: "0%" }}> 
+                              <img id='login-logo-2' alt="Login Logo" src={logo} />
                         </div>
 
+                        <div class="col text-center" style={{ background: "white", margin: "0%" }}>
+                            <div id='text' style={{ marginTop: "18px", fontSize: "18px", fontWeight: "600", color: "#606060" }}>Login to IP Creator</div>
 
-                        <div id='logo-holder-text' class="row-md">
+                            <div id='username-field' style={{ width: "100%" }}>
 
-                            <text id='logo-name-text'>Idea Creator</text>
-
-
-                        </div>
-
-                        <div id='username-field'>
-
-                            <input type="email" autofocus class="form-control" id="userName-input" placeholder="Email"
+                            <input type="email" style={{background: "white", color: "black"}} autofocus class="form-control" id="userName-input" placeholder="Email"
                                 value={this.state.userName} onChange={this.handleUserNameChange} />
                         </div>
-                        <div id='password-field'>
+                        <div id='password-field' style={{ width: "100%" }}>
 
-                            <input type="password" class="form-control" id="password-input"
+                            <input type="password" style={{ background: "white", color: "black" }} class="form-control" id="password-input"
                                 onKeyDown={this.handleKeyDown} placeholder="Password" value={this.state.password}
                                 onChange={this.handlePasswordChange} />
                         </div>
 
 
-                        <div class="form-check" id='remember-me'>
+                            <div class="form-check" style={{ fontColor: "black" }} id='remember-me'>
                             <input type="checkbox" class="form-check-input" id="rememberme-check" />
-                            <label class="form-check-label" for="rememberme-check">Remember Me?</label>
+                                <label class="form-label" style={{fontColor: "black"}} for="rememberme-check">Remember Me?</label>
                         </div>
 
-                        <button type="submit" class="btn btn-lg btn-primary" id='submit-button'
+                            <button type="submit" style={{ width: "100%", backgroundColor: "#0292D1" }} class="btn btn-lg" id='submit-button'
                             onClick={this.handleSubmit}>Login
                         </button>
 
 
-                        <Button color="link" id='forgot-pass' onClick={this.handleClickOpenForgotPassword}>Forgot
+                            <Button style={{marginRight: 20}} color="link" id='forgot-pass' onClick={this.handleClickOpenForgotPassword}>Forgot
                             password?</Button>
 
 
-                        <Button color="link" id='register' onClick={this.openRegisterAccount}>Create
+                            <Button style={{ marginRight: 20 }} color="link" id='register' onClick={this.openRegisterAccount}>Create
                             Account <FontAwesomeIcon icon="user-plus" /></Button>
 
 
@@ -435,7 +426,7 @@ export class Login extends Component {
                                 </DialogActions>
                             </Dialog>
                         </div>
-                         
+                        </div>
                     </div>
                 </div>
             </div>
