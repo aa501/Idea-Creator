@@ -11,7 +11,7 @@ namespace MindOverMapper_Movim.Models
         public string Uid { get; set; }
         public string SurveyName { get; set; }
         public int ProjectId { get; set; }
-        public int PrototypeId { get; set; }
+        public string Prototypes { get; set; }
         public int ConceptId { get; set; }
         public string Notes { get; set; }
         public string Qualifications { get; set; }

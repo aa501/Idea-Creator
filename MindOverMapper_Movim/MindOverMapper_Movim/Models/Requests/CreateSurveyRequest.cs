@@ -9,7 +9,7 @@ namespace MindOverMapper_Movim.Models.Requests
         public string SurveyName { get; set; }
         public string UniqueId { get; set; }
         public string ProjectUid { get; set; }
-        public string PrototypeUid { get; set; }
+        public string Prototypes { get; set; }
         public string ConceptUid { get; set; }
         public string Notes { get; set; }
         public string Qualifications { get; set; }
