@@ -79,6 +79,21 @@ export default class ProjectSurvey extends Component {
         })
     }
 
+    analyzedSurvey = () => {
+      return this.props.history.push({
+          pathname: '/survey-analytics',
+          state: this.state
+      });
+    }
+
+    backToSurveys = () => {
+        this.props.history.push({
+            pathname: '/surveys',
+            state: this.state
+        });
+    }
+
+
   render() {
       return (
 
