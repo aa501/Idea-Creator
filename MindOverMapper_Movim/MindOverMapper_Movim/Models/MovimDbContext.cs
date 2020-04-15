@@ -422,6 +422,10 @@ namespace MindOverMapper_Movim.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Reward)
+                    .HasColumnName("reward")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<SurveyQuestion>(entity =>

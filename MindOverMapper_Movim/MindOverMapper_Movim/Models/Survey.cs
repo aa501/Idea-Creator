@@ -19,5 +19,6 @@ namespace MindOverMapper_Movim.Models
         public DateTime DateCreated { get; set; }
         public string Status { get; set; }
         public string EndDate { get; set; }
+        public string Reward { get; set; }
     }
 }

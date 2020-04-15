@@ -55,6 +55,8 @@
     <Compile Remove="Migrations\20200415012311_SurveyQuestion.Designer.cs" />
     <Compile Remove="Migrations\20200415021622_SurveyQuestion2.cs" />
     <Compile Remove="Migrations\20200415021622_SurveyQuestion2.Designer.cs" />
+    <Compile Remove="Migrations\20200415200725_Reward.cs" />
+    <Compile Remove="Migrations\20200415200725_Reward.Designer.cs" />
     <None Remove="Controllers\PrototypeController.cs" />
     <None Remove="Models\ConceptSurvey.cs" />
     <None Remove="Models\PrototypeSurvey.cs" />
