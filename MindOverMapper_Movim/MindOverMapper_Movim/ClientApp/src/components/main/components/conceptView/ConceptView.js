@@ -424,6 +424,12 @@ export default class ConceptView extends Component {
         }
       }
 
+    addQuestion = () => {
+      this.props.history.push({
+          pathname: '/question-editor',
+          state: this.state  // need this for moving to different component
+      });
+    }
 
     copyToClipboard = () => {
         /* Get the text field */
@@ -482,6 +488,16 @@ export default class ConceptView extends Component {
                             </NavIcon>
                             <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Add Project
+                            </NavText>
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="add-question" onClick={()=> this.addQuestion()}>
+                            <NavIcon>
+                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Add Question
                             </NavText>
 
                         </NavItem>
@@ -542,7 +558,7 @@ export default class ConceptView extends Component {
                         <hr style={{ width: "30%" }} id="hr-1" />
                     </div>
                    <div class="row" id="background-concepts">
-                        
+
                         <div className='concept-board-body'>
                             {this.state.concepts.map((concept, index) => {
                                 return (

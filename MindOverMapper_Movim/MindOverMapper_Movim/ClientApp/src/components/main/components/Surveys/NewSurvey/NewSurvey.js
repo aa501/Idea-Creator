@@ -295,7 +295,6 @@ export default class NewSurvey extends Component {
           pathname: '/survey'
       });
     }
-
     save = () => {
 
     }
@@ -977,7 +976,7 @@ export default class NewSurvey extends Component {
                               {/*  <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
                                 <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button> */}
                             </span>
-                        </div>
+                    </div>
                     <Dialog
                     open={this.state.questionDialog}
                     maxWidth='xl' >
