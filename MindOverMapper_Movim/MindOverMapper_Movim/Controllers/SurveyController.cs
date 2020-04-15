@@ -56,7 +56,7 @@ namespace MindOverMapper_Movim.Controllers
 
         [Authorize]
         [HttpGet("{uid}")]
-        public ActionResult GetSurveys(string uid) { 
+        public ActionResult GetSurveys(string uid) {
             Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
             var surveys = _context.Survey.Where(s => s.ProjectId == proj.Id);
             return Ok(surveys);
@@ -67,14 +67,13 @@ namespace MindOverMapper_Movim.Controllers
         public ActionResult CreateSurvey([FromBody] CreateSurveyRequest req)
         {
            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
-           Prototype proto = _context.Prototype.Where(o => o.Uid == req.PrototypeUid).FirstOrDefault<Prototype>();
            Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
 
 
             Survey survey = new Survey();
             survey.Uid = req.UniqueId;
             survey.ProjectId = proj.Id;
-            survey.PrototypeId = proto.Id;
+            survey.Prototypes = req.Prototypes;
             if (cpt != null)
             survey.ConceptId = cpt.Id;
             survey.SurveyName = req.SurveyName;

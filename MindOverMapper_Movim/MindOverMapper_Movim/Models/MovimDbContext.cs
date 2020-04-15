@@ -26,6 +26,9 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<Prototype> Prototype { get; set; }
         public virtual DbSet<Survey> Survey { get; set; }
+        public virtual DbSet<SurveyQuestion> SurveyQuestion { get; set; }
+        public virtual DbSet<SurveyPrototype> SurveyPrototype { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
@@ -381,7 +384,10 @@ namespace MindOverMapper_Movim.Models
 
                 entity.Property(e => e.ProjectId).HasColumnName("project_id");
 
-                entity.Property(e => e.PrototypeId).HasColumnName("prototype_id");
+                entity.Property(e => e.Prototypes)
+                    .HasColumnName("prototypes")
+                    .HasColumnType("nvarchar(4000)")
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ConceptId).HasColumnName("concept_id");
 
@@ -418,6 +424,29 @@ namespace MindOverMapper_Movim.Models
 
             });
 
+            modelBuilder.Entity<SurveyQuestion>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id")
+                    .IsRequired();
+
+                entity.Property(e => e.QuestionId).HasColumnName("question_id")
+                    .IsRequired();
+
+                entity.Property(e => e.SurveyId).HasColumnName("survey_id")
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<SurveyPrototype>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id")
+                    .IsRequired();
+
+                entity.Property(e => e.PrototypeId).HasColumnName("prototype_id")
+                    .IsRequired();
+
+                entity.Property(e => e.SurveyId).HasColumnName("survey_id")
+                    .IsRequired();
+            });
         }
     }
 }
