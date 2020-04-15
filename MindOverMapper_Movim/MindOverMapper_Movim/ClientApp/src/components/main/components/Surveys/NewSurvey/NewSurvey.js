@@ -44,7 +44,7 @@ export default class NewSurvey extends Component {
             prototypes: [],
             warning: '',
             template: [],
-            chosenPrototype: '',
+            chosenPrototypes: [],
             questionDialog: false,
             conceptDialog: false,
             prototypeDialog: false,
@@ -80,9 +80,9 @@ export default class NewSurvey extends Component {
             this.setState({
                 pulledQuestions: response,
                 test: response.length
-            }, () => (console.log(this.state.pulledQuestions)))
+            })
         }).catch(() => {
-          console.log("oops");
+          console.log("question retrieval error");
         });
     }
 
@@ -191,7 +191,7 @@ export default class NewSurvey extends Component {
              'surveyName': this.state.surveyName,
              'uniqueId': this.state.uniqueId,
              'projectUid': this.state.projectName.uid,
-             'prototypeUid': this.state.chosenPrototype.uid,
+             'prototypes': JSON.stringify(this.state.chosenPrototypes),
              'conceptUid': '',
              'notes': '',
              'qualifications': '',
@@ -295,7 +295,6 @@ export default class NewSurvey extends Component {
           pathname: '/survey'
       });
     }
-
     save = () => {
 
     }
@@ -347,7 +346,7 @@ export default class NewSurvey extends Component {
     }
 
     validateSurvey = () => {
-        if (this.state.surveyName && this.state.chosenPrototype)
+        if (this.state.surveyName && this.state.chosenPrototypes)
             return true;
 
         return false;
@@ -373,7 +372,7 @@ export default class NewSurvey extends Component {
     cancel = () => {
         this.props.history.push({
             pathname: '/surveys',
-            state: { userData: this.state.userData }
+            state: this.state
         });
     }
 
@@ -469,14 +468,23 @@ export default class NewSurvey extends Component {
     }
 
     choosePrototype = (choice) => {
+      const prototypes = this.state.chosenPrototypes;
+      var finalPrototypes = [];
+      if (prototypes.includes(choice)) {
+        finalPrototypes = prototypes.filter(el => el !== choice)
+      }
+      else {
+        prototypes.push(choice);
+        finalPrototypes = prototypes;
+      }
       this.setState({
-        chosenPrototype: choice
-      }, () => (console.log(this.state.chosenPrototype)));
+        chosenPrototypes: finalPrototypes
+      }, () => (console.log(this.state.chosenPrototypes)));
     }
 
     resetPrototype = () => {
       this.setState({
-        chosenPrototype: ''
+        chosenPrototypes: []
       });
     }
 
@@ -495,25 +503,29 @@ export default class NewSurvey extends Component {
     }
 
     loadTemplateQuestions = async () => {
-      var templateQuestions = this.state.templateQuestions;
+      var pulledQuestions = this.state.pulledQuestions;
+      var pulledIds = [];
       const template = this.state.template.questions;
       const parsedTemplate = JSON.parse(template);
       const finalQuestionSet = this.state.finalQuestionSet;
-      const pulledQuestions = this.state.pulledQuestions;
+
+      this.state.pulledQuestions.forEach(function(qsn) {
+        var index = qsn.id.toString();
+        pulledIds.push(index);
+      });
 
       const chosenQuestions = this.state.chosenQuestions;
 
       parsedTemplate.forEach(function(qsn) {
         var index = qsn.id.toString();
-        console.log(index);
-        if (!chosenQuestions.includes(index) && pulledQuestions.includes(qsn)) {
-          console.log(finalQuestionSet);
-          chosenQuestions.push(qsn.id.toString());
-          console.log(chosenQuestions);
+        //console.log(typeof(index) + " " + index);
+        if (!(chosenQuestions.includes(index)) && pulledIds.includes(index)) {
+          //console.log(finalQuestionSet);
+          chosenQuestions.push(index);
+          //console.log(chosenQuestions);
         }
       });
-
-      await this.setState({ chosenQuestions }, () => (console.log(this.state.chosenQuestions)));
+      await this.setState({ chosenQuestions });
       await this.finalizeSurvey();
     }
 
@@ -524,20 +536,20 @@ export default class NewSurvey extends Component {
         try {
         chosenQuestions.forEach(function(id){
             var convertedInt = parseInt(id)
-            console.log("Searching for: " + typeof(convertedInt) + " " + convertedInt)
+            //console.log("Searching for: " + typeof(convertedInt) + " " + convertedInt)
             const found = pulledQuestions.filter(obj => {return obj.id === parseInt(convertedInt)})
-            console.log(found);
+            //console.log(found);
             finalArray.push(found[0]);
           });
         if (finalArray.length > 0) {
           this.setState({
                finalQuestionSet: finalArray
-            }, () => (console.log(this.state.finalQuestionSet)));
+            });
         }
         else {
           this.setState({
                finalQuestionSet: []
-            }, () => (console.log(this.state.finalQuestionSet)));
+            });
         }
       } catch (e) {
         console.log(e);
@@ -549,56 +561,16 @@ export default class NewSurvey extends Component {
       const choices = this.state.choices;
       const choiceArray = this.state.choiceArray;
       choiceArray.push(choices);
-      this.setState({ choiceArray }, () => {console.log(this.state.choiceArray)});
+      this.setState({ choiceArray });
     }
 
-    checkChosenArray(id) {
+    checkChosenQuestionArray(id) {
       var result = this.state.chosenQuestions.includes(id.toString());
       if (result == true)
       {
         return true;
       }
       return false;
-    }
-
-    renderQuestions = () => {
-      const finalQuestionSet = this.state.finalQuestionSet;
-      if (finalQuestionSet.length > 0) {
-          return (
-            <div>
-              <p>
-              <TableContainer component={Paper}>
-                <Table size="small" aria-label="a dense table">
-                  <TableHead>
-                    <TableRow>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {finalQuestionSet.map((qsn) => (
-                      <TableRow hover key={qsn.uid}>
-                        <TableCell style={{maxWidth:"40px"}}>
-                          <Checkbox name={qsn.id} color="primary" checked={this.checkChosenArray(qsn.id)} onChange={(event) => this.handleChecked(event, qsn)} />
-                        </TableCell>
-                        <TableCell component="th" scope="row" style={{maxWidth:"130px", wordWrap: 'break-word'}}>
-                          <Chip size="sm" label={qsn.type}></Chip>
-                        </TableCell>
-                        <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{qsn.text}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              </p>
-            </div>
-            )
-          }
-      else {
-        return (
-          <div>
-          <h6>Your chosen questions will appear here.</h6>
-          </div>
-        )
-      }
     }
 
     addNewQuestions = async () => {
@@ -608,7 +580,7 @@ export default class NewSurvey extends Component {
       var cutQuestions = [];
 
       questions.forEach(function(item) {
-        console.log(item.question);
+        //console.log(item.question);
         cutQuestions.push(item.question);
       })
 
@@ -616,12 +588,32 @@ export default class NewSurvey extends Component {
         if (cutQuestions.includes(qsn.text) && !chosenQuestions.includes(qsn.id.toString()))
         {
           chosenQuestions.push(qsn.id.toString());
-          console.log(chosenQuestions);
+          //console.log(chosenQuestions);
         }
       });
 
       await this.setState({ chosenQuestions }, () => (this.finalizeSurvey()));
       await this.finalizeSurvey();
+    }
+
+    handleCheckedPrototype(event, i) {
+      const item = event.target.name;
+      const isChecked = event.target.checked;
+      const checkedArray = this.state.chosenPrototypes;
+      var chosenQuestions = [];
+
+      if (isChecked == true) {
+        checkedArray.push(item)
+        chosenQuestions = checkedArray;
+      }
+
+      else {
+        var newArray = [];
+        newArray = checkedArray.filter(el => el !== item)
+        chosenQuestions = newArray;
+      }
+
+      this.setState({ chosenQuestions }, () => this.finalizeSurvey());
     }
 
     handleChecked(event, i) {
@@ -642,6 +634,82 @@ export default class NewSurvey extends Component {
       }
 
       this.setState({ chosenQuestions }, () => this.finalizeSurvey());
+    }
+
+    renderQuestions = () => {
+      const finalQuestionSet = this.state.finalQuestionSet;
+      if (finalQuestionSet.length > 0) {
+          return (
+            <div>
+              <p>
+              <TableContainer component={Paper}>
+                <Table size="small" aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {finalQuestionSet.map((qsn) => (
+                      <TableRow hover key={qsn.uid}>
+                        <TableCell style={{maxWidth:"40px"}}>
+                          <Checkbox name={qsn.id} color="primary" checked={this.checkChosenQuestionArray(qsn.id)} onChange={(event) => this.handleChecked(event, qsn)} />
+                        </TableCell>
+                        <TableCell component="th" scope="row" style={{maxWidth:"130px", wordWrap: 'break-word'}}>
+                          <Chip size="sm" label={qsn.type}></Chip>
+                        </TableCell>
+                        <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{qsn.text}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              </p>
+            </div>
+            )
+          }
+      else {
+        return (
+          <div style={{align: "center"}}>
+          <h6>Your chosen questions will appear here.</h6>
+          </div>
+        )
+      }
+    }
+
+    renderPrototypes = () => {
+      const chosenPrototypes = this.state.chosenPrototypes;
+      if (chosenPrototypes.length > 0) {
+          return (
+            <div>
+              <p>
+              <TableContainer component={Paper}>
+                <Table size="small" aria-label="a dense table">
+                  <TableHead>
+                    <TableRow>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {chosenPrototypes.map((file) => (
+                      <TableRow hover key={file.id}>
+                        <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}><Button variant='danger' onClick={() => (this.choosePrototype(file))}><FontAwesomeIcon icon="times" /></Button></TableCell>
+                        <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{file.prototypeName}</TableCell>
+                        <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{file.prototypeDescription}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              </p>
+            </div>
+            )
+          }
+      else {
+        return (
+          <div>
+          <h6>Your chosen prototypes will appear here.</h6>
+          </div>
+        )
+      }
     }
 
     renderQstDropdown() {
@@ -863,7 +931,13 @@ export default class NewSurvey extends Component {
                                         </Button>
                                     </div>
                                     <div className="d-flex flex-wrap justify-content-around">
-                                      <div hidden={!this.state.chosenPrototype}><b><i>Prototype chosen!</i></b></div>
+                                      <div>
+                                          <Container>
+                                            <hr />
+                                            {this.renderPrototypes()}
+                                            <hr />
+                                          </Container>
+                                        </div>
                                     </div>
                                 </FormGroup>
                                 <FormGroup>
@@ -875,16 +949,16 @@ export default class NewSurvey extends Component {
                                       <Button variant="warning" onClick={this.openSurveyDialog}><FontAwesomeIcon icon="upload" /> Load Survey</Button>
                                       <Button variant="warning" onClick={this.openQuestionBank}><FontAwesomeIcon icon="wrench" /> Choose Questions</Button>
                                       <Button variant="warning" onClick={this.openQuestionEditorModal}><FontAwesomeIcon icon="pen" /> Create Question</Button>
-                                      <Button variant="primary" onClick={this.handleViewProgress}><FontAwesomeIcon icon="list" /> View Current </Button>
+                                      <Button variant="primary" onClick={this.handleViewProgress}><FontAwesomeIcon icon="list" /> Toggle Question View </Button>
                                     </div>
                                 </FormGroup>
+                                <FormGroup>
                                 <div hidden={this.state.viewProgress}>
-                                  <Container>
                                     <hr />
                                     {this.renderQuestions()}
                                     <hr />
-                                  </Container>
                                 </div>
+                                </FormGroup>
                                 <FormGroup>
                                     <h5>5. Survey Comments (Optional)</h5>
                                         <p>This space is here to preface your survey to users before they take it.</p>
@@ -902,7 +976,7 @@ export default class NewSurvey extends Component {
                               {/*  <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
                                 <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button> */}
                             </span>
-                        </div>
+                    </div>
                     <Dialog
                     open={this.state.questionDialog}
                     maxWidth='xl' >
@@ -922,7 +996,7 @@ export default class NewSurvey extends Component {
                                             {this.state.pulledQuestions.map((qsn) => (
                                               <TableRow hover key={qsn.uid}>
                                                 <TableCell style={{maxWidth:"50px"}}>
-                                                  <Checkbox name={qsn.id} color="primary" checked={this.checkChosenArray(qsn.id)} onChange={(event) => this.handleChecked(event, qsn)} />
+                                                  <Checkbox name={qsn.id} color="primary" checked={this.checkChosenQuestionArray(qsn.id)} onChange={(event) => this.handleChecked(event, qsn)} />
                                                 </TableCell>
                                                 <TableCell component="th" scope="row" style={{maxWidth:"120px", wordWrap: 'break-word'}}>
                                                   <Chip size="sm" label={qsn.type}></Chip>
@@ -993,11 +1067,12 @@ export default class NewSurvey extends Component {
                         open={this.state.prototypeDialog}
                         maxWidth='xl'>
                         <DialogContent dividers>
-                            <h6>Click on the prototype to include in your survey.</h6>
+                            <h6>Click on the prototypes to include in your survey.</h6>
                             <TableContainer component={Paper}>
                               <Table size="small" aria-label="a dense table">
                                 <TableHead>
                                   <TableRow>
+                                    <TableCell></TableCell>
                                     <TableCell><b>Name</b></TableCell>
                                     <TableCell><b>Description</b></TableCell>
                                     <TableCell><b>Type</b></TableCell>
@@ -1006,7 +1081,7 @@ export default class NewSurvey extends Component {
                                 <TableBody>
                                   {this.state.prototypes.map((file) => (
                                     <TableRow hover onClick={() => this.choosePrototype(file)} key={file.prototypeName}>
-                                      {/* <TableCell style={{maxWidth:"50px"}}><Checkbox name={file.id} color="primary" checked={this.checkChosenArray(qsn.id)} onChange={(event) => this.handleChecked(event, qsn)/></TableCell> */}
+                                      <TableCell><div hidden={!this.state.chosenPrototypes.includes(file)}><FontAwesomeIcon icon="check"/></div></TableCell>
                                       <TableCell component="th" scope="row" style={{maxWidth:"120px", wordWrap: 'break-word'}}>
                                         {file.prototypeName}
                                       </TableCell>
@@ -1017,11 +1092,9 @@ export default class NewSurvey extends Component {
                                 </TableBody>
                               </Table>
                             </TableContainer>
-                            <hr />
-                          <div hidden={this.state.chosenPrototype==''}><p>Chosen Prototype: {this.state.chosenPrototype.prototypeName}</p></div>
                         </DialogContent>
                         <DialogActions>
-                            <Button variant='warning' onClick={this.resetPrototype}><FontAwesomeIcon icon="undo" /> Reset</Button>
+                            <Button variant='warning' onClick={this.resetPrototype}><FontAwesomeIcon icon="undo" /> Remove All</Button>
                             <Button variant='success' onClick={this.prototypeDialogClose}>Save</Button>
                         </DialogActions>
                       </Dialog>

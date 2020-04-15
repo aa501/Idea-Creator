@@ -321,13 +321,6 @@ export default class AdminPanel extends Component {
         this.handleCloseErrorModal();
     }
 
-    nextPage = () => {
-        this.props.history.push({
-            pathname: '/question-editor',
-            state: this.state  // need this for moving to different component
-        });
-    }
-
     resetValue = () => {
         this.setState({
             permissionsChanged: [],
@@ -431,9 +424,6 @@ export default class AdminPanel extends Component {
 
         return (
             <div className='dashboard-container'>
-                <div id="conceptButton" padding-left="4" align="left">
-                    <Button id="opt" onClick={this.nextPage}>Question Editor <FontAwesomeIcon icon="edit" /></Button>
-                </div>
                 <div className='dashboard-header'>
                 </div>
                 <div className='dashboard-body'>
