@@ -93,6 +93,18 @@ export default class ProjectSurvey extends Component {
         });
     }
 
+    editSurvey = (survey) => {
+        this.setState({
+          template: survey
+        }, () => (this.pushToEdit()));
+    }
+
+    pushToEdit = () => {
+        this.props.history.push({
+            pathname: '/edit-survey',
+            state: this.state
+        });
+    }
 
   render() {
       return (
@@ -193,7 +205,7 @@ export default class ProjectSurvey extends Component {
                     <Row>
                         <List subheader={<ListSubheader>Surveys</ListSubheader>} >
                             {this.state.surveys.map((survey) => {
-                                return <ListItem>
+                                return <ListItem onClick={() => this.editSurvey(survey)}  >
                                     <ListItemText primary={survey.surveyName} />
                                 </ListItem>
                             })

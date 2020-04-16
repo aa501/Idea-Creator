@@ -63,6 +63,45 @@ namespace MindOverMapper_Movim.Controllers
         }
 
         [Authorize]
+        [HttpPut("{uid}")]
+        public ActionResult UpdateSurvey(string uid, [FromBody] UpdateSurveyRequest req) {
+            Survey surv = _context.Survey.Where(u => u.Uid == uid).FirstOrDefault<Survey>();
+
+            if (surv == null)
+            {
+                return BadRequest(new { message = "Invalid Survey" });
+            }
+
+            surv.Prototypes = req.Prototypes;
+            surv.SurveyName = req.SurveyName;
+            surv.Notes = req.Notes;
+            surv.Qualifications = req.Qualifications;
+            surv.DateCreated = DateTime.Now;
+            surv.Questions = req.Questions;
+            surv.Status = req.Status;
+            surv.EndDate = req.EndDate;
+
+            _context.SaveChanges();
+            return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
+        [HttpPut("{uid}/pass")]
+        public ActionResult ChangeSurveyStatus(string uid, [FromBody] UpdateSurveyStatus req) {
+            Survey surv = _context.Survey.Where(u => u.Uid == uid).FirstOrDefault<Survey>();
+
+            if (surv == null)
+            {
+                return BadRequest(new { message = "Invalid Survey" });
+            }
+
+            surv.Status = req.Status;
+
+            _context.SaveChanges();
+            return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
         [HttpPost]
         public ActionResult CreateSurvey([FromBody] CreateSurveyRequest req)
         {

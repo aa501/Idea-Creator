@@ -188,8 +188,8 @@ export default class ProjectPrototype extends Component {
                         <h3 id="subtitle">Prototypes</h3>
                         <hr style={{ width: "30%" }} id="hr-1" />
                     </div>
-                
-                            <div className='project-definition-holder'>
+                        <Container>
+                        <div className='project-definition-holder'>
                             <TextField
                                 value={this.state.prototypetName}
                                 onChange={this.handlePrototypeNameChange}
@@ -198,7 +198,7 @@ export default class ProjectPrototype extends Component {
                                 placeholder="Enter Name..."
                                 variant="outlined">
                             </TextField>
-                            </div>
+                        </div>
                         <div className='project-definition-holder'>
                             <TextField
                                 value={this.state.prototypeDescription}
@@ -209,8 +209,8 @@ export default class ProjectPrototype extends Component {
                                 multiline
                                 placeholder="Enter Description..."
                                  variant="outlined">
-                                    </TextField>
-                                </div>
+                            </TextField>
+                        </div>
                     <h4>Upload your files</h4>
                     <div className = "zone">
                     <Dropzone onDrop={this.onDrop} multiple>
@@ -228,27 +228,28 @@ export default class ProjectPrototype extends Component {
                                 </div>
                             )}
                         </Dropzone>
-                            </div>
+                    </div>
                     <Button variant="primary" type="submit" onClick={this.submitPrototype}>Upload</Button>
                     <Row>
                         {
-                            this.state.prototypes.map(Item => 
+                            this.state.prototypes.map(Item =>
                                 <Card>
                                     <CardTitle>{Item.PrototypeName}</CardTitle>
                                     <CardContent>{Item.Description}
                                         <ul>
-                                            { Item.PrototypePath.map(file => 
+                                            { Item.PrototypePath.map(file =>
                                                 <li>{file}</li>
                                             )
                                             }
                                         </ul>
                                     </CardContent>
-                                    
-                                </Card>       
+
+                                </Card>
                             )
                         }
                     </Row>
                 </Container>
+          </div>
           </div>
         );
     }

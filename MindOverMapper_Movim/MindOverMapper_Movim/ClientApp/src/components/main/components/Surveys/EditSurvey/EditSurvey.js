@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@materi
 import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
 import Slide from '@material-ui/core/Slide';
-import './NewSurvey.css';
+import './EditSurvey.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default class EditSurvey extends Component {
+export default class NewSurvey extends Component {
 
     constructor(props) {
         super(props);
@@ -32,24 +32,23 @@ export default class EditSurvey extends Component {
             userData: this.props.location.state.userData || this.props.userData,
             projectName: this.props.location.state.projectName,
             surveys: this.props.location.state.surveys,
-            uniqueId: 'IP' + Math.floor(Math.random() * 10000000).toString(),
+            template: this.props.location.state.template,
+            uniqueId: this.props.location.state.template.uid,
             loading: false,
-            surveyName: '',
-            templateQuestions: [],
-            questions: [],
+            surveyName: this.props.location.state.template.surveyName,
+            surveyNotes: this.props.location.state.template.notes,
             pulledQuestions: [],
+            questions: [],
             chosenQuestions: [],
             finalQuestionSet: [],
             concepts: [],
             prototypes: [],
             warning: '',
-            template: [],
             chosenPrototypes: [],
             questionDialog: false,
             conceptDialog: false,
             prototypeDialog: false,
             demographics: '',
-            surveyNotes: '',
 
             numQs: 0,
 
@@ -67,8 +66,24 @@ export default class EditSurvey extends Component {
         }
     }
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
         console.log(this.props);
+        await this.loadData();
+    }
+
+    loadData = async () => {
+      await this.getQuestions();
+      await this.loadTemplateQuestions();
+      await this.getPrototypes();
+      const prototypes = this.state.chosenPrototypes;
+
+      const loadedPrototypes = JSON.parse(this.state.template.prototypes);
+      loadedPrototypes.forEach(function(pro) {
+            prototypes.push(pro);
+      });
+      this.setState({
+        chosenPrototypes: prototypes
+      }, () => (console.log(this.state.chosenPrototypes)));
     }
 
     getQuestions = async () => {
@@ -85,6 +100,12 @@ export default class EditSurvey extends Component {
         }).catch(() => {
           console.log("question retrieval error");
         });
+    }
+
+    openPrototypes = async () => {
+      await this.setState({
+        prototypeDialog: true
+      });
     }
 
     getPrototypes = async () => {
@@ -105,9 +126,6 @@ export default class EditSurvey extends Component {
           console.log(e);
         });
       await this.setLoading(false);
-      await this.setState({
-        prototypeDialog: true
-      });
     }
 
     returnToDashboard = () => {
@@ -182,19 +200,19 @@ export default class EditSurvey extends Component {
         if (test == false) {
           this.openErrorModal();
           this.setState({
-            errorMessage: 'You are missing parts of your survey!'
+            errorMessage: 'You are part(s) of your survey!'
           });
         }
 
         if (test == true) {
         //let survey = this.buildSurveyPayload();
-        axios.post('/api/survey', {
+        axios.put(`/api/survey/${this.state.uniqueId}`, {
              'surveyName': this.state.surveyName,
              'uniqueId': this.state.uniqueId,
              'projectUid': this.state.projectName.uid,
              'prototypes': JSON.stringify(this.state.chosenPrototypes),
              'conceptUid': '',
-             'notes': '',
+             'notes': this.state.surveyNotes,
              'qualifications': '',
              'questions': JSON.stringify(this.state.finalQuestionSet),
              'status': 'Written',
@@ -251,6 +269,20 @@ export default class EditSurvey extends Component {
       });
     }
 
+    handleOpenConfirmationModal = () => {
+      this.setState({
+        questionDialog: false,
+        confirmationModal: true
+      })
+    }
+
+    handleCloseConfirmationModal = () => {
+      this.setState({
+        questionDialog: true,
+        confirmationModal: false
+      });
+    }
+
     openErrorModal = () => {
       this.setState({
           errorModal: true
@@ -266,20 +298,6 @@ export default class EditSurvey extends Component {
     openSuccessModal = () => {
       this.setState({
           successModal: true
-      });
-    }
-
-    handleOpenConfirmationModal = () => {
-      this.setState({
-        questionDialog: false,
-        confirmationModal: true
-      });
-    }
-
-    handleCloseConfirmationModal = () => {
-      this.setState({
-        questionDialog: true,
-        confirmationModal: false
       });
     }
 
@@ -396,7 +414,7 @@ export default class EditSurvey extends Component {
     }
 
     questionDialogClose = () => {
-        this.setState({ questionDialog: false });
+        this.setState({ questionDialog: false});
     }
 
     addConcept = () => {
@@ -453,7 +471,7 @@ export default class EditSurvey extends Component {
     }
 
     demographicsChanged = (evt) => {
-        this.setState({ dedmographics: !this.state.demographics });
+        this.setState({ demographics: !this.state.demographics });
     }
 
     resetChosenQuestions = () => {
@@ -491,17 +509,24 @@ export default class EditSurvey extends Component {
     }
 
     choosePrototype = (choice) => {
-      const prototypes = this.state.chosenPrototypes;
-      var finalPrototypes = [];
-      if (prototypes.includes(choice)) {
-        finalPrototypes = prototypes.filter(el => el !== choice)
+      var prototypes = this.state.chosenPrototypes;
+      var protoIds = [];
+
+      prototypes.forEach(function(file){
+        protoIds.push(file.id)
+      });
+
+      console.log(choice);
+      if (protoIds.includes(choice.id)) {
+        prototypes = prototypes.filter(el => el !== choice)
       }
+
       else {
         prototypes.push(choice);
-        finalPrototypes = prototypes;
       }
+
       this.setState({
-        chosenPrototypes: finalPrototypes
+        chosenPrototypes: prototypes
       }, () => (console.log(this.state.chosenPrototypes)));
     }
 
@@ -617,26 +642,6 @@ export default class EditSurvey extends Component {
 
       await this.setState({ chosenQuestions }, () => (this.finalizeSurvey()));
       await this.finalizeSurvey();
-    }
-
-    handleCheckedPrototype(event, i) {
-      const item = event.target.name;
-      const isChecked = event.target.checked;
-      const checkedArray = this.state.chosenPrototypes;
-      var chosenQuestions = [];
-
-      if (isChecked == true) {
-        checkedArray.push(item)
-        chosenQuestions = checkedArray;
-      }
-
-      else {
-        var newArray = [];
-        newArray = checkedArray.filter(el => el !== item)
-        chosenQuestions = newArray;
-      }
-
-      this.setState({ chosenQuestions }, () => this.finalizeSurvey());
     }
 
     handleChecked(event, i) {
@@ -924,7 +929,7 @@ export default class EditSurvey extends Component {
             <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
                 <Container>
                     <div class="d-flex align-content-between flex-column">
-                        <h3>Survey Builder</h3>
+                        <h3>Survey Editor</h3>
                         <hr id="hr-3" />
                         <FormGroup>
                             Unique Survey ID: <h5>{this.state.uniqueId}</h5>
@@ -949,9 +954,11 @@ export default class EditSurvey extends Component {
                                       {/*  <Button variant="success">
                                             Add a WRITTEN CONCEPT (Yellow Card)
                                         </Button> */}
-                                        <Button onClick={this.getPrototypes} variant="primary">
+                                        <div hidden={this.state.chosenPrototypes.length > 0}>
+                                        <Button onClick={this.openPrototypes} variant="primary">
                                             Add Concept Prototype Image
                                         </Button>
+                                        </div>
                                     </div>
                                     <div className="d-flex flex-wrap justify-content-around">
                                       <div>
@@ -1218,7 +1225,6 @@ export default class EditSurvey extends Component {
                   </Dialog>
                 </div>
             </div>
-
         );
     }
 }

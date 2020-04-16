@@ -68,7 +68,7 @@ namespace MindOverMapper_Movim.Controllers
         }
         
         [Authorize]
-        [HttpGet("{projectUID}")]
+        [HttpGet("{uid}")]
         public ActionResult getPrototypes(string uid)
         {
             Project prototypeProject = _context.Project.Where(project => project.Uid == uid).First<Project>();

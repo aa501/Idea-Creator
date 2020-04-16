@@ -15,7 +15,8 @@ import ProjectLandingPage from './components/projectLandingPage/projectLandingPa
 import ProjectPrototype from './components/projectprototype/ProjectPrototype.js';
 import ProjectSurvey from './components/Surveys/ProjecctSurvey.js';
 import NewSurvey from './components/Surveys/NewSurvey/NewSurvey.js';
-import SurveyAnalytics from './components/Surveys/surveyAnalytics/SurveyAnalytics.js'
+import SurveyAnalytics from './components/Surveys/surveyAnalytics/SurveyAnalytics.js';
+import EditSurvey from './components/Surveys/EditSurvey/EditSurvey.js';
 
 
 export class Main extends Component {
@@ -56,6 +57,7 @@ export class Main extends Component {
                         <Route path='/surveys' component={ProjectSurvey} />
                         <Route path='/new-survey' component={NewSurvey} />
                         <Route path='/survey-analytics' component={SurveyAnalytics} />
+                        <Route path='/edit-survey' component={EditSurvey} />
                     </Layout>
                 ): (null)}
             </div>
