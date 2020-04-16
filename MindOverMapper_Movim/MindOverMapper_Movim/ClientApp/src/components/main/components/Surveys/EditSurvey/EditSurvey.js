@@ -24,6 +24,12 @@ const useStyles = makeStyles({
   },
 });
 
+const surveyStates = {
+  Written: 'Written',
+  Deployed: 'Deployed',
+  Closed: 'Closed'
+}
+
 export default class NewSurvey extends Component {
 
     constructor(props) {
@@ -49,6 +55,7 @@ export default class NewSurvey extends Component {
             conceptDialog: false,
             prototypeDialog: false,
             demographics: '',
+            demographic: false,
 
             numQs: 0,
 
@@ -93,6 +100,7 @@ export default class NewSurvey extends Component {
           }
       }).then(response => {
             response = response.data;
+            response = response.sort((a, b) => (a.demographic > b.demographic) ? -1 : 1)
             this.setState({
                 pulledQuestions: response,
                 test: response.length
@@ -149,6 +157,7 @@ export default class NewSurvey extends Component {
           ratingArray: [],
           numOptions: 0,
           choices: '',
+          demographic: false,
           choiceArray: []
 
         })
@@ -175,7 +184,8 @@ export default class NewSurvey extends Component {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
           'notes': notes,
-          'archived': 'No'
+          'archived': 'No',
+          'demographic': this.state.demographic
       },
       {
           headers: {
@@ -665,6 +675,24 @@ export default class NewSurvey extends Component {
       this.setState({ chosenQuestions }, () => this.finalizeSurvey());
     }
 
+    handleDemographicOption = () => {
+      this.setState({
+        demographic: !this.state.demographic
+      });
+    }
+
+    translateDemo = (val) => {
+      if (val == true)
+      {
+        return "Yes"
+      }
+
+      else if (val == false)
+      {
+        return "No"
+      }
+    }
+
     renderQuestions = () => {
       const finalQuestionSet = this.state.finalQuestionSet;
       if (finalQuestionSet.length > 0) {
@@ -1021,6 +1049,7 @@ export default class NewSurvey extends Component {
                                               <TableCell></TableCell>
                                               <TableCell>Type</TableCell>
                                               <TableCell>Content</TableCell>
+                                              <TableCell>Demographics Question</TableCell>
                                             </TableRow>
                                           </TableHead>
                                           <TableBody>
@@ -1033,6 +1062,7 @@ export default class NewSurvey extends Component {
                                                   <Chip size="sm" label={qsn.type}></Chip>
                                                 </TableCell>
                                                 <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{qsn.text}</TableCell>
+                                                <TableCell>{this.translateDemo(qsn.demographic)}</TableCell>
                                               </TableRow>
                                             ))}
                                           </TableBody>
@@ -1060,6 +1090,7 @@ export default class NewSurvey extends Component {
                             <Row>
                               <Col md={{ span: 3, offset: 0 }} >
                                 <div> Choose Question Type: {this.renderQstDropdown()} </div>
+                                <h6> <Checkbox name="demographic" color="primary" checked={this.state.demographic} onChange={() => this.handleDemographicOption()} /> This is a demographics question. </h6>
                               </Col>
                               <Col md={{ span: 8, offset: 0 }} >
                                 <p> {this.renderResult()} </p>

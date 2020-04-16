@@ -332,6 +332,9 @@ namespace MindOverMapper_Movim.Models
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
+                entity.Property(e => e.Demographic)
+                .HasColumnName("demographic")
+                .HasDefaultValue(false);
             });
 
             modelBuilder.Entity<Prototype>(entity =>

@@ -3,6 +3,11 @@ import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
 import { Container, Row, Col } from 'react-bootstrap';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -30,6 +35,12 @@ import './ProjectSurvey.css';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
+}
+
+const surveyStates = {
+  Written: 'Written',
+  Deployed: 'Deployed',
+  Closed: 'Closed'
 }
 
 const useStyles = makeStyles(theme => ({
@@ -61,6 +72,7 @@ export default class ProjectSurvey extends Component {
         }
         ).then(response => {
             this.setState({ surveys: response.data });
+            console.log(response)
         });
       } catch {}
     }
@@ -104,6 +116,26 @@ export default class ProjectSurvey extends Component {
             pathname: '/edit-survey',
             state: this.state
         });
+    }
+
+    renderPrototypes = (survey) => {
+        var parsedPrototypes = JSON.parse(survey.prototypes);
+        console.log(parsedPrototypes);
+
+
+        return (
+          <div>
+          <strong>Prototypes</strong>
+          <ul> {
+            parsedPrototypes.map((prototype) => (
+                  <li>
+                      - {prototype.prototypeName}
+                  </li>
+                ))
+            }
+          </ul>
+          </div>
+        )
     }
 
   render() {
@@ -194,6 +226,73 @@ export default class ProjectSurvey extends Component {
 
 
               <div id="main-content">
+              <div id="concept-main-content">
+                  <div>
+                      <h3>Surveys for {this.state.projectName.title}</h3>
+                      <hr style={{ width: "30%" }} id="hr-1" />
+                  </div>
+                 <div class="row" id="background-concepts">
+                      <div className='survey-board-body'>
+                          {this.state.surveys.map((survey, index) => {
+                              return (
+                                  <div class='survey-paper-holder'>
+                                      <Card style={{width: 400 }}>
+                                          <Paper className='concept-paper'>
+                                                  <CardContent>
+                                                      <Typography gutterBottom variant="h5" component="h2">
+                                                        <div className="d-flex flex-wrap justify-content-around">
+                                                          {survey.surveyName}
+                                                        </div>
+                                                      </Typography>
+                                                      <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                          <FontAwesomeIcon id='font-awesome-space-right' icon="info-circle" style={{ fontSize: '1.4em' }}/>
+                                                          <strong>Status</strong> {survey.status}
+                                                      </Typography>
+                                                      <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                          <FontAwesomeIcon id='font-awesome-space-right' icon="question" style={{ fontSize: '1.4em' }}/>
+                                                          <strong>Questions</strong> {JSON.parse(survey.questions).length}
+                                                      </Typography>
+                                                      <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                          <FontAwesomeIcon id='font-awesome-space-right' icon="comments" style={{ fontSize: '1.4em' }}/>
+                                                          <strong>Responses</strong> #
+                                                      </Typography>
+                                                      <hr />
+                                                      <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                          <FontAwesomeIcon id='font-awesome-space-right' icon="pen" style={{ fontSize: '1.4em' }}/>
+                                                          {this.renderPrototypes(survey)}
+                                                      </Typography>
+                                                      <hr />
+                                                      <Typography>
+                                                      <div className="d-flex flex-wrap justify-content-around">
+                                                        <Button variant="warning" onClick={() => this.editSurvey(survey)}>Edit</Button>
+                                                      </div>
+                                                      </Typography>
+                                                  </CardContent>
+                                          </Paper>
+                                      </Card>
+                                  </div>
+                              );
+                          })
+                          }
+                              <div className='concept-paper-holder'>
+                                  <Card>
+                                      <Paper className='concept-paper' onClick={this.addConcept}>
+                                          <CardActionArea>
+                                              <CardContent>
+
+                                                  <Typography variant="h5" component="h2">
+                                                      <center>
+                                                          Add Concept +
+                                      </center>
+                                                  </Typography>
+                                              </CardContent>
+                                          </CardActionArea>
+
+                                      </Paper>
+                                  </Card>
+                              </div>
+                          </div>
+                          </div>
 
                     <div>
                       <h3 id="subtitle">Surveys</h3>
@@ -212,9 +311,9 @@ export default class ProjectSurvey extends Component {
                             }
                             </List>
                   </Row>
-
-              </div>
-      </div>
+                </div>
+                </div>
+                </div>
     );
   }
 }

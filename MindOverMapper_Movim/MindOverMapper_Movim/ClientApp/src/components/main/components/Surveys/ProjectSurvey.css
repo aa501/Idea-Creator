@@ -4,6 +4,24 @@
     width: 80%;
 }
 #main-content {
-    margin-left: 28%;
+    margin-left: 0%;
     margin-top: 3%;
+}
+
+.survey-paper-holder{
+    height: 40%;
+    width: 40%;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.survey-board-body {
+    display: flex;
+    max-height: 200vh;
+    margin-right: 1%;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
 }

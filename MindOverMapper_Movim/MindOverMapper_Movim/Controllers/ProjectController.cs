@@ -791,7 +791,8 @@ namespace MindOverMapper_Movim.Controllers
                 Type = req.Type,
                 Notes = req.Notes,
                 DateCreated = DateTime.Now,
-                Archived = "No"
+                Archived = "No",
+                Demographic = req.Demographic
             };
 
             _context.Question.Add(qsn);
@@ -878,6 +879,6 @@ namespace MindOverMapper_Movim.Controllers
             promisingIdea = _context.ProjectParameters.Where(b => b.Type == "p");
 
             return Ok(promisingIdea);
-        }    
+        }
     }
 }
