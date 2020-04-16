@@ -198,10 +198,18 @@ export default class ConceptView extends Component {
     }
 
     handleOpenOldQuestionModal = () => {
+      console.log(this.state.combinedAnswered.length);
+      if (this.state.combinedAnswered.length > 0) {
         this.setState({
             oldQuestionModal: true,
             questionModal: false
         });
+      }
+      else {
+        this.setState({
+            questionModal: false
+        });
+      }
     }
 
     handleCloseOldQuestionModal = () => {
@@ -298,36 +306,40 @@ export default class ConceptView extends Component {
 
     computeArrays = () => {
         var ids = [];
+        const answers = this.state.answers;
         var answered = [];
         var unanswered = [];
-        this.state.answers.forEach(function (answer) {
+
+        answers.forEach(function (answer) {
             if (!ids.includes(answer.qid)) {
                 ids.push(answer.qid);
             }
         });
 
         console.log("List of IDs" + ids);
+        console.log(answers)
+
         this.state.questions.forEach(function (question) {
-            if (ids.includes(question.id)) {
+           var foundAnswer = answers.find(ans => { return ans.qid === question.id})
+                console.log(foundAnswer)
+              if (foundAnswer != undefined) {
+                if (ids.includes(foundAnswer.qid)) {
                 console.log("Found: " + question.id + " in answered questions.");
-                answered.push(question);
-            }
-            else if (!answered.includes(question)) {
+                console.log(question);
+                var combination = {answer: foundAnswer, question: question}
+                answered.push(combination);
+                }
+              }
+            else {
                 console.log("Didn't find: " + question.id + " in answered questions.");
+                console.log(question);
                 unanswered.push(question);
             }
-            else { console.log("error") }
         });
         console.log(answered);
         console.log(unanswered);
 
-
-
-        var ansQns = this.state.answers.map(function (x, i) {
-            return {"answer": x, "question": answered[i]}
-        }.bind(this));
-
-        this.setAnswered(ansQns, unanswered);
+        this.setAnswered(answered, unanswered);
     }
 
     setAnswered = async (ans, unans) =>
@@ -391,6 +403,34 @@ export default class ConceptView extends Component {
             errorMessage: 'Error: Concept could not be updated!'
           });
         });
+      }
+
+      showCombinedArray = () => {
+        console.log(this.state.combinedAnswered.length)
+        if (this.state.combinedAnswered.length > 0) {
+          return (
+            <div>
+            <h4>Answer all that may apply.</h4>
+            <div> {
+             this.state.combinedAnswered.map(qsn => (
+              <div>
+                  <div>{qsn.question.text}</div>
+                  <TextField
+                      defaultValue={qsn.answer.answer}
+                      onChange={(event) => this.handleUpdatedAnswer(event, `${qsn.question.id}`)}
+                      multiline
+                      rows="3"
+                      fullWidth
+                      variant="outlined">
+                  </TextField>
+                  <p></p>
+             </div>
+             ))
+             }
+             </div>
+          </div>
+          )
+        }
       }
 
       updateAnswers = () => {
@@ -805,24 +845,8 @@ export default class ConceptView extends Component {
                         aria-describedby="alert-dialog-slide-description">
                         <DialogContent>
                              <Container>
-                                <h4>Answer all that may apply.</h4>
                                 <div>
-                                    {
-                                     this.state.combinedAnswered.map(qsn => (
-                                      <div>
-                                          <div>{qsn.question.text}</div>
-                                          <TextField
-                                              defaultValue={qsn.answer.answer}
-                                              onChange={(event) => this.handleUpdatedAnswer(event, `${qsn.question.id}`)}
-                                              multiline
-                                              rows="3"
-                                              fullWidth
-                                              variant="outlined">
-                                          </TextField>
-                                          <p></p>
-                                     </div>
-                                     ))
-                                     }
+                                {this.showCombinedArray()}
                                 </div>
                              </Container>
                         </DialogContent>
