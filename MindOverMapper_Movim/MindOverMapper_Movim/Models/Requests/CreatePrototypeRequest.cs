@@ -8,6 +8,7 @@ namespace MindOverMapper_Movim.Models.Requests
 {
     public class CreatePrototypeRequest
     {
+        public string ProjectId { get; set; }
         public string PrototypeName { get; set; }
         public string PrototypeDescription { get; set; }
         public string ProjectUid { get; set; }

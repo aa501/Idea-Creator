@@ -44,32 +44,36 @@ namespace MindOverMapper_Movim.Controllers
             IList<string> filePaths = new List<string>();
             foreach(IFormFile file in req.Files)
             {
-                string fileName = Guid.NewGuid().ToString() + file.FileName;
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 string filepath = Path.Combine(path, fileName);
-                file.CopyTo(new FileStream(filepath, FileMode.Create));
-                filePaths.Add(filepath);
+                FileStream fileStream = new FileStream(filepath, FileMode.Create);
+                file.CopyTo(fileStream);
+                fileStream.Close();
+                AzureFileService fileService = new AzureFileService(this._appSettings);
+                fileService.storeFile("files", fileName, filepath);
+
+                filePaths.Add(fileName);
             }
+
+            Project Project = _context.Project.Where(project => project.Uid == req.ProjectId).First<Project>();
             Prototype prototype = new Prototype();
-            prototype.Uid = Guid.NewGuid().ToString();
-            prototype.ProjectId = proj.Id;
+            prototype.ProjectId = Project.Id;
             prototype.PrototypeName = req.PrototypeName;
-            prototype.PrototypeDescription = req.PrototypeDescription;
+            prototype.PrototypeDescription = req.PrototypeName;
+            prototype.Uid = Guid.NewGuid().ToString();
             prototype.PrototypePath = Newtonsoft.Json.JsonConvert.SerializeObject(filePaths);
-            _context.Prototype.Add(prototype);
-            _context.SaveChanges();
-            return Ok();
+            var result = _context.Prototype.Add(prototype);
+            return Ok(prototype);
 
         }
-
-        [Authorize(Roles = "admin")]
+        
+        [Authorize]
         [HttpGet("{uid}")]
-        public ActionResult GetPrototypes(string uid)
+        public ActionResult getPrototypes(string uid)
         {
-
-          Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
-          var prototypes = _context.Prototype.Where(r => r.ProjectId == proj.Id);
-          return Ok(prototypes);
-
+            Project prototypeProject = _context.Project.Where(project => project.Uid == uid).First<Project>();
+            var prototypes = _context.Prototype.Where(prototype => prototype.ProjectId == prototypeProject.Id).ToList<Prototype>();
+            return Ok(prototypes);
         }
     }
 }
