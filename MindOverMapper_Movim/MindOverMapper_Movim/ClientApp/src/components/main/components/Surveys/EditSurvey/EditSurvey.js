@@ -269,20 +269,6 @@ export default class NewSurvey extends Component {
       });
     }
 
-    handleOpenConfirmationModal = () => {
-      this.setState({
-        questionDialog: false,
-        confirmationModal: true
-      })
-    }
-
-    handleCloseConfirmationModal = () => {
-      this.setState({
-        questionDialog: true,
-        confirmationModal: false
-      });
-    }
-
     openErrorModal = () => {
       this.setState({
           errorModal: true
@@ -298,6 +284,21 @@ export default class NewSurvey extends Component {
     openSuccessModal = () => {
       this.setState({
           successModal: true
+      });
+    }
+
+
+    handleOpenConfirmationModal = () => {
+      this.setState({
+          questionDialog: false,
+          confirmationModal: true
+      });
+    }
+
+    handleCloseConfirmationModal = () => {
+      this.setState({
+          questionDialog: true,
+          confirmationModal: false
       });
     }
 
