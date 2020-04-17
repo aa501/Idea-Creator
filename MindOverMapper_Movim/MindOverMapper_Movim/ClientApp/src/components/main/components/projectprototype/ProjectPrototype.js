@@ -30,9 +30,16 @@ export default class ProjectPrototype extends Component {
     }
 
     componentDidMount = () => {
-        axios.get('/api/prototype/', this.state.projectName.uid)
+        axios.get('/api/prototype/' + this.state.projectName.uid, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token,
+                'Content-Type': 'multipart/form-data'
+
+            }
+        })
             .then(response => {
-                this.setState({ prototypes: response.data });
+                let prototypes = response.data;
+                this.setState({ prototypes: prototypes });
             })
         console.log(this.props)
     }
@@ -96,7 +103,27 @@ export default class ProjectPrototype extends Component {
         });
     }
 
+    projectPaths = (item) => {
+        let pathArray = JSON.parse(item.prototypePath);
+        console.log(pathArray);
+        return pathArray;
+    }
 
+    downloadFile = (file) => {
+        axios.get('/api/prototype/file/' + file, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token,
+                'Content-Type': 'text/html'
+
+            }
+        })
+            .then(response => {
+                let blob = new Blob([response.data]),
+                    url = window.URL.createObjectURL(blob)
+
+                window.open(url)
+            });
+    }
     render() {
         return (
 
@@ -237,8 +264,8 @@ export default class ProjectPrototype extends Component {
                                     <CardTitle>{Item.PrototypeName}</CardTitle>
                                     <CardContent>{Item.Description}
                                         <ul>
-                                            { Item.PrototypePath.map(file =>
-                                                <li>{file}</li>
+                                            { this.projectPaths(Item).map(file =>
+                                                <li><a href="javascript:void(0);" onClick={() => { this.downloadFile(file) }}>{file}</a></li>
                                             )
                                             }
                                         </ul>
