@@ -58,7 +58,15 @@ namespace MindOverMapper_Movim.Controllers
         [HttpGet("{uid}")]
         public ActionResult GetSurveys(string uid) {
             Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
-            var surveys = _context.Survey.Where(s => s.ProjectId == proj.Id);
+            var surveys = _context.Survey.Where(u => u.ProjectId == proj.Id);
+            return Ok(surveys);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult GetAllSurveys(string uid) {
+            var surveys = _context.Survey;
+
             return Ok(surveys);
         }
 

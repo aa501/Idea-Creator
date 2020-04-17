@@ -28,6 +28,8 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<Survey> Survey { get; set; }
         public virtual DbSet<SurveyQuestion> SurveyQuestion { get; set; }
         public virtual DbSet<SurveyPrototype> SurveyPrototype { get; set; }
+        public virtual DbSet<SurveyTaker> SurveyTaker { get; set; }
+        public virtual DbSet<SurveyAnswer> SurveyAnswer { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -332,6 +334,9 @@ namespace MindOverMapper_Movim.Models
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
+                entity.Property(e => e.Demographic)
+                .HasColumnName("demographic")
+                .HasDefaultValue(false);
             });
 
             modelBuilder.Entity<Prototype>(entity =>
@@ -449,6 +454,63 @@ namespace MindOverMapper_Movim.Models
                     .IsRequired();
 
                 entity.Property(e => e.SurveyId).HasColumnName("survey_id")
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<SurveyTaker>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id")
+                    .IsRequired();
+
+                entity.Property(e => e.Uid)
+                    .IsRequired()
+                    .HasColumnName("uid")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SurveyUid)
+                    .IsRequired()
+                    .HasColumnName("survey_uid")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Turk)
+                    .HasColumnName("turk")
+                    .HasDefaultValue(false);
+            });
+
+            modelBuilder.Entity<SurveyAnswer>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id")
+                    .IsRequired();
+
+                entity.Property(e => e.Uid)
+                    .IsRequired()
+                    .HasColumnName("uid")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.surveyTakerId).HasColumnName("survey_taker_id")
+                    .IsRequired();
+
+                entity.Property(e => e.SurveyUid)
+                    .IsRequired()
+                    .HasColumnName("survey_uid")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Answer)
+                    .IsRequired()
+                    .HasColumnName("answer")
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DateCompleted)
+                    .IsRequired()
+                    .HasColumnName("date_completed")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Qid).HasColumnName("qid")
                     .IsRequired();
             });
         }

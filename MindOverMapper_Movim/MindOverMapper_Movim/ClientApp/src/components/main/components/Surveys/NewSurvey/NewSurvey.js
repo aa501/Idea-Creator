@@ -24,6 +24,12 @@ const useStyles = makeStyles({
   },
 });
 
+const surveyStates = {
+  Written: 'Written',
+  Deployed: 'Deployed',
+  Closed: 'Closed'
+}
+
 export default class EditSurvey extends Component {
 
     constructor(props) {
@@ -31,7 +37,7 @@ export default class EditSurvey extends Component {
         this.state = {
             userData: this.props.location.state.userData || this.props.userData,
             projectName: this.props.location.state.projectName,
-            surveys: this.props.location.state.surveys,
+            surveys: [],
             uniqueId: 'IP' + Math.floor(Math.random() * 10000000).toString(),
             loading: false,
             surveyName: '',
@@ -50,6 +56,7 @@ export default class EditSurvey extends Component {
             prototypeDialog: false,
             demographics: '',
             surveyNotes: '',
+            demographic: false,
 
             numQs: 0,
 
@@ -68,7 +75,22 @@ export default class EditSurvey extends Component {
     }
 
     componentDidMount = () => {
+        this.setLoading(true);
         console.log(this.props);
+        this.getAllSurveys();
+        this.setLoading(false);
+    }
+
+    getAllSurveys = () => {
+      axios.get('/api/survey/', {
+          headers: {
+              Authorization: 'Bearer ' + this.state.userData.token
+          }
+      }
+      ).then(response => {
+          this.setState({ surveys: response.data });
+          console.log(response)
+      });
     }
 
     getQuestions = async () => {
@@ -78,10 +100,12 @@ export default class EditSurvey extends Component {
           }
       }).then(response => {
             response = response.data;
+            response = response.sort((a, b) => (a.demographic > b.demographic) ? -1 : 1)
             this.setState({
                 pulledQuestions: response,
                 test: response.length
             })
+
         }).catch(() => {
           console.log("question retrieval error");
         });
@@ -131,6 +155,7 @@ export default class EditSurvey extends Component {
           ratingArray: [],
           numOptions: 0,
           choices: '',
+          demographic: false,
           choiceArray: []
 
         })
@@ -157,7 +182,8 @@ export default class EditSurvey extends Component {
           'text': this.state.subQuestion,
           'type': this.state.qstType,
           'notes': notes,
-          'archived': 'No'
+          'archived': 'No',
+          'demographic': this.state.demographic
       },
       {
           headers: {
@@ -197,7 +223,7 @@ export default class EditSurvey extends Component {
              'notes': '',
              'qualifications': '',
              'questions': JSON.stringify(this.state.finalQuestionSet),
-             'status': 'Written',
+             'status': surveyStates.Written,
              'EndDate': '20200501'
             },
             {
@@ -424,33 +450,6 @@ export default class EditSurvey extends Component {
         this.setState({ prototypeDialog: false });
     }
 
-    pricingOptionChanged = (evt) => {
-        this.setState({ pricingOptionId: evt.value });
-    }
-
-    ideaChanged = (evt) => {
-        this.setState({ idea: !this.state.ideaChanged });
-    }
-
-    packageChanged = (evt) => {
-        this.setState({ package: !this.state.packageChanged });
-    }
-
-    productChanged = (evt) => {
-        this.setState({ product: !this.state.productChanged });
-    }
-
-    nameChanged = (evt) => {
-        this.setState({ name: !this.state.nameChanged });
-    }
-
-    purchaseFrequencyChanged = (evt) => {
-        this.setState({ purchaseFrequency: !this.state.purchaseFrequency });
-    }
-
-    purchasePriceChanged = (evt) => {
-        this.setState({ purchasePrice: !this.state.purchasePrice });
-    }
 
     demographicsChanged = (evt) => {
         this.setState({ dedmographics: !this.state.demographics });
@@ -657,6 +656,24 @@ export default class EditSurvey extends Component {
       }
 
       this.setState({ chosenQuestions }, () => this.finalizeSurvey());
+    }
+
+    handleDemographicOption = () => {
+      this.setState({
+        demographic: !this.state.demographic
+      });
+    }
+
+    translateDemo = (val) => {
+      if (val == true)
+      {
+        return "Yes"
+      }
+
+      else
+      {
+        return "No"
+      }
     }
 
     renderQuestions = () => {
@@ -1013,6 +1030,7 @@ export default class EditSurvey extends Component {
                                               <TableCell></TableCell>
                                               <TableCell>Type</TableCell>
                                               <TableCell>Content</TableCell>
+                                              <TableCell>Demographics Question</TableCell>
                                             </TableRow>
                                           </TableHead>
                                           <TableBody>
@@ -1025,6 +1043,7 @@ export default class EditSurvey extends Component {
                                                   <Chip size="sm" label={qsn.type}></Chip>
                                                 </TableCell>
                                                 <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{qsn.text}</TableCell>
+                                                <TableCell>{this.translateDemo(qsn.demographic)}</TableCell>
                                               </TableRow>
                                             ))}
                                           </TableBody>
@@ -1052,6 +1071,7 @@ export default class EditSurvey extends Component {
                             <Row>
                               <Col md={{ span: 3, offset: 0 }} >
                                 <div> Choose Question Type: {this.renderQstDropdown()} </div>
+                                <h6> <Checkbox name="demographic" color="primary" checked={this.state.demographic} onChange={() => this.handleDemographicOption()} /> This is a demographics question. </h6>
                               </Col>
                               <Col md={{ span: 8, offset: 0 }} >
                                 <p> {this.renderResult()} </p>
