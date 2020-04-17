@@ -8,6 +8,7 @@ using Microsoft.Azure;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.File;
 using System.Threading;
+using System.IO;
 
 namespace MindOverMapper_Movim
 {
@@ -41,12 +42,30 @@ namespace MindOverMapper_Movim
                 {
                     ICancellableAsyncResult result = file.BeginUploadFromFile(uploadFile, ar => waitHandle.Set() , new object());
                     waitHandle.WaitOne();
+
                     file.EndUploadFromFile(result);
                 }
 
             }
 
 
+        }
+
+        public CloudFile getFIle(String path, String fileName)
+        {
+            CloudFileClient fileClient = this.storageAccount.CreateCloudFileClient();
+            CloudFileShare fileShare = fileClient.GetShareReference(this._appSettings.AzureFIleStoreName);
+            if (fileShare.Exists())
+            {
+                CloudFileDirectory root = fileShare.GetRootDirectoryReference();
+                CloudFileDirectory folder = root.GetDirectoryReference(path);
+                CloudFile file = folder.GetFileReference(fileName);
+                return file;
+            }
+            else
+            {
+                throw new Exception("File Share does not exists");
+            }
         }
 
     }
