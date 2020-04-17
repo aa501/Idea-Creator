@@ -58,23 +58,13 @@ export default class ProjectSurvey extends Component {
     this.state = {
       userData: this.props.location.state.userData || this.props.userData,
         projectName: this.props.location.state.projectName,
-        surveys: []
-
+        specificSurveys: [],
     }
   }
 
     componentDidMount() {
-      try{
-        axios.get('/api/survey/' + this.state.projectName.uid, {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token
-            }
-        }
-        ).then(response => {
-            this.setState({ surveys: response.data });
-            console.log(response)
-        });
-      } catch {}
+      console.log(this.props);
+      this.getSurveys();
     }
 
   returnToDashboard = () => {
@@ -83,6 +73,18 @@ export default class ProjectSurvey extends Component {
       state: { userData: this.state.userData } // need this for moving to different component
   });
   }
+
+    getSurveys = () => {
+      axios.get('/api/survey/' + this.state.projectName.uid, {
+          headers: {
+              Authorization: 'Bearer ' + this.state.userData.token
+          }
+      }
+      ).then(response => {
+          this.setState({ specificSurveys: response.data });
+          console.log(response)
+      });
+    }
 
     newSurvey = () => {
         this.props.history.push({
@@ -231,9 +233,13 @@ export default class ProjectSurvey extends Component {
                       <h3>Surveys for {this.state.projectName.title}</h3>
                       <hr style={{ width: "30%" }} id="hr-1" />
                   </div>
+
                  <div class="row" id="background-concepts">
+                     <div className="d-flex flex-wrap justify-content-around">
+                       <Button style={{ height: 60, backgroundColor: "#009941", borderColor: "#009941"}}onClick={this.newSurvey}>Create New Survey</Button>
+                     </div>
                       <div className='survey-board-body'>
-                          {this.state.surveys.map((survey, index) => {
+                          {this.state.specificSurveys.map((survey, index) => {
                               return (
                                   <div class='survey-paper-holder'>
                                       <Card style={{width: 400 }}>
@@ -244,6 +250,12 @@ export default class ProjectSurvey extends Component {
                                                           {survey.surveyName}
                                                         </div>
                                                       </Typography>
+                                                      <Typography gutterBottom component="h5">
+                                                        <div className="d-flex flex-wrap justify-content-around">
+                                                          <b>{survey.uid}</b>
+                                                        </div>
+                                                      </Typography>
+                                                      <hr />
                                                       <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                           <FontAwesomeIcon id='font-awesome-space-right' icon="info-circle" style={{ fontSize: '1.4em' }}/>
                                                           <strong>Status</strong> {survey.status}
@@ -264,7 +276,10 @@ export default class ProjectSurvey extends Component {
                                                       <hr />
                                                       <Typography>
                                                       <div className="d-flex flex-wrap justify-content-around">
-                                                        <Button variant="warning" onClick={() => this.editSurvey(survey)}>Edit</Button>
+                                                        <Button color="warning" onClick={() => this.editSurvey(survey)}>Edit</Button>
+                                                        <Button color="primary" onClick={() => this.editSurvey(survey)}>Deploy</Button>
+                                                        <Button color="danger" onClick={() => this.editSurvey(survey)}>End Early</Button>
+                                                        <Button color="success" onClick={() => this.editSurvey(survey)}>View Results</Button>
                                                       </div>
                                                       </Typography>
                                                   </CardContent>
@@ -274,45 +289,10 @@ export default class ProjectSurvey extends Component {
                               );
                           })
                           }
-                              <div className='concept-paper-holder'>
-                                  <Card>
-                                      <Paper className='concept-paper' onClick={this.addConcept}>
-                                          <CardActionArea>
-                                              <CardContent>
-
-                                                  <Typography variant="h5" component="h2">
-                                                      <center>
-                                                          Add Concept +
-                                      </center>
-                                                  </Typography>
-                                              </CardContent>
-                                          </CardActionArea>
-
-                                      </Paper>
-                                  </Card>
-                              </div>
                           </div>
                           </div>
-
-                    <div>
-                      <h3 id="subtitle">Surveys</h3>
-                      <hr style={{ width: "30%" }} id="hr-1" />
+                        </div>
                     </div>
-                    <div>
-                      <Button style={{ height: 60, backgroundColor: "#009941", borderColor: "#009941"}}onClick={this.newSurvey}>Create New Survey +</Button>
-                    </div>
-                    <Row>
-                        <List subheader={<ListSubheader>Surveys</ListSubheader>} >
-                            {this.state.surveys.map((survey) => {
-                                return <ListItem onClick={() => this.editSurvey(survey)}  >
-                                    <ListItemText primary={survey.surveyName} />
-                                </ListItem>
-                            })
-                            }
-                            </List>
-                  </Row>
-                </div>
-                </div>
                 </div>
     );
   }

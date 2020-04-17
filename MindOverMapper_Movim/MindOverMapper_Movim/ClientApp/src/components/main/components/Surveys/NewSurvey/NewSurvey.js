@@ -37,7 +37,7 @@ export default class EditSurvey extends Component {
         this.state = {
             userData: this.props.location.state.userData || this.props.userData,
             projectName: this.props.location.state.projectName,
-            surveys: this.props.location.state.surveys,
+            surveys: [],
             uniqueId: 'IP' + Math.floor(Math.random() * 10000000).toString(),
             loading: false,
             surveyName: '',
@@ -75,7 +75,22 @@ export default class EditSurvey extends Component {
     }
 
     componentDidMount = () => {
+        this.setLoading(true);
         console.log(this.props);
+        this.getAllSurveys();
+        this.setLoading(false);
+    }
+
+    getAllSurveys = () => {
+      axios.get('/api/survey/', {
+          headers: {
+              Authorization: 'Bearer ' + this.state.userData.token
+          }
+      }
+      ).then(response => {
+          this.setState({ surveys: response.data });
+          console.log(response)
+      });
     }
 
     getQuestions = async () => {
@@ -655,7 +670,7 @@ export default class EditSurvey extends Component {
         return "Yes"
       }
 
-      else if (val == false)
+      else
       {
         return "No"
       }

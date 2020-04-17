@@ -37,7 +37,7 @@ export default class NewSurvey extends Component {
         this.state = {
             userData: this.props.location.state.userData || this.props.userData,
             projectName: this.props.location.state.projectName,
-            surveys: this.props.location.state.surveys,
+            surveys: [],
             template: this.props.location.state.template,
             uniqueId: this.props.location.state.template.uid,
             loading: false,
@@ -79,6 +79,8 @@ export default class NewSurvey extends Component {
     }
 
     loadData = async () => {
+      this.setLoading(true);
+      await this.getAllSurveys();
       await this.getQuestions();
       await this.loadTemplateQuestions();
       await this.getPrototypes();
@@ -91,6 +93,19 @@ export default class NewSurvey extends Component {
       this.setState({
         chosenPrototypes: prototypes
       }, () => (console.log(this.state.chosenPrototypes)));
+      await this.setLoading(false);
+    }
+
+    getAllSurveys = () => {
+      axios.get('/api/survey/', {
+          headers: {
+              Authorization: 'Bearer ' + this.state.userData.token
+          }
+      }
+      ).then(response => {
+          this.setState({ surveys: response.data });
+          console.log(response)
+      });
     }
 
     getQuestions = async () => {
@@ -117,7 +132,6 @@ export default class NewSurvey extends Component {
     }
 
     getPrototypes = async () => {
-      this.setLoading(true);
       await console.log(this.state.projectName.uid);
       var uid = await this.state.projectName.uid;
       const response = await axios.get(`/api/prototype/${uid}/`, {
@@ -133,7 +147,6 @@ export default class NewSurvey extends Component {
         }).catch((e) => {
           console.log(e);
         });
-      await this.setLoading(false);
     }
 
     returnToDashboard = () => {
@@ -687,7 +700,7 @@ export default class NewSurvey extends Component {
         return "Yes"
       }
 
-      else if (val == false)
+      else 
       {
         return "No"
       }
