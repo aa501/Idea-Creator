@@ -343,7 +343,7 @@ export default class ProjectSurvey extends Component {
   render() {
       return (
 
-      <div id='page-container'>
+      <div>
 
               <SideNav expanded="true" style={{
                   backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"
@@ -428,13 +428,12 @@ export default class ProjectSurvey extends Component {
 
 
               <div id="main-content">
-              <div id="concept-main-content">
-                  <div>
+                  <div id="push" >
                       <h3>Surveys for {this.state.projectName.title}</h3>
                       <hr style={{ width: "30%" }} id="hr-1" />
                   </div>
 
-                 <div class="row" id="background-concepts">
+                 <div class="row" id="survey-id">
                      <div className="d-flex flex-wrap justify-content-around">
                        <Button style={{ height: 60, backgroundColor: "#009941", borderColor: "#009941"}}onClick={this.newSurvey}>Create New Survey</Button>
                      </div>
@@ -443,7 +442,7 @@ export default class ProjectSurvey extends Component {
                               return (
                                   <div class='survey-paper-holder'>
                                       <Card style={{width: 400}}>
-                                          <Paper className='concept-paper'>
+                                          <Paper className='survey-paper'>
                                                   <CardContent>
                                                       <Typography gutterBottom variant="h5" component="h2">
                                                         <div className="d-flex flex-wrap justify-content-around">
@@ -492,7 +491,7 @@ export default class ProjectSurvey extends Component {
                           })
                           }
                           </div>
-                          </div>
+                      </div>
 
                           <Dialog
                           open={this.state.deployDialog}
@@ -540,7 +539,6 @@ export default class ProjectSurvey extends Component {
                           </Dialog>
 
                         </div>
-                    </div>
                     <div>
                       <Dialog
                         open={this.state.successModal}
@@ -619,8 +617,8 @@ export default class ProjectSurvey extends Component {
                       </DialogActions>
                     </Dialog>
                 </div>
+            </div>
 
-                </div>
     );
   }
 }
