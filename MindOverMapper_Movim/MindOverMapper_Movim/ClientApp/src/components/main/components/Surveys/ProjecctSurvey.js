@@ -99,10 +99,11 @@ export default class ProjectSurvey extends Component {
       console.log(surveys)
       const token = this.state.userData.token;
       surveys.forEach(function(survey) {
-        var dateNumber = parseInt(survey.endDate);
+        var dateNumber = parseFloat(survey.endDate);
         var date = Date.now();
         console.log(date + ' ' + survey.endDate);
         if (date > dateNumber) {
+          console.log("Closing survey" + " " + survey.uid)
           var convertedDate = date.toString();
           axios.put(`/api/survey/${survey.uid}/pass`,
               {
@@ -311,6 +312,7 @@ export default class ProjectSurvey extends Component {
 
     setValidDate = () => {
       var parsedDate = Date.parse(this.state.endDate);
+      console.log(parsedDate)
       var time = this.state.endTime
       if (time && parsedDate) {
         var parsedTime = Number(time.split(':')[0])*3600000+Number(time.split(':')[1])*1000;

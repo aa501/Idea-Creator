@@ -13,6 +13,8 @@ import { Route } from 'react-router';
 import { LayoutS } from './navigation/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SurveyView from './components/surveyView/SurveyView.js';
+import SurveyLandingPage from './components/surveyLandingPage/SurveyLandingPage.js';
+
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
@@ -39,7 +41,9 @@ export class SurveyEnd extends Component {
               <div>
                   {this.state ? (
                       <LayoutS>
-                          <Route exactpath='/survey-view' component={SurveyView} />
+                          <Route path='/survey-view' component={SurveyView} />
+                          <Route exactpath='/survey-landing-page' component={SurveyLandingPage} />
+
                       </LayoutS>
                   ): (null)}
               </div>

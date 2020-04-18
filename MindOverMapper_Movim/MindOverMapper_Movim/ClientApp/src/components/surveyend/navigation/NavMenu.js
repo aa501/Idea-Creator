@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Col } from 'react-bootstrap';
 import './NavMenu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import logo from '../../../static/Logo.png';
+import logo from '../../../static/new-logo-crop-wide.jpg';
 
 export class NavMenuS extends Component {
   static displayName = NavMenuS.name;
@@ -30,24 +30,19 @@ export class NavMenuS extends Component {
     render() {
     return (
 
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-3" dark expand="xl">
+      <Navbar className="navbar-expand-sm navbar-toggleable-sm box-shadow mb-3" dark expand="xl" >
           <div id='naviboi'>
-            <NavbarBrand id='nav-text-accru'>
-                <span id ='title-image'>
-                    <img src={logo} width = "50"/>
-                </span>
-                <span id='name-span'>
-                <h id='app-name'>Idea Creator</h>
-                </span>
-            </NavbarBrand>
 
-            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-            <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow">
-              </ul>
-            </Collapse>
-          </div>
-        </Navbar>
+              <NavbarBrand style={{marginLeft: "-15px"}} id='nav-text-accru' tag={Link} to={{ pathname: '/home', state: {userData: this.props.userData} }}>
+                  <span id='title-image'>
+                      <img src={logo} width="90" height="58" />
+              </span>
+
+          </NavbarBrand>
+
+          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+        </div>
+      </Navbar>
 
     );
   }
