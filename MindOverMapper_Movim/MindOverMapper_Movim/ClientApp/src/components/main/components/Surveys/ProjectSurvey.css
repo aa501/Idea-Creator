@@ -25,3 +25,7 @@
     flex-wrap: wrap;
     justify-content: left;
 }
+
+#proto-list{
+    margin-left: 19pt;
+}

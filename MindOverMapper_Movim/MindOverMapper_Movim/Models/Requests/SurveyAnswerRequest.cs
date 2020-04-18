@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace MindOverMapper_Movim.Models
 {
-    public partial class SurveyTaker
+    public partial class SurveyAnswerRequest
     {
-        public int Id { get; set; }
-        public string Uid { get; set; }
         public string SurveyUid { get; set; }
+        public string[] AnswerList { get; set; }
         public bool? Turk { get; set; }
-        public string Notes { get; set; }
+        public string Demographics { get; set; }
     }
 }

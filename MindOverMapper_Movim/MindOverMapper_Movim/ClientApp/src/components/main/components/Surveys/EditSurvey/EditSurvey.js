@@ -239,7 +239,6 @@ export default class NewSurvey extends Component {
              'qualifications': '',
              'questions': JSON.stringify(this.state.finalQuestionSet),
              'status': 'Written',
-             'EndDate': '20200501'
             },
             {
             headers: {
@@ -700,7 +699,7 @@ export default class NewSurvey extends Component {
         return "Yes"
       }
 
-      else 
+      else
       {
         return "No"
       }

@@ -477,6 +477,11 @@ namespace MindOverMapper_Movim.Models
                 entity.Property(e => e.Turk)
                     .HasColumnName("turk")
                     .HasDefaultValue(false);
+
+                entity.Property(e => e.SurveyUid)
+                    .HasColumnName("notes")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<SurveyAnswer>(entity =>
@@ -490,8 +495,11 @@ namespace MindOverMapper_Movim.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.surveyTakerId).HasColumnName("survey_taker_id")
-                    .IsRequired();
+                entity.Property(e => e.SurveyTakerUid)
+                    .IsRequired()
+                    .HasColumnName("survey_taker_uid")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SurveyUid)
                     .IsRequired()
