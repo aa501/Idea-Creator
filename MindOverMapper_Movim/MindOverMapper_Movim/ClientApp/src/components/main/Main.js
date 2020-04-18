@@ -13,7 +13,7 @@ import ConceptQuestion from './components/conceptQuestion/ConceptQuestion.js';
 import QuestionEditor from './components/questionEditor/QuestionEditor.js';
 import ProjectLandingPage from './components/projectLandingPage/projectLandingPage.js';
 import ProjectPrototype from './components/projectprototype/ProjectPrototype.js';
-import ProjectSurvey from './components/Surveys/ProjectSurvey.js';
+import ProjectSurvey from './components/Surveys/ProjecctSurvey.js';
 import NewSurvey from './components/Surveys/NewSurvey/NewSurvey.js';
 import SurveyAnalytics from './components/Surveys/surveyAnalytics/SurveyAnalytics.js';
 import EditSurvey from './components/Surveys/EditSurvey/EditSurvey.js';
