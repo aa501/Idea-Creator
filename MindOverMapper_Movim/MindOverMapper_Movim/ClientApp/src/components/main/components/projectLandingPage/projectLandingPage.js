@@ -61,6 +61,7 @@ export default class ProjectLandingPage extends Component {
                 projectName: this.props.location.state.projectName,
             });
         }
+        console.log(this.state.projectName)
     }
 
     pushToMindMap = () => {
@@ -72,7 +73,7 @@ export default class ProjectLandingPage extends Component {
 
     pushToResearch = () => {
         this.props.history.push({
-            pathname: '/project-research',
+            pathname: '/project-research-editing',
             state: this.state  // need this for moving to different component
         });
     }
@@ -264,7 +265,7 @@ export default class ProjectLandingPage extends Component {
                                         </CardContent>
                                     </CardActionArea>
                                 </Card>
-                            </div>                            
+                            </div>
                             <div class="col-sm-2">
                                 <Card class="card-button-3">
                                     <CardActionArea onClick={this.pushToPrototypes}>
