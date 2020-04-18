@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Azure.Storage.File;
+using Microsoft.AspNetCore.StaticFiles;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -86,7 +87,10 @@ namespace MindOverMapper_Movim.Controllers
             string path = Path.Combine(_env.WebRootPath, "files");
             cloudFile.DownloadToFile(Path.Combine(path, FileName), FileMode.Create);
             var stream = new FileStream(Path.Combine(path, FileName), FileMode.Open);
-            return File(stream, "application/octet-stream",FileName);
+            var mimeProvider = new FileExtensionContentTypeProvider();
+            string mimeType;
+            mimeProvider.TryGetContentType(Path.Combine(path, FileName), out mimeType);
+            return File(stream, mimeType);
         }
     }
 }

@@ -15,6 +15,7 @@ import Dropzone from 'react-dropzone'
 import './ProjectPrototype.css';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import * as FileSaver from 'file-saver';
 
 export default class ProjectPrototype extends Component {
     constructor(props) {
@@ -111,6 +112,7 @@ export default class ProjectPrototype extends Component {
 
     downloadFile = (file) => {
         axios.get('/api/prototype/file/' + file, {
+            responseType: 'arraybuffer',
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token,
                 'Content-Type': 'text/html'
@@ -118,10 +120,9 @@ export default class ProjectPrototype extends Component {
             }
         })
             .then(response => {
-                let blob = new Blob([response.data]),
-                    url = window.URL.createObjectURL(blob)
-
-                window.open(url)
+                
+                let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
+                FileSaver.saveAs(downloadedFile, file);
             });
     }
 
