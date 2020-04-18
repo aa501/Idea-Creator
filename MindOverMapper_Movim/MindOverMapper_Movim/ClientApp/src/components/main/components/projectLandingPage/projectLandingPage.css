@@ -1,4 +1,15 @@
-﻿.landing-page-container {
+﻿#subnav{
+    color: black;
+    margin-left: 13px;
+    margin-bottom: 6px;
+}
+
+    #subnav:hover {
+        color: #0283C4;
+        
+    }
+
+.landing-page-container {
     width: 100%;
     height: 100%;
     

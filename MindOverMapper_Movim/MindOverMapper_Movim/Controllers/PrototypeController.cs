@@ -86,7 +86,7 @@ namespace MindOverMapper_Movim.Controllers
             string path = Path.Combine(_env.WebRootPath, "files");
             cloudFile.DownloadToFile(Path.Combine(path, FileName), FileMode.Create);
             var stream = new FileStream(Path.Combine(path, FileName), FileMode.Open);
-            return File(stream, "application/octet-stream",FileName,);
+            return File(stream, "application/octet-stream",FileName);
         }
     }
 }
