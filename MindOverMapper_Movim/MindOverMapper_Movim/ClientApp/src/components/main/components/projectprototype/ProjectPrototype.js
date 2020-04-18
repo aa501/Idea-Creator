@@ -30,9 +30,16 @@ export default class ProjectPrototype extends Component {
     }
 
     componentDidMount = () => {
-        axios.get('/api/prototype/', this.state.projectName.uid)
+        axios.get('/api/prototype/' + this.state.projectName.uid, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token,
+                'Content-Type': 'multipart/form-data'
+
+            }
+        })
             .then(response => {
-                this.setState({ prototypes: response.data });
+                let prototypes = response.data;
+                this.setState({ prototypes: prototypes });
             })
         console.log(this.props)
     }
@@ -96,6 +103,83 @@ export default class ProjectPrototype extends Component {
         });
     }
 
+    projectPaths = (item) => {
+        let pathArray = JSON.parse(item.prototypePath);
+        console.log(pathArray);
+        return pathArray;
+    }
+
+    downloadFile = (file) => {
+        axios.get('/api/prototype/file/' + file, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token,
+                'Content-Type': 'text/html'
+
+            }
+        })
+            .then(response => {
+                let blob = new Blob([response.data]),
+                    url = window.URL.createObjectURL(blob)
+
+                window.open(url)
+            });
+    }
+
+    pushToMindMap = () => {
+        this.props.history.push({
+            pathname: '/project-view',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToResearch = () => {
+        this.props.history.push({
+            pathname: '/project-research',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToConcepts = () => {
+        this.props.history.push({
+            pathname: '/concept-view',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToSurveys = () => {
+        this.props.history.push({
+            pathname: '/surveys',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToPrototypes = () => {
+        this.props.history.push({
+            pathname: '/add-prototype',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+    
+    navLogout = () => {
+        this.props.history.push({
+            pathname: '/',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navProject = () => {
+        this.props.history.push({
+            pathname: '/project-landing-page',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
     render() {
         return (
@@ -113,7 +197,7 @@ export default class ProjectPrototype extends Component {
                     <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home">
+                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
@@ -124,50 +208,46 @@ export default class ProjectPrototype extends Component {
 
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="project">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                            </NavIcon>
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                Add Project
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="settings">
+                        <NavItem expanded="true" role="menuitem" eventKey="project">
                             <NavIcon>
                                 <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
-
                             <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                Settings
+                                Project Options
                             </NavText>
-
+                            <NavItem eventKey="options" onClick={() => this.navProject()}>
+                                <NavText id="subnav">
+                                    Project Home
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToResearch}>
+                                <NavText id="subnav">
+                                    Research
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToConcepts}>
+                                <NavText  id="subnav">
+                                    Concepts
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToMindMap}>
+                                <NavText id="subnav">
+                                    Mind Map
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToPrototypes}>
+                                <NavText style={{ color: "#0283C4" }} id="subnav">
+                                    Prototypes
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToSurveys}>
+                                <NavText id="subnav">
+                                    Surveys
+                                </NavText>
+                            </NavItem>
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="info">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                About
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="help">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                Help
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="logout">
+                        <NavItem role="menuitem" eventKey="logout" onClick={() => this.navLogout()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
@@ -237,8 +317,8 @@ export default class ProjectPrototype extends Component {
                                     <CardTitle>{Item.PrototypeName}</CardTitle>
                                     <CardContent>{Item.Description}
                                         <ul>
-                                            { Item.PrototypePath.map(file =>
-                                                <li>{file}</li>
+                                            { this.projectPaths(Item).map(file =>
+                                                <li><a href="javascript:void(0);" onClick={() => { this.downloadFile(file) }}>{file}</a></li>
                                             )
                                             }
                                         </ul>

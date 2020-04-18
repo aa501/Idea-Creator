@@ -12,7 +12,7 @@ using MindOverMapper_Movim.Models.Requests;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using System.Collections.Generic;
-
+using Microsoft.Azure.Storage.File;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -63,6 +63,7 @@ namespace MindOverMapper_Movim.Controllers
             prototype.Uid = Guid.NewGuid().ToString();
             prototype.PrototypePath = Newtonsoft.Json.JsonConvert.SerializeObject(filePaths);
             var result = _context.Prototype.Add(prototype);
+            _context.SaveChanges();
             return Ok(prototype);
 
         }
@@ -74,6 +75,18 @@ namespace MindOverMapper_Movim.Controllers
             Project prototypeProject = _context.Project.Where(project => project.Uid == uid).First<Project>();
             var prototypes = _context.Prototype.Where(prototype => prototype.ProjectId == prototypeProject.Id).ToList<Prototype>();
             return Ok(prototypes);
+        }
+
+        [Authorize]
+        [HttpGet("file/{FileName}")]
+        public ActionResult getFile(String FileName)
+        {
+            AzureFileService fileService = new AzureFileService(this._appSettings);
+            CloudFile cloudFile = fileService.getFIle("files", FileName);
+            string path = Path.Combine(_env.WebRootPath, "files");
+            cloudFile.DownloadToFile(Path.Combine(path, FileName), FileMode.Create);
+            var stream = new FileStream(Path.Combine(path, FileName), FileMode.Open);
+            return File(stream, "application/octet-stream",FileName);
         }
     }
 }
