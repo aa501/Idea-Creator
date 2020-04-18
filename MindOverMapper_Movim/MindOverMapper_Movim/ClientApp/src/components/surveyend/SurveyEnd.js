@@ -10,7 +10,7 @@ import logo from '../../static/Logo.png';
 import light from '../../static/Light.jpg'
 import './SurveyEnd.css';
 import { Route } from 'react-router';
-import { LayoutS } from './navigation/Layout';
+import { LayoutS } from './navigationS/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SurveyView from './components/surveyView/SurveyView.js';
 import SurveyLandingPage from './components/surveyLandingPage/SurveyLandingPage.js';
@@ -31,7 +31,7 @@ export class SurveyEnd extends Component {
 
     nextPage = () => {
         this.props.history.push({
-            pathname: 'login',
+            pathname: 'survey-landing-page',
             state: this.state  // need this for moving to different component
         });
     }
@@ -41,9 +41,8 @@ export class SurveyEnd extends Component {
               <div>
                   {this.state ? (
                       <LayoutS>
-                          <Route path='/survey-view' component={SurveyView} />
                           <Route exactpath='/survey-landing-page' component={SurveyLandingPage} />
-
+                          <Route exact path='/survey-view' component={SurveyView} />
                       </LayoutS>
                   ): (null)}
               </div>
