@@ -412,7 +412,7 @@ export default class ProjectSurvey extends Component {
                   <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home">
+                      <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
@@ -479,7 +479,7 @@ export default class ProjectSurvey extends Component {
               </SideNav>
 
 
-              <div id="main-content">
+              <div id="survey-main-content">
                   <div id="push" >
                       <h3>Surveys for {this.state.projectName.title}</h3>
                       <hr style={{ width: "30%" }} id="hr-1" />

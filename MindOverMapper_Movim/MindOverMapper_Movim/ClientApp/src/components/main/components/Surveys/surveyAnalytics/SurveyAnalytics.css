@@ -11,3 +11,32 @@
 #surveyId {
   width: 100px;
 }
+
+#page-holder{
+    height: 100%;
+    width: 100%;
+}
+
+#analytics-container {
+    height: 100%;
+    width: 100%;
+}
+
+
+#analytics-main-content {
+    margin-left: 22%;
+    margin-top: 3%;
+    background-color: transparent;
+}
+
+#hr-1 {
+    width: 30%;
+    height: 1px;
+    background-color: darkgray;
+}
+
+#hr-2 {
+    width: 80%;
+    height: 1px;
+    background-color: darkgray;
+}
