@@ -1,7 +1,8 @@
 ﻿
 #page-container{
-    max-height: initial;
-    width: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  max-height: 89vh;
 }
 #main-content {
     margin-left: 0%;

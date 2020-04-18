@@ -399,7 +399,7 @@ export default class ProjectSurvey extends Component {
   render() {
       return (
 
-      <div>
+      <div id="page-container">
 
               <SideNav expanded="true" style={{
                   backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"
@@ -421,7 +421,7 @@ export default class ProjectSurvey extends Component {
                                 Home
                             </NavText>
 
-                      </NavItem>    
+                      </NavItem>
 
                       <NavItem expanded="true" role="menuitem" eventKey="project">
                           <NavIcon>
@@ -429,7 +429,7 @@ export default class ProjectSurvey extends Component {
                           </NavIcon>
                           <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                               Project Options
-                            </NavText>                       
+                            </NavText>
                           <NavItem eventKey="options" onClick={() => this.navProject()}>
                               <NavText id="subnav">
                                   Project Home
