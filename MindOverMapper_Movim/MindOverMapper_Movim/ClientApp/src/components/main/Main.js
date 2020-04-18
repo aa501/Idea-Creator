@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './navigation/Layout';
 import DashBoard  from './components/dashboard/Dashboard.js';
-import ProjectDefinition from './components/projectdefinition/ProjectDefinition.js'
-import ProjectResearch from './components/projectresearch/ProjectResearch.js'
+import ProjectDefinition from './components/projectdefinition/ProjectDefinition.js';
+import ProjectResearch from './components/projectresearch/ProjectResearch.js';
+import ProjectResearchEditing from './components/projectResearchEditing/ProjectResearchEditing.js';
 import AdminPanel from './components/admin/AdminPanel.js';
 import ProjectView from './components/projectview/ProjectView.js'
 import ProjectStimuli from './components/projectStimuli/ProjectStimuli.js';
@@ -45,6 +46,7 @@ export class Main extends Component {
                         <Route path='/home' component={DashBoard}/>
                         <Route path='/create-project' component={ProjectDefinition} />
                         <Route path='/project-research' component={ProjectResearch} />
+                        <Route path='/project-research-editing' component={ProjectResearchEditing} />
                         <Route path='/admin-panel' component={AdminPanel}/>
                         <Route path='/project-view' component={ProjectView}/>
                         <Route path='/project-stimuli' component={ProjectStimuli}/>

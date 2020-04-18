@@ -72,7 +72,7 @@ export default class ProjectLandingPage extends Component {
 
     pushToResearch = () => {
         this.props.history.push({
-            pathname: '/project-research',
+            pathname: '/project-research-editing',
             state: this.state  // need this for moving to different component
         });
     }
