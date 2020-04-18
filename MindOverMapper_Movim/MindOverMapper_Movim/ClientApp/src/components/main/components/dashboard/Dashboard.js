@@ -385,7 +385,7 @@ export default class Dashboard extends Component {
                     }}
                 >
 
-                
+
 
                     <SideNav.Nav defaultSelected="">
 
@@ -408,7 +408,7 @@ export default class Dashboard extends Component {
                             <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Add Project
                             </NavText>
-                            
+
                         </NavItem>
                     
 
@@ -437,7 +437,7 @@ export default class Dashboard extends Component {
                         <h3>Current Projects</h3>
                         <hr style={{width: "100%"}} id="hr-1" />
                     </div>
-                    
+
 
                     <div className='dashboard-body' style={{marginLeft: "20%"}}>
                             {this.state.projectList.length === 0 ? (
@@ -445,7 +445,7 @@ export default class Dashboard extends Component {
 
                             ) : (<div></div>)}
 
-                            
+
 
 
                             {/* TODO: Have to make this conditional render, render the project tiles */}
@@ -455,7 +455,7 @@ export default class Dashboard extends Component {
                                         <Card style={{ height: 150, width: 240, borderTop: "solid", borderTopWidth: "6px", borderTopColor: "#028ECC"}}>
                                             <Paper className='project-paper'>
                                                 <CardActionArea style={{ height: 200 }} onClick={() => this.viewProject(project)}>
-                                                    
+
                                                     <CardContent style={{ marginTop:-100 }} id='project-card-content'>
                                                         <Typography gutterBottom variant="h5" component="h2">
                                                             {project.title}
@@ -464,14 +464,14 @@ export default class Dashboard extends Component {
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="stream" style={{ fontSize: '1.0em' }}/>
                                                             <strong>Description:</strong> {project.description.slice(0, 58)}...
                                                         </Typography>
-                                                       
+
                                                         <Typography style={{ fontSize: 13 }} id="description-logo" variant="body2" color="textSecondary" component="p">
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" style={{ fontSize: '1.0em' }}/>
                                                             <strong>Date Created:  </strong>{project.dateCreated.slice(0, 10)}
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>
-                                                
+
                                             </Paper>
                                         </Card>
                                     </div>

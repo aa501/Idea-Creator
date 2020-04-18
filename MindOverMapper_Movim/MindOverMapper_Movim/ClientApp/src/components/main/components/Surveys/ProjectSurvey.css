@@ -1,17 +1,26 @@
 ﻿
 #page-container{
-    height: 100%;
-    width: 80%;
+    max-height: initial;
+    width: 100%;
 }
 #main-content {
     margin-left: 0%;
     margin-top: 3%;
 }
 
+#survey-id {
+    margin-left: 28%;
+    margin-top: 3%;
+}
+
+#push {
+  margin-left: 28%;
+}
+
 .survey-paper-holder{
     height: 40%;
-    width: 40%;
-    margin-right: 20px;
+    width: 50%;
+    margin-right: 0;
     margin-top: 10px;
     margin-bottom: 20px;
 }
@@ -24,4 +33,13 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: left;
+}
+
+#proto-list{
+    margin-left: 19pt;
+}
+
+.survey-paper{
+    width: 100%;
+    height: 100%;
 }

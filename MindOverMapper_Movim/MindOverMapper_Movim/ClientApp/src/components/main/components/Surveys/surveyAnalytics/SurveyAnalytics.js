@@ -18,9 +18,12 @@ export default class SurveyAnalytics extends Component {
     this.state = {
       userData: this.props.location.state.userData || this.props.userData,
         projectName: this.props.location.state.projectName,
-        analyzedSurvey: this.state.analyzedSurvey
-
+        analyzedSurvey: this.props.location.state.analyzedSurvey
     }
   }
+
+  render() {
+      return (<div></div>)
+    }
 
 }

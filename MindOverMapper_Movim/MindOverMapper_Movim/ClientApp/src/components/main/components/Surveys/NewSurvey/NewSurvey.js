@@ -224,7 +224,6 @@ export default class EditSurvey extends Component {
              'qualifications': '',
              'questions': JSON.stringify(this.state.finalQuestionSet),
              'status': surveyStates.Written,
-             'EndDate': '20200501'
             },
             {
             headers: {

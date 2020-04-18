@@ -59,12 +59,15 @@ export default class ProjectSurvey extends Component {
       userData: this.props.location.state.userData || this.props.userData,
         projectName: this.props.location.state.projectName,
         specificSurveys: [],
+        analyzedSurvey: [],
+        validDate: false,
+        closeCheck: false,
     }
   }
 
-    componentDidMount() {
+    componentDidMount = async () => {
       console.log(this.props);
-      this.getSurveys();
+      await this.runDataRetrieval();
     }
 
   returnToDashboard = () => {
@@ -74,6 +77,10 @@ export default class ProjectSurvey extends Component {
   });
   }
 
+    runDataRetrieval = async () => {
+      await this.getSurveys();
+    }
+
     getSurveys = () => {
       axios.get('/api/survey/' + this.state.projectName.uid, {
           headers: {
@@ -82,8 +89,119 @@ export default class ProjectSurvey extends Component {
       }
       ).then(response => {
           this.setState({ specificSurveys: response.data });
-          console.log(response)
+          if (this.state.closeCheck == false)
+          this.checkEndDates(response.data);
+        });
+    }
+
+    checkEndDates = (surveys) => {
+      console.log("Running...")
+      console.log(surveys)
+      const token = this.state.userData.token;
+      surveys.forEach(function(survey) {
+        var dateNumber = parseInt(survey.endDate);
+        var date = Date.now();
+        console.log(date + ' ' + survey.endDate);
+        if (date > dateNumber) {
+          var convertedDate = date.toString();
+          axios.put(`/api/survey/${survey.uid}/pass`,
+              {
+                  'status': surveyStates.Closed,
+                  'endDate': survey.endDate
+              },
+            {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          }
+        ).then(() => {
+          console.log("Survey statuses updated")
+        }).catch(() => {
+          console.log("Survey statuses failed to update")
+          });
+        }
       });
+
+      if (this.state.closeCheck == false) {
+      this.getSurveys();
+      this.setState({ closeCheck: true})
+      }
+    }
+
+    changeSurveyStatus = (statusToSet) => {
+      var successMessage, errorMessage, logMessage, stateToPass = ''
+
+      if (statusToSet == "Deployed") {
+        successMessage = "Survey Deployed!";
+        errorMessage = 'Error: Survey could not be deployed!';
+        logMessage = "Deploying Survey... ";
+        stateToPass = surveyStates.Deployed;
+
+        console.log( logMessage + this.state.currentUid)
+        axios.put(`/api/survey/${this.state.currentUid}/pass`,
+            {
+                'status': stateToPass,
+                'endDate': this.state.fullEndDate
+            },
+          {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
+        }
+      ).then(() => {
+        this.openSuccessModal();
+        this.setState({
+          confirmationModal: false,
+          successModal: true,
+          deployDialog: false,
+          successMessage
+        }, () => (this.getSurveys()))
+      }).catch(() => {
+          this.openErrorModal();
+          this.setState({
+          confirmationModal: false,
+          errorModal: true,
+          deployDialog: true,
+          errorMessage
+          });
+        });
+      }
+
+      if (statusToSet == "Closed") {
+        var date = Date.now();
+        var convertedDate = date.toString();
+        successMessage = "Survey Ended!";
+        errorMessage = 'Error: Survey could not be closed!';
+        logMessage = "Closing Survey... ";
+        stateToPass = surveyStates.Closed;
+
+        console.log( logMessage + this.state.currentUid)
+        axios.put(`/api/survey/${this.state.currentUid}/pass`,
+            {
+                'status': stateToPass,
+                'endDate': convertedDate
+            },
+          {
+          headers: {
+            Authorization: 'Bearer ' + this.state.userData.token
+          }
+        }
+      ).then(() => {
+        this.openSuccessModal();
+        this.setState({
+          endConfirmationModal: false,
+          successModal: true,
+          successMessage
+        }, () => (this.getSurveys()))
+      }).catch(() => {
+          this.openErrorModal();
+          this.setState({
+          endConfirmationModal: false,
+          errorModal: true,
+          errorMessage
+          });
+        });
+      }
     }
 
     newSurvey = () => {
@@ -93,10 +211,14 @@ export default class ProjectSurvey extends Component {
         })
     }
 
-    analyzedSurvey = () => {
-      return this.props.history.push({
+    analyzeSurvey = (survey) => {
+       this.props.history.push({
           pathname: '/survey-analytics',
-          state: this.state
+          state: {
+            userData: this.props.location.state.userData || this.props.userData,
+            projectName: this.props.location.state.projectName,
+            analyzedSurvey: survey
+          }
       });
     }
 
@@ -120,14 +242,92 @@ export default class ProjectSurvey extends Component {
         });
     }
 
+    setEndDate = (event) => {
+      var currentDate = Date.now();
+      var endDate = Date.parse(event.target.value);
+      this.setState({ endDate: event.target.value }, () => (this.setValidDate()));
+    }
+
+    setEndTime = async (event) => {
+      await this.setState({ endTime: event.target.value });
+      await console.log(this.state.endTime);
+      await this.setValidDate();
+    }
+
+    handleCloseErrorModal = () => {
+      this.setState({
+          errorModal: false
+      });
+    }
+
+    openErrorModal = () => {
+      this.setState({
+          errorModal: true
+      });
+    }
+
+    handleCloseSuccessModal = () => {
+      this.setState({
+          successModal: false
+      });
+    }
+
+    openSuccessModal = () => {
+      this.setState({
+          successModal: true
+      });
+    }
+
+    openDeployDialog = (uid) => {
+      this.setState({ deployDialog: true,
+                      currentUid: uid,
+                      settingStatus: surveyStates.Deployed
+                    })
+                  }
+
+    closeDeployDialog = () => {
+      this.setState({ deployDialog: false })
+    }
+
+    handleOpenConfirmationModal = (uid) => {
+      this.setState({ deployDialog: false,
+        confirmationModal: true });
+    }
+
+    handleCloseConfirmationModal = () => {
+      this.setState({ deployDialog: false,
+        confirmationModal: false });
+    }
+
+    handleOpenEndConfirmationModal = (uid) => {
+      this.setState({ endConfirmationModal: true,
+      currentUid: uid,
+      settingStatus: surveyStates.Closed })
+    }
+
+    handleCloseEndConfirmationModal = () => {
+      this.setState({ endConfirmationModal: false })
+    }
+
+    setValidDate = () => {
+      var parsedDate = Date.parse(this.state.endDate);
+      var time = this.state.endTime
+      if (time && parsedDate) {
+        var parsedTime = Number(time.split(':')[0])*3600000+Number(time.split(':')[1])*1000;
+
+        var sumTime = parsedDate + parsedTime;
+        console.log(Date.now() + " " + sumTime)
+        if (sumTime > Date.now() + 86400000) {
+        this.setState({ validDate: true, fullEndDate: sumTime }, () => (console.log(sumTime)));
+        } else { this.setState({ validDate: false }) }
+      }
+    }
+
     renderPrototypes = (survey) => {
         var parsedPrototypes = JSON.parse(survey.prototypes);
-        console.log(parsedPrototypes);
-
 
         return (
-          <div>
-          <strong>Prototypes</strong>
+          <div id="proto-list">
           <ul> {
             parsedPrototypes.map((prototype) => (
                   <li>
@@ -199,7 +399,7 @@ export default class ProjectSurvey extends Component {
   render() {
       return (
 
-      <div id='page-container'>
+      <div>
 
               <SideNav expanded="true" style={{
                   backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"
@@ -280,13 +480,12 @@ export default class ProjectSurvey extends Component {
 
 
               <div id="main-content">
-              <div id="concept-main-content">
-                  <div>
+                  <div id="push" >
                       <h3>Surveys for {this.state.projectName.title}</h3>
                       <hr style={{ width: "30%" }} id="hr-1" />
                   </div>
 
-                 <div class="row" id="background-concepts">
+                 <div class="row" id="survey-id">
                      <div className="d-flex flex-wrap justify-content-around">
                        <Button style={{ height: 60, backgroundColor: "#009941", borderColor: "#009941"}}onClick={this.newSurvey}>Create New Survey</Button>
                      </div>
@@ -294,8 +493,8 @@ export default class ProjectSurvey extends Component {
                           {this.state.specificSurveys.map((survey, index) => {
                               return (
                                   <div class='survey-paper-holder'>
-                                      <Card style={{width: 400 }}>
-                                          <Paper className='concept-paper'>
+                                      <Card style={{width: 400}}>
+                                          <Paper className='survey-paper'>
                                                   <CardContent>
                                                       <Typography gutterBottom variant="h5" component="h2">
                                                         <div className="d-flex flex-wrap justify-content-around">
@@ -322,16 +521,18 @@ export default class ProjectSurvey extends Component {
                                                       </Typography>
                                                       <hr />
                                                       <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
-                                                          <FontAwesomeIcon id='font-awesome-space-right' icon="pen" style={{ fontSize: '1.4em' }}/>
+                                                          <FontAwesomeIcon id='font-awesome-space-right' icon="scroll" style={{ fontSize: '1.4em' }}/>
+                                                          <strong>Prototypes</strong>
                                                           {this.renderPrototypes(survey)}
                                                       </Typography>
                                                       <hr />
                                                       <Typography>
                                                       <div className="d-flex flex-wrap justify-content-around">
-                                                        <Button color="warning" onClick={() => this.editSurvey(survey)}>Edit</Button>
-                                                        <Button color="primary" onClick={() => this.editSurvey(survey)}>Deploy</Button>
-                                                        <Button color="danger" onClick={() => this.editSurvey(survey)}>End Early</Button>
-                                                        <Button color="success" onClick={() => this.editSurvey(survey)}>View Results</Button>
+                                                        <div hidden={survey.status != "Written"}><Button color="warning" onClick={() => this.editSurvey(survey)}>Edit</Button></div>
+                                                        <div hidden={survey.status != "Written"}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>Deploy</Button></div>
+                                                        <div hidden={survey.status != "Deployed"}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>View Options</Button></div>
+                                                        <div hidden={survey.status != "Deployed"}><Button color="danger" onClick={() => this.handleOpenEndConfirmationModal(survey.uid)}>End Now</Button></div>
+                                                        <div hidden={survey.status != "Closed"}><Button color="success" onClick={() => this.analyzeSurvey(survey)}>View Results</Button></div>
                                                       </div>
                                                       </Typography>
                                                   </CardContent>
@@ -342,10 +543,134 @@ export default class ProjectSurvey extends Component {
                           })
                           }
                           </div>
-                          </div>
+                      </div>
+
+                          <Dialog
+                          open={this.state.deployDialog}
+                          maxWidth='xl' >
+                                  <DialogContent dividers>
+                                      <div><h6>Enter an end date for your survey. <br />
+                                               Your choice must be at least 24 hours from now.</h6></div>
+                                      <div>
+                                      <TextField
+                                        id="date"
+                                        label="End Date"
+                                        value={this.state.endDate}
+                                        onChange={this.setEndDate}
+                                        type="date"
+                                        InputLabelProps={{
+                                          shrink: true,
+                                        }}
+                                      />
+                                      <TextField
+                                        id="time"
+                                        label="End Time"
+                                        value={this.state.endTime}
+                                        onChange={this.setEndTime}
+                                        type="time"
+                                        InputLabelProps={{
+                                          shrink: true,
+                                        }}
+                                        inputProps={{
+                                          step: 300, // 5 min
+                                        }}
+                                      />
+                                      <hr />
+                                      <div align="center">
+                                      <b>Sharing Info:</b>
+                                      <div>idea-creator.com/survey</div>
+                                      <div>Unique Survey Code:</div>
+                                      <b>{this.state.currentUid}</b>
+                                      </div>
+                                      </div>
+                                  </DialogContent>
+                                  <DialogActions>
+                                      <Button color="success" disabled={!this.state.validDate} onClick={this.handleOpenConfirmationModal}>Deploy</Button>
+                                      <Button color="primary" onClick={this.handleCloseConfirmationModal}>Close</Button>
+                                  </DialogActions>
+                          </Dialog>
+
                         </div>
+                    <div>
+                      <Dialog
+                        open={this.state.successModal}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        maxWidth='lg'
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                      >
+                        <DialogTitle id="responsibe-alert-dialog-slide-title">
+                          {this.state.successMessage}
+                        </DialogTitle>
+                        <DialogActions>
+                          <Button onClick={this.handleCloseSuccessModal} color="primary">
+                            Close
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
                     </div>
+
+                    <div>
+                      <Dialog
+                        open={this.state.confirmationModal}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        maxWidth='lg'
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                      >
+                        <DialogTitle id="responsibe-alert-dialog-slide-title">
+                          Are you sure you're ready to deploy your survey?<br />
+                          You won't be able to modify it once this is done.
+                        </DialogTitle>
+                        <DialogActions>
+                          <Button onClick={() => this.changeSurveyStatus(this.state.settingStatus)} color="success">Confirm</Button>
+                          <Button onClick={this.handleCloseConfirmationModal} color="primary">Cancel</Button>
+                        </DialogActions>
+                      </Dialog>
+                    </div>
+
+                    <div>
+                      <Dialog
+                        open={this.state.endConfirmationModal}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        maxWidth='lg'
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                      >
+                        <DialogTitle id="responsibe-alert-dialog-slide-title">
+                          Are you sure you want to close your survey early?<br />
+                          You cannot undo this action.
+                        </DialogTitle>
+                        <DialogActions>
+                          <Button onClick={() => this.changeSurveyStatus(this.state.settingStatus)} color="danger">End Survey</Button>
+                          <Button onClick={this.handleCloseEndConfirmationModal} color="primary">Cancel</Button>
+                        </DialogActions>
+                      </Dialog>
+                    </div>
+
+                  <div>
+                    <Dialog
+                      open={this.state.errorModal}
+                      TransitionComponent={Transition}
+                      keepMounted
+                      maxWidth='lg'
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description">
+                      <DialogTitle id="responsibe-alert-dialog-slide-title">
+                        {this.state.errorMessage}
+                      </DialogTitle>
+                      <DialogActions>
+                        <Button onClick={this.handleCloseErrorModal} color="primary">
+                          Close
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                 </div>
+            </div>
+
     );
   }
 }
