@@ -105,7 +105,21 @@ export default class QuestionEditor extends Component {
         }).catch(() => {
           this.openErrorModal();
         });
-      }
+    }
+
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navLogout = () => {
+        this.props.history.push({
+            pathname: '/',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
     render() {
 
@@ -124,7 +138,7 @@ export default class QuestionEditor extends Component {
                 <SideNav.Nav defaultSelected="">
 
 
-                    <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home">
+                    <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                         <NavIcon>
                             <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                         </NavIcon>
@@ -133,16 +147,7 @@ export default class QuestionEditor extends Component {
                             Home
                         </NavText>
 
-                    </NavItem>
-
-                    <NavItem role="menuitem" eventKey="project">
-                        <NavIcon>
-                            <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                        </NavIcon>
-                        <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                            Add Project
-                        </NavText>
-                    </NavItem>
+                    </NavItem>                              
 
                     <NavItem role="menuitem" eventKey="add-question" onClick={()=> this.goBack()}>
                         <NavIcon>
@@ -154,41 +159,9 @@ export default class QuestionEditor extends Component {
                         </NavText>
 
                     </NavItem>
+                                  
 
-                    <NavItem role="menuitem" eventKey="settings">
-                        <NavIcon>
-                            <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                        </NavIcon>
-
-                        <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                            Settings
-                        </NavText>
-
-                    </NavItem>
-
-                    <NavItem role="menuitem" eventKey="info">
-                        <NavIcon>
-                            <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                        </NavIcon>
-
-                        <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                            About
-                        </NavText>
-
-                    </NavItem>
-
-                    <NavItem role="menuitem" eventKey="help">
-                        <NavIcon>
-                            <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                        </NavIcon>
-
-                        <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                            Help
-                        </NavText>
-
-                    </NavItem>
-
-                    <NavItem role="menuitem" eventKey="logout">
+                        <NavItem role="menuitem" eventKey="logout" onClick={() => this.navLogout()}>
                         <NavIcon>
                             <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                         </NavIcon>

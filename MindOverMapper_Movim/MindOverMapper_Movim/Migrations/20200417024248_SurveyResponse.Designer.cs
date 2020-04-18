@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MindOverMapper_Movim.Models;
 
 namespace MindOverMapper_Movim.Migrations
 {
     [DbContext(typeof(MovimDbContext))]
-    partial class MovimDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200417024248_SurveyResponse")]
+    partial class SurveyResponse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -454,15 +456,9 @@ namespace MindOverMapper_Movim.Migrations
                     b.Property<int>("Qid")
                         .HasColumnName("qid");
 
-                    b.Property<string>("SurveyTakerUid")
-                        .IsRequired()
-                        .HasColumnName("survey_taker_uid")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
                     b.Property<string>("SurveyUid")
                         .IsRequired()
-                        .HasColumnName("survey_uid")
+                        .HasColumnName("uid")
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
@@ -471,6 +467,8 @@ namespace MindOverMapper_Movim.Migrations
                         .HasColumnName("uid")
                         .HasMaxLength(50)
                         .IsUnicode(false);
+
+                    b.Property<string>("surveyTakerId");
 
                     b.HasKey("Id");
 
@@ -520,11 +518,9 @@ namespace MindOverMapper_Movim.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Notes");
-
                     b.Property<string>("SurveyUid")
                         .IsRequired()
-                        .HasColumnName("notes")
+                        .HasColumnName("uid")
                         .HasMaxLength(50)
                         .IsUnicode(false);
 

@@ -7,5 +7,6 @@ namespace MindOverMapper_Movim.Models.Requests
     public partial class UpdateSurveyStatus
     {
         public string Status { get; set; }
+        public string EndDate { get; set; }
     }
 }

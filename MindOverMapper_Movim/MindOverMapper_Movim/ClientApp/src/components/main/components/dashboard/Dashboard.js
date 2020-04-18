@@ -357,6 +357,19 @@ export default class Dashboard extends Component {
         }
       }
 
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navLogout = () => {
+        this.props.history.push({
+            pathname: '/',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
     render() {
 
@@ -372,12 +385,12 @@ export default class Dashboard extends Component {
                     }}
                 >
 
-                
+
 
                     <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem style={{marginTop: 40}}role="menuitem" eventKey="home">
+                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                             <NavIcon>
                                     <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
@@ -388,50 +401,18 @@ export default class Dashboard extends Component {
 
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="project">
+                        <NavItem role="menuitem" eventKey="project" onClick={() => this.addProject()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
                             <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Add Project
                             </NavText>
-                            
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="settings">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black"  }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                Settings
-                            </NavText>
 
                         </NavItem>
+                    
 
-                        <NavItem role="menuitem" eventKey="info">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.1em', color: "black"  }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                About
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="help">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                Help
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="logout">
+                        <NavItem role="menuitem" eventKey="logout" onClick={() => this.navLogout()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black"  }} />
                             </NavIcon>
@@ -456,7 +437,7 @@ export default class Dashboard extends Component {
                         <h3>Current Projects</h3>
                         <hr style={{width: "100%"}} id="hr-1" />
                     </div>
-                    
+
 
                     <div className='dashboard-body' style={{marginLeft: "20%"}}>
                             {this.state.projectList.length === 0 ? (
@@ -464,7 +445,7 @@ export default class Dashboard extends Component {
 
                             ) : (<div></div>)}
 
-                            
+
 
 
                             {/* TODO: Have to make this conditional render, render the project tiles */}
@@ -474,7 +455,7 @@ export default class Dashboard extends Component {
                                         <Card style={{ height: 150, width: 240, borderTop: "solid", borderTopWidth: "6px", borderTopColor: "#028ECC"}}>
                                             <Paper className='project-paper'>
                                                 <CardActionArea style={{ height: 200 }} onClick={() => this.viewProject(project)}>
-                                                    
+
                                                     <CardContent style={{ marginTop:-100 }} id='project-card-content'>
                                                         <Typography gutterBottom variant="h5" component="h2">
                                                             {project.title}
@@ -483,14 +464,14 @@ export default class Dashboard extends Component {
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="stream" style={{ fontSize: '1.0em' }}/>
                                                             <strong>Description:</strong> {project.description.slice(0, 58)}...
                                                         </Typography>
-                                                       
+
                                                         <Typography style={{ fontSize: 13 }} id="description-logo" variant="body2" color="textSecondary" component="p">
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" style={{ fontSize: '1.0em' }}/>
                                                             <strong>Date Created:  </strong>{project.dateCreated.slice(0, 10)}
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>
-                                                
+
                                             </Paper>
                                         </Card>
                                     </div>

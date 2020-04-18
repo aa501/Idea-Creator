@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MindOverMapper_Movim.Models;
 
 namespace MindOverMapper_Movim.Migrations
 {
     [DbContext(typeof(MovimDbContext))]
-    partial class MovimDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200416211817_QDemo")]
+    partial class QDemo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -434,49 +436,6 @@ namespace MindOverMapper_Movim.Migrations
                     b.ToTable("Survey");
                 });
 
-            modelBuilder.Entity("MindOverMapper_Movim.Models.SurveyAnswer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Answer")
-                        .IsRequired()
-                        .HasColumnName("answer")
-                        .HasMaxLength(1000)
-                        .IsUnicode(false);
-
-                    b.Property<DateTime>("DateCompleted")
-                        .HasColumnName("date_completed")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("Qid")
-                        .HasColumnName("qid");
-
-                    b.Property<string>("SurveyTakerUid")
-                        .IsRequired()
-                        .HasColumnName("survey_taker_uid")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<string>("SurveyUid")
-                        .IsRequired()
-                        .HasColumnName("survey_uid")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<string>("Uid")
-                        .IsRequired()
-                        .HasColumnName("uid")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SurveyAnswer");
-                });
-
             modelBuilder.Entity("MindOverMapper_Movim.Models.SurveyPrototype", b =>
                 {
                     b.Property<int>("Id")
@@ -511,37 +470,6 @@ namespace MindOverMapper_Movim.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SurveyQuestion");
-                });
-
-            modelBuilder.Entity("MindOverMapper_Movim.Models.SurveyTaker", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Notes");
-
-                    b.Property<string>("SurveyUid")
-                        .IsRequired()
-                        .HasColumnName("notes")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.Property<bool?>("Turk")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("turk")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Uid")
-                        .IsRequired()
-                        .HasColumnName("uid")
-                        .HasMaxLength(50)
-                        .IsUnicode(false);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SurveyTaker");
                 });
 
             modelBuilder.Entity("MindOverMapper_Movim.Models.User", b =>

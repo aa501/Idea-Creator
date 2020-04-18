@@ -58,7 +58,65 @@ namespace MindOverMapper_Movim.Controllers
         [HttpGet("{uid}")]
         public ActionResult GetSurveys(string uid) {
             Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
-            var surveys = _context.Survey.Where(s => s.ProjectId == proj.Id);
+            var surveys = _context.Survey.Where(u => u.ProjectId == proj.Id);
+            return Ok(surveys);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{uid}/retrieve")]
+        public ActionResult GetSingleSurvey(string uid)
+        {
+            var survey = _context.Survey.Where(u => u.Uid == uid);
+
+            if (survey == null)
+            {
+                return BadRequest(new { message = "Survey does not exist!" });
+            }
+
+            return Ok(survey);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("post-answers")]
+        public ActionResult PostAnswers([FromBody] SurveyAnswerRequest req) {
+
+            SurveyTaker taker = new SurveyTaker();
+            taker.Uid = Guid.NewGuid().ToString();
+            taker.Turk = req.Turk;
+            taker.Notes = req.Demographics;
+            taker.SurveyUid = req.SurveyUid;
+            var answerList = req.AnswerList;
+
+            foreach (var obj in answerList)
+            {
+                if (obj != null)
+                {
+                    SurveyAnswer answer = new SurveyAnswer
+                    {
+                        Uid = Guid.NewGuid().ToString(),
+                        SurveyTakerUid = taker.Uid,
+                        SurveyUid = req.SurveyUid,
+                        Answer = obj,
+                        DateCompleted = DateTime.Now,
+                        Qid = Array.IndexOf(answerList, obj),
+                    };
+
+                    _context.SurveyAnswer.Add(answer);
+                }
+            }
+
+            _context.SurveyTaker.Add(taker);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Success!" });
+        }
+
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult GetAllSurveys(string uid) {
+            var surveys = _context.Survey;
+
             return Ok(surveys);
         }
 
@@ -79,7 +137,6 @@ namespace MindOverMapper_Movim.Controllers
             surv.DateCreated = DateTime.Now;
             surv.Questions = req.Questions;
             surv.Status = req.Status;
-            surv.EndDate = req.EndDate;
 
             _context.SaveChanges();
             return Ok(new { message = "Success!" });
@@ -96,6 +153,7 @@ namespace MindOverMapper_Movim.Controllers
             }
 
             surv.Status = req.Status;
+            surv.EndDate = req.EndDate;
 
             _context.SaveChanges();
             return Ok(new { message = "Success!" });
@@ -121,11 +179,11 @@ namespace MindOverMapper_Movim.Controllers
             survey.DateCreated = DateTime.Now;
             survey.Questions = req.Questions;
             survey.Status = req.Status;
-            survey.EndDate = req.EndDate;
 
            _context.Survey.Add(survey);
            _context.SaveChanges();
-           return Ok();
+
+            return Ok(new { message = "Success!" });
         }
 
         [Authorize]
@@ -148,6 +206,8 @@ namespace MindOverMapper_Movim.Controllers
 
             return Ok(questions);
         }
+
+
 
         //[Authorize]
         //[HttpPost("/turk")]

@@ -98,6 +98,20 @@ export default class ProjectLandingPage extends Component {
         });
     }
 
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navLogout = () => {
+        this.props.history.push({
+            pathname: '/',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
     render() {
         return (
             <div class="landing-page-container">
@@ -114,7 +128,7 @@ export default class ProjectLandingPage extends Component {
                     <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home">
+                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
@@ -125,50 +139,46 @@ export default class ProjectLandingPage extends Component {
 
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="project">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                            </NavIcon>
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                Add Project
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="settings">
+                        <NavItem expanded="true" role="menuitem" eventKey="project">
                             <NavIcon>
                                 <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
-
                             <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                Settings
+                                Project Options
                             </NavText>
-
+                            <NavItem eventKey="options" onClick={() => this.navProject()}>
+                                <NavText style={{ color: "#0283C4" }} id="subnav">
+                                    Project Home
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options"  onClick={this.pushToResearch}>
+                                <NavText id="subnav">
+                                    Research
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToConcepts}>
+                                <NavText id="subnav">
+                                    Concepts
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToMindMap}>
+                                <NavText id="subnav">
+                                    Mind Map
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToPrototypes}>
+                                <NavText id="subnav">
+                                    Prototypes
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToSurveys}>
+                                <NavText id="subnav">
+                                    Surveys
+                                </NavText>
+                            </NavItem>
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="info">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                About
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="help">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
-                                Help
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="logout">
+                        <NavItem role="menuitem" eventKey="logout" onClick={() => this.navLogout()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>

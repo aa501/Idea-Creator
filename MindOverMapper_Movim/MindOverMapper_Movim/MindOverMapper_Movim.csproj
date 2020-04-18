@@ -53,6 +53,10 @@
     <Compile Remove="AzureFileService.cs" />
     <Compile Remove="Migrations\20200405181101_Survey.cs" />
     <Compile Remove="Migrations\20200405181101_Survey.Designer.cs" />
+    <Compile Remove="Migrations\20200416211817_QDemo.cs" />
+    <Compile Remove="Migrations\20200416211817_QDemo.Designer.cs" />
+    <Compile Remove="Migrations\20200417222308_Slight1.cs" />
+    <Compile Remove="Migrations\20200417222308_Slight1.Designer.cs" />
     <None Remove="Controllers\PrototypeController.cs" />
     <None Remove="Migrations\20200413213250_prototype-files.cs" />
     <None Remove="Models\ConceptSurvey.cs" />
