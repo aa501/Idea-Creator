@@ -1,14 +1,14 @@
 @import url(https://fonts.googleapis.com/css?family=Exo+2:400,700,500,300);
 
 #prototype-container {
-    width: 80%;
+    width: 100%;
     overflow-y: scroll;
     height: 89vh;
     max-height: 89vh;
     padding-bottom: 1vh;
 }
 #prototype-main-content{
-    margin-left: 27%;
+    margin-left: 17%;
     margin-top: 3%;
 }
 .project-creator-container {
@@ -16,7 +16,6 @@
     flex-direction: column;
     width: 100%;
 }
-
 .blue-card-container {
     width: 100%;
     overflow-y: scroll;
@@ -66,12 +65,11 @@
     height: 45vh;
 }
 
-#project-definition-holder {
+#prototype-definition-holder {
     display: flex;
     flex-direction: row;
     margin-left: 5%;
     margin-right: 5%;
-    width: 90%;
     height: 100vh;
 }
 

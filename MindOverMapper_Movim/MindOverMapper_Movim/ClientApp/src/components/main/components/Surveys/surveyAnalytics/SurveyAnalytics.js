@@ -24,8 +24,10 @@ export default class SurveyAnalytics extends Component {
         projectName: this.props.location.state.projectName,
         analyzedSurvey: this.props.location.state.analyzedSurvey,
         loading: '',
+        numResponses: 0,
         responses: [],
         subjects: [],
+        answerCorrelations: [],
         qualitatives: [],
         quantitatives: [],
         uniqueAnswers: [],
@@ -65,10 +67,13 @@ export default class SurveyAnalytics extends Component {
   processResponses = () => {
     var uniqueAnswers = [];
     var averages = [];
+    var uniqueResponseIds = [];
     const responses = this.state.responses;
     const qualitatives = this.state.qualitatives;
     const quantitatives = this.state.quantitatives;
+    const answerCorrelations = this.state.answerCorrelations;
     var frequencyCheck = 0;
+    var numResponses = this.state.numResponses;
 
     var qualIds = [];
     var quantIds = [];
@@ -86,6 +91,12 @@ export default class SurveyAnalytics extends Component {
       responses.forEach(function(response) {
 
         if (qualIds.includes(response.qid)) {
+            var aCAnswer = {
+              takerUid: response.surveyTakerUid,
+              question: response.qid,
+              answer: response.answer
+            };
+            answerCorrelations.push(aCAnswer);
             var found = uniqueAnswers.find(ans => ans.answer === response.answer);
             if (found) {
               console.log(response);
@@ -96,7 +107,6 @@ export default class SurveyAnalytics extends Component {
               var newAnswer = {
                   question: response.qid,
                   answer: response.answer,
-                  takerId: response.SurveyTakerUid,
                   frequency: 1
                 };
               uniqueAnswers.push(newAnswer);
@@ -105,6 +115,12 @@ export default class SurveyAnalytics extends Component {
         }
 
         else if (quantIds.includes(response.qid)) {
+            var aCAnswer = {
+              takerUid: response.surveyTakerUid,
+              question: response.qid,
+              answer: parseInt(response.answer)
+            };
+            answerCorrelations.push(aCAnswer);
             var found = averages.find(ans => ans.answer === parseInt(response.answer));
             if (found) {
               console.log(response);
@@ -115,7 +131,6 @@ export default class SurveyAnalytics extends Component {
               var newAnswer = {
                   question: response.qid,
                   answer: parseInt(response.answer),
-                  takerId: response.SurveyTakerUid,
                   frequency: 1
                 };
               averages.push(newAnswer);
@@ -123,9 +138,20 @@ export default class SurveyAnalytics extends Component {
             frequencyCheck += 1;
         }
 
+        else {
+          console.log("Question could not be organized.")
+        }
+
+      });
+
+      responses.forEach(function(res) {
+         if (!uniqueResponseIds.includes(res.surveyTakerUid)) {
+           uniqueResponseIds.push(res.surveyTakerUid);
+           numResponses+=1;
+         }
       });
       console.log("Total Frequency: " + frequencyCheck)
-      this.setState({ uniqueAnswers, averages }, () => (this.checkPopulations()));
+      this.setState({ uniqueAnswers, averages, answerCorrelations, numResponses }, () => (this.checkPopulations()));
     }
   }
 
@@ -134,6 +160,10 @@ export default class SurveyAnalytics extends Component {
     console.log(this.state.uniqueAnswers);
     console.log("Averages");
     console.log(this.state.averages);
+    console.log("Total Correlations");
+    console.log(this.state.answerCorrelations);
+    console.log("Number of Responses");
+    console.log(this.state.numResponses);
   }
 
   getSurveyResponses = async () => {

@@ -60,7 +60,7 @@ namespace MindOverMapper_Movim.Controllers
             Prototype prototype = new Prototype();
             prototype.ProjectId = Project.Id;
             prototype.PrototypeName = req.PrototypeName;
-            prototype.PrototypeDescription = req.PrototypeName;
+            prototype.PrototypeDescription = req.PrototypeDescription;
             prototype.Uid = Guid.NewGuid().ToString();
             prototype.PrototypePath = Newtonsoft.Json.JsonConvert.SerializeObject(filePaths);
             var result = _context.Prototype.Add(prototype);
@@ -68,7 +68,7 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(prototype);
 
         }
-        
+
         [Authorize]
         [HttpGet("{uid}")]
         public ActionResult getPrototypes(string uid)

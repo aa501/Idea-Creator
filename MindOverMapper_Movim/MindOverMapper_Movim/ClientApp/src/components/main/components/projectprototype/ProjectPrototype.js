@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 import TextField from '@material-ui/core/TextField';
-import { Dialog, Card, CardContent } from '@material-ui/core';
+import { Dialog, Card, CardContent, TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -268,9 +268,39 @@ export default class ProjectPrototype extends Component {
                         <h3 id="subtitle">Prototypes</h3>
                         <hr style={{ width: "30%" }} id="hr-1" />
                     </div>
+                    <div align="center">
+                    <TableContainer style={{ width: "80%" }} component={Paper}>
+                      <Table size="small" aria-label="a dense table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Description</TableCell>
+                            <TableCell></TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          { this.state.prototypes.map((Item) => (
+                              <TableRow>
+                                  <TableCell style={{maxWidth:"130px", wordWrap: 'break-word'}}>{Item.prototypeName}</TableCell>
+                                  <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{Item.prototypeDescription}</TableCell>
+                                  <TableCell style={{maxWidth:"70px"}}>{this.projectPaths(Item).map(file =>
+                                                   <a href="javascript:void(0);" onClick={() => { this.downloadFile(file) }}><Button>Download</Button></a>)
+                                             }</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      </div>
+                      <div>
+                      <p></p>
+                          <h5 id="subtitle">Add Prototype</h5>
+                          <hr style={{ width: "30%" }} id="hr-1" />
+                      </div>
+                      <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
                         <Container>
-                        <div className='project-definition-holder'>
-                            <TextField
+                        <div className='prototype-definition-holder'>
+                            <TextField style={{width: "400px"}}
                                 value={this.state.prototypetName}
                                 onChange={this.handlePrototypeNameChange}
                                 label="Name"
@@ -279,8 +309,8 @@ export default class ProjectPrototype extends Component {
                                 variant="outlined">
                             </TextField>
                         </div>
-                        <div className='project-definition-holder'>
-                            <TextField
+                        <div className='prototype-definition-holder'>
+                            <TextField style={{width: "400px"}}
                                 value={this.state.prototypeDescription}
                                 onChange={this.handlePrototypeDescriptionChange}
                                 label="Description"
@@ -291,7 +321,7 @@ export default class ProjectPrototype extends Component {
                                  variant="outlined">
                             </TextField>
                         </div>
-                    <h4>Upload your files</h4>
+
                     <div className = "zone">
                     <Dropzone onDrop={this.onDrop} multiple>
                         {({ getRootProps, getInputProps, isDragActive, acceptedFiles}) => (
@@ -309,26 +339,11 @@ export default class ProjectPrototype extends Component {
                             )}
                         </Dropzone>
                     </div>
-                    <Button variant="primary" type="submit" onClick={this.submitPrototype}>Upload</Button>
-                    <Row>
-                        {
-                            this.state.prototypes.map(Item =>
-                                <Card>
-                                    <CardTitle>{Item.PrototypeName}</CardTitle>
-                                    <CardContent>{Item.Description}
-                                        <ul>
-                                            { this.projectPaths(Item).map(file =>
-                                                <li><a href="javascript:void(0);" onClick={() => { this.downloadFile(file) }}>{file}</a></li>
-                                            )
-                                            }
-                                        </ul>
-                                    </CardContent>
-
-                                </Card>
-                            )
-                        }
-                    </Row>
+                    <div>
+                    <Button style={{width: "100px", marginTop: "10px"}} variant="primary" type="submit" onClick={this.submitPrototype}>Upload</Button>
+                    </div>
                 </Container>
+                </div>
           </div>
           </div>
         );
