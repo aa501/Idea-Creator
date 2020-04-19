@@ -72,9 +72,9 @@ namespace MindOverMapper_Movim.Surveys
             Qualification qualification = new Qualification();
             qualification.QualificationTypeId = "00000000000000000071";
             QualificationType qType = new QualificationType();
-            
-            }
-            return "hello";
+
+            return "string";
+           
         }
     }
 }

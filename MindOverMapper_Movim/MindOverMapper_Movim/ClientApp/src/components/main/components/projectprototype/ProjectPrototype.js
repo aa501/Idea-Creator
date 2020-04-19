@@ -111,6 +111,7 @@ export default class ProjectPrototype extends Component {
 
     downloadFile = (file) => {
         axios.get('/api/prototype/file/' + file, {
+            responseType: 'arraybuffer',
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token,
                 'Content-Type': 'text/html'

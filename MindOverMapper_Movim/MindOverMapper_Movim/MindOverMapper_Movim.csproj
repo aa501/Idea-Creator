@@ -57,6 +57,7 @@
     <Compile Remove="Migrations\20200416211817_QDemo.Designer.cs" />
     <Compile Remove="Migrations\20200417222308_Slight1.cs" />
     <Compile Remove="Migrations\20200417222308_Slight1.Designer.cs" />
+    <Compile Remove="Models\iso3166_2.cs" />
     <None Remove="Controllers\PrototypeController.cs" />
     <None Remove="Migrations\20200413213250_prototype-files.cs" />
     <None Remove="Models\ConceptSurvey.cs" />
@@ -89,6 +90,11 @@
     <None Include="**/*" />
     <None Include="**/*" />
     <None Include="**/*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Models\iso3166.cs" />
+    <None Remove="Models\TurkQualificationType.cs" />
   </ItemGroup>
 
   <ItemGroup>
