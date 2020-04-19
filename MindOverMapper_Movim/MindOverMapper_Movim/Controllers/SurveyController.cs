@@ -219,6 +219,14 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(takers);
         }
 
+        [Authorize]
+        [HttpGet("all-responses")]
+        public ActionResult GetResponses(string uid)
+        {
+            var responses = _context.SurveyAnswer;
+            return Ok(responses);
+        }
+
         //[Authorize]
         //[HttpPost("/turk")]
         //public ActionResult TurkSurvey([FromBody]CreateTurkSurveyRequest req)

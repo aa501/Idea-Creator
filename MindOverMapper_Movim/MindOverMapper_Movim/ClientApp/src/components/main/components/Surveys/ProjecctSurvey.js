@@ -60,6 +60,9 @@ export default class ProjectSurvey extends Component {
         projectName: this.props.location.state.projectName,
         specificSurveys: [],
         analyzedSurvey: [],
+        responseGroups: [],
+        responses: [],
+        surveyTakers: [],
         validDate: false,
         closeCheck: false,
     }
@@ -70,18 +73,20 @@ export default class ProjectSurvey extends Component {
       await this.runDataRetrieval();
     }
 
-  returnToDashboard = () => {
-    this.props.history.push({
-      pathname: '/home',
-      state: { userData: this.state.userData } // need this for moving to different component
-  });
-  }
+    returnToDashboard = () => {
+      this.props.history.push({
+        pathname: '/home',
+        state: { userData: this.state.userData } // need this for moving to different component
+    });
+    }
 
     runDataRetrieval = async () => {
       await this.getSurveys();
+      await this.getSurveyResponses();
     }
 
     getSurveys = () => {
+      const responseGroups = this.state.responseGroups;
       axios.get('/api/survey/' + this.state.projectName.uid, {
           headers: {
               Authorization: 'Bearer ' + this.state.userData.token
@@ -93,6 +98,55 @@ export default class ProjectSurvey extends Component {
           this.checkEndDates(response.data);
         });
     }
+
+    getSurveyResponses = async () => {
+        const response = await axios.get(`/api/survey/all-responses`, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+            }
+        }).then(response => {
+            response = response.data;
+            this.setState({
+                responses: response
+          }, () => (this.organizeResponses()));
+      });
+    }
+
+    organizeResponses = async () => {
+      var group;
+      const specificSurveys = this.state.specificSurveys;
+      const responseGroups = this.state.responseGroups;
+      specificSurveys.forEach(function(survey) {
+        group = {
+          surveyUid: survey.uid,
+          responses: 0
+        };
+        responseGroups.push(group);
+      });
+      const responses = this.state.responses;
+      responses.forEach(function(res) {
+        var found = responseGroups.find(grp => grp.surveyUid === res.uid)
+        if (found) {
+          group.responses += 1
+        }
+      });
+      this.setState({ responseGroups });
+    }
+
+    getResponseCount = async (surveyUid) => {
+      return 0
+      // const responseGroups = this.state.responseGroups;
+      // if (surveyUid) {
+      //   var found = responseGroups.find(grp => grp.surveyUid === surveyUid)
+      //   console.log(found)
+      //   return 1
+      // }
+      // else {
+      //   return 0
+      // }
+    }
+
+
 
     checkEndDates = (surveys) => {
       console.log("Running...")
