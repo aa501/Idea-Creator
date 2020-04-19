@@ -6,5 +6,11 @@
 
 #submit-survey{
   height: 40px;
-  width: 100px;
+  margin-left: 10px;
+  width: 175px;
+}
+
+.ToggleButton{
+  width: 50px;
+  border-color: black;
 }

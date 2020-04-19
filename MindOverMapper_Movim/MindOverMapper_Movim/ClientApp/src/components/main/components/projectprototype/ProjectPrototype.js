@@ -12,6 +12,7 @@ import { Container, Form, Button, FormGroup} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
+import * as FileSaver from 'file-saver';
 import './ProjectPrototype.css';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
@@ -111,6 +112,7 @@ export default class ProjectPrototype extends Component {
 
     downloadFile = (file) => {
         axios.get('/api/prototype/file/' + file, {
+            responseType: 'arraybuffer',
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token,
                 'Content-Type': 'text/html'
@@ -118,10 +120,9 @@ export default class ProjectPrototype extends Component {
             }
         })
             .then(response => {
-                let blob = new Blob([response.data]),
-                    url = window.URL.createObjectURL(blob)
 
-                window.open(url)
+                let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
+                FileSaver.saveAs(downloadedFile, file);
             });
     }
 
@@ -166,7 +167,7 @@ export default class ProjectPrototype extends Component {
             state: this.state  // need this for moving to different component
         });
     }
-    
+
     navLogout = () => {
         this.props.history.push({
             pathname: '/',

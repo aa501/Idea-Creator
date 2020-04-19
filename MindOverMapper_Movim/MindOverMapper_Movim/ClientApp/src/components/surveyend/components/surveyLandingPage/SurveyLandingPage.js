@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import { RadioGroup, FormControlLabel, Radio, Checkbox, FormControl, FormLabel } from '@material-ui/core';
+import { RadioGroup, FormControlLabel, Radio, Checkbox, FormControl, FormLabel, CircularProgress } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import Grid from '@material-ui/core/Grid';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
@@ -22,6 +22,11 @@ import './SurveyLandingPage.css';
 const useStyles = makeStyles(theme => ({
   toggleContainer: {
     margin: theme.spacing(2, 0),
+  },
+
+  toggleStyles: {
+    borderColor: 'rgb(51, 153, 255)',
+    width: '50px'
   },
 
   root: {
@@ -50,12 +55,15 @@ export default class SurveyLandingPage extends Component {
         this.state = {
             subQuestion: '',
             qstType: '',
+            survey: [],
             answers: [],
             ratings: [],
             questions: [],
+            electedQuestions: [],
             checkedHold: [],
-            surveyCode: 'IP',
+            surveyCode: '',
             retrieved: false,
+            completed: false,
             length: 0,
             demographics: '',
         }
@@ -69,18 +77,27 @@ export default class SurveyLandingPage extends Component {
     /* Todo: Change controller to pull only relevant questions based on a unique survey code.
        Requirements: Change api link in both this file and the controller with {uid} */
     getSurvey = async () => {
+        this.setLoading(true);
         const response = await axios.get(`/api/survey/${this.state.surveyCode}/retrieve`, {
         }).then(response => {
-            response = response.data;
+          response = response.data;
+          if (response.length > 0) {
             this.setState({
                 survey: response[0],
             }, () => (this.verifySurvey()));
-        }).catch(() => {
+          }
+          else {
+            this.openErrorModal();
+            this.setState({
+              errorMessage: 'No survey was found with that code.'
+            }, () => (this.setLoading(false)));
+          }
+      }).catch(() => {
           this.openErrorModal();
           this.setState({
             errorMessage: 'Error loading survey. Please contact your system administrator.'
           });
-        });;
+        });
     }
 
     verifySurvey = async () => {
@@ -102,10 +119,12 @@ export default class SurveyLandingPage extends Component {
     getQuestions = () => {
       console.log("running");
       const survey = this.state.survey;
-      const questions = JSON.parse(survey.questions);
+      var questions = JSON.parse(survey.questions);
+      var electedQuestions = questions.sort((a, b) => (a.demographic > b.demographic) ? -1 : 1)
 
-      this.setState({ questions, retrieved: true, length: questions.length }, () =>
-      (console.log("Question length: " + this.state.questions.length)));
+      this.setState({ questions, electedQuestions, retrieved: true, length: electedQuestions.length }, () =>
+      (console.log("Question length: " + this.state.electedQuestions.length)));
+      this.setLoading(false);
     }
 
     getPrototypes = () => {
@@ -114,20 +133,39 @@ export default class SurveyLandingPage extends Component {
 
     /* Submits answer list to the controller */
     submitAnswers = async () => {
+        var completedAnswerCount = 0
+        const answers = this.state.answers;
+        answers.forEach(function(answer) {
+          if (answer.replace(/\s/g, '').length && answer != null)
+          completedAnswerCount += 1;
+        })
+        console.log(completedAnswerCount)
 
-        axios.post(`/api/survey/post-answers`,
-              {
-                  'surveyUid': this.state.survey.uid,
-                  'answerList': this.state.answers,
-                  'turk': false,
-                  'demographics': this.state.demographics
-              },
-        ).then(this.handleOpenOldQuestionModal).catch(() => {
+        if (completedAnswerCount == this.state.electedQuestions.length)
+        {
+            axios.post(`/api/survey/post-answers`,
+                  {
+                      'surveyUid': this.state.survey.uid,
+                      'answerList': this.state.answers,
+                      'turk': false,
+                      'demographics': this.state.demographics
+                  },
+            ).then(() => {
+                this.reset();
+            }).catch(() => {
+              this.openErrorModal();
+              this.setState({
+                errorMessage: 'Survey could not be submitted.'
+              });
+            });
+        }
+
+        else {
           this.openErrorModal();
           this.setState({
-            errorMessage: 'Before submitting we need to figure out our survey submission plans'
+            errorMessage: 'Not all questions have been answered.'
           });
-        });
+        }
       }
 
     /* Calls two functions to handle the rating React element and add the answer to the answers array */
@@ -182,6 +220,53 @@ export default class SurveyLandingPage extends Component {
       });
     }
 
+    handleCloseSuccessModal = () => {
+      this.setState({
+          successModal: false
+      });
+    }
+
+    openSuccessModal = () => {
+      this.setState({
+          successModal: true
+      });
+    }
+
+    handleOpenConfirmationModal = () => {
+      this.setState({
+        confirmationModal: true
+      });
+    }
+
+    handleCloseConfirmationModal = () => {
+      this.setState({
+        confirmationModal: false
+      });
+    }
+
+    setLoading = (value) => {
+      this.setState({ loading: value })
+    }
+
+    reset = () => {
+      this.setState({
+        subQuestion: '',
+        qstType: '',
+        answers: [],
+        survey: [],
+        ratings: [],
+        questions: [],
+        electedQuestions: [],
+        checkedHold: [],
+        surveyCode: '',
+        successModal: false,
+        retrieved: false,
+        completed: true,
+        length: 0,
+        demographics: '',
+      });
+    }
+
     /* Updates the values for all check boxes in a check all answer group  */
     handleChecked(event, i) {
       const item = event.target.name;
@@ -222,6 +307,14 @@ export default class SurveyLandingPage extends Component {
 
     /* Renders the HTML for each question type  */
     renderQuestion(qsn) {
+
+        const toggleStyles = {
+          width: "50px",
+          textColor: "rgb(51, 153, 255)",
+          borderWidth: "2px",
+          borderColor: "rgb(51, 153, 255)"
+        };
+
       var type = qsn.type;
       if (type === "Text" || type === "Concept") {
         return(
@@ -268,17 +361,17 @@ export default class SurveyLandingPage extends Component {
                   exclusive
                   onChange={(event) => this.handleRatingMaster(event, `${qsn.id}`)}
                   aria-label="text alignment">
-                    <ToggleButton key={0} style={{ width: "50px" }} value="0">0</ToggleButton>
-                    <ToggleButton key={1} style={{ width: "50px" }} value="1">1</ToggleButton>
-                    <ToggleButton key={2} style={{ width: "50px" }} value="2">2</ToggleButton>
-                    <ToggleButton key={3} style={{ width: "50px" }} value="3">3</ToggleButton>
-                    <ToggleButton key={4} style={{ width: "50px" }} value="4">4</ToggleButton>
-                    <ToggleButton key={5} style={{ width: "50px" }} value="5">5</ToggleButton>
-                    <ToggleButton key={6} style={{ width: "50px" }} value="6">6</ToggleButton>
-                    <ToggleButton key={7} style={{ width: "50px" }} value="7">7</ToggleButton>
-                    <ToggleButton key={8} style={{ width: "50px" }} value="8">8</ToggleButton>
-                    <ToggleButton key={9} style={{ width: "50px" }} value="9">9</ToggleButton>
-                    <ToggleButton key={10} style={{ width: "50px" }} value="10">10</ToggleButton>
+                    <ToggleButton key={0} style={ toggleStyles } value="0"><b>0</b></ToggleButton>
+                    <ToggleButton key={1} style={ toggleStyles } value="1"><b>1</b></ToggleButton>
+                    <ToggleButton key={2} style={ toggleStyles } value="2"><b>2</b></ToggleButton>
+                    <ToggleButton key={3} style={ toggleStyles } value="3"><b>3</b></ToggleButton>
+                    <ToggleButton key={4} style={ toggleStyles } value="4"><b>4</b></ToggleButton>
+                    <ToggleButton key={5} style={ toggleStyles } value="5"><b>5</b></ToggleButton>
+                    <ToggleButton key={6} style={ toggleStyles } value="6"><b>6</b></ToggleButton>
+                    <ToggleButton key={7} style={ toggleStyles } value="7"><b>7</b></ToggleButton>
+                    <ToggleButton key={8} style={ toggleStyles } value="8"><b>8</b></ToggleButton>
+                    <ToggleButton key={9} style={ toggleStyles } value="9"><b>9</b></ToggleButton>
+                    <ToggleButton key={10} style={ toggleStyles } value="10"><b>10</b></ToggleButton>
                 </ToggleButtonGroup>
               </div>
               </Grid>
@@ -356,11 +449,47 @@ export default class SurveyLandingPage extends Component {
       }
     }
 
+    renderSurvey () {
+
+      if (this.state.survey) {
+          return (
+          <div class="d-flex align-content-justify flex-column">
+                  <div align="center"><h3>Survey Question View</h3></div>
+                  <hr />
+                  {this.state.survey.notes}
+                <p></p>
+                  <Container>
+                  <div>
+                      {
+                          this.state.electedQuestions.map(qsn => (
+                          <div>
+                                  <div key={`q${qsn.type},${qsn.id}`}>{qsn.text}</div>
+                                  {this.renderQuestion(qsn)}
+                                  <p><hr id="hr-3" /></p>
+
+                          </div>
+                      ))
+                      }
+                  </div>
+                  </Container>
+                  <Container>
+                    <div class="d-flex align-content-justify flex-column">
+                      <div align="right">
+                      <Button color='danger' id='submit-survey' onClick={this.handleOpenConfirmationModal}><FontAwesomeIcon icon="times" /> Cancel Response</Button>
+                      <Button color='success' id='submit-survey' onClick={this.submitAnswers}><FontAwesomeIcon icon="angle-double-right" /> Submit Response</Button>
+                      </div>
+                    </div>
+                  </Container>
+            </div>
+          )
+        }
+    }
+
     render() {
 
         return (
           <div style={{width: "100%"}}>
-              <div hidden={this.state.retrieved} class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+              <div hidden={this.state.retrieved || this.state.completed} class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
 
                   <Container>
                       <div align="center" class="d-flex align-content-justify flex-column">
@@ -368,43 +497,27 @@ export default class SurveyLandingPage extends Component {
                           <hr />
                           <h5>Enter your unique Survey code here:</h5>
 
-                          <div align="center"><TextField variant="outlined" value={this.state.surveyCode} onChange={this.handleSurveyCode} inputProps={{ style: {textAlign: 'center', width: "300px"} }}/>
+                          <div align="center"><TextField variant="outlined" placeholder='IP0000000' value={this.state.surveyCode} onChange={this.handleSurveyCode} inputProps={{ style: {textAlign: 'center', width: "300px"} }}/>
                           <Button id="submit-code" color="primary" onClick={this.getSurvey}>Take Survey</Button></div>
 
                       </div>
                   </Container>
               </div>
 
-                <div hidden={!this.state.retrieved} class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
-                  <div class="d-flex align-content-justify flex-column">
-                          <div align="center"><h3>Survey Question View</h3></div>
-                          <hr />
-                        <p></p>
-                          <Container>
-                          <div>
-                              {
-                                  this.state.questions.map(qsn => (
-                                  <div>
-                                          <div key={`q${qsn.type},${qsn.id}`}>{qsn.text}</div>
-                                          {this.renderQuestion(qsn)}
-                                          <p><hr id="hr-3" /></p>
+                <div hidden={this.state.completed || !this.state.retrieved} class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+                  {this.renderSurvey()}
+                </div>
 
-                                  </div>
-                              ))
-                              }
-                          </div>
-                          </Container>
-                          <Container>
-                            <div class="d-flex align-content-justify flex-column">
-                              <div align="right">
-                              <Button color='success' id='submit-survey' onClick={this.submitAnswers}><FontAwesomeIcon icon="angle-double-right" /> Submit</Button>
-                              </div>
-                            </div>
-                          </Container>
-                    </div>
-
-
-                    </div>
+                <div hidden={!this.state.completed} class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+                    <Container>
+                        <div align="center" class="d-flex align-content-justify flex-column">
+                            <h3>Thank you for your response!</h3>
+                            <hr />
+                            <h5>Click here to take another survey:</h5>
+                            <div width="100px"><Button id="submit-code" color="primary" onClick={() => window.location.reload(false)}>Take a New Survey</Button></div>
+                        </div>
+                    </Container>
+                </div>
 
                   <div>
                     <Dialog
@@ -425,6 +538,52 @@ export default class SurveyLandingPage extends Component {
                       </DialogActions>
                     </Dialog>
                   </div>
+
+                  <div>
+                    <Dialog
+                      open={this.state.successModal}
+                      TransitionComponent={Transition}
+                      keepMounted
+                      maxWidth='lg'
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle id="responsibe-alert-dialog-slide-title">
+                        {this.state.successMessage}
+                      </DialogTitle>
+                      <DialogActions>
+                        <Button onClick={this.reset} color="primary">
+                          Close
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
+
+                  <div>
+                    <Dialog
+                      open={this.state.confirmationModal}
+                      TransitionComponent={Transition}
+                      keepMounted
+                      maxWidth='lg'
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle id="responsibe-alert-dialog-slide-title">
+                        Are you sure you want cancel your response?
+                      </DialogTitle>
+                      <DialogActions>
+                        <Button onClick={this.handleCloseConfirmationModal} color="primary">Continue with Survey</Button>
+                        <Button onClick={() => window.location.reload(false)} color="danger">Cancel Response</Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
+
+                  <Dialog open={this.state.loading}
+                      style={{backgroundColor: 'transparent'}}
+                      maxWidth="lg">
+                      <div style={{overflow: 'hidden'}}>{"   "}<CircularProgress/>{"   "}</div>
+                  </Dialog>
+
               </div>
 
 
