@@ -22,7 +22,151 @@ export default class SurveyAnalytics extends Component {
     this.state = {
       userData: this.props.location.state.userData || this.props.userData,
         projectName: this.props.location.state.projectName,
-        analyzedSurvey: this.props.location.state.analyzedSurvey
+        analyzedSurvey: this.props.location.state.analyzedSurvey,
+        loading: '',
+        responses: [],
+        subjects: [],
+        qualitatives: [],
+        quantitatives: [],
+        uniqueAnswers: [],
+        averages: [],
+    }
+  }
+
+  componentDidMount = async () => {
+    console.log(this.props);
+    this.setLoading(true);
+    await this.getSurveyResponses();
+    await this.getSubjects();
+    await this.assembleQuestions();
+    this.setLoading(false);
+  }
+
+  assembleQuestions = () => {
+    const survey = this.state.analyzedSurvey;
+    const questions = JSON.parse(survey.questions);
+    var qualitatives = [];
+    var quantitatives = [];
+
+    this.setState({ questions });
+
+    questions.forEach(function(qsn) {
+      if (qsn.type == "Rating") {
+        quantitatives.push(qsn);
+      }
+      else {
+        qualitatives.push(qsn);
+      }
+    });
+
+    this.setState({ qualitatives, quantitatives }, () => this.processResponses());
+  }
+
+  processResponses = () => {
+    var uniqueAnswers = [];
+    var averages = [];
+    const responses = this.state.responses;
+    const qualitatives = this.state.qualitatives;
+    const quantitatives = this.state.quantitatives;
+    var frequencyCheck = 0;
+
+    var qualIds = [];
+    var quantIds = [];
+
+    qualitatives.forEach(function(qual) {
+      qualIds.push(qual.id);
+    });
+
+    quantitatives.forEach(function(quant) {
+      quantIds.push(quant.id);
+    });
+
+    if (responses.length)
+    {
+      responses.forEach(function(response) {
+
+        if (qualIds.includes(response.qid)) {
+            var found = uniqueAnswers.find(ans => ans.answer === response.answer);
+            if (found) {
+              console.log(response);
+              var foundId = uniqueAnswers.indexOf(found);
+              uniqueAnswers[foundId].frequency += 1
+              }
+            else {
+              var newAnswer = {
+                  question: response.qid,
+                  answer: response.answer,
+                  takerId: response.SurveyTakerUid,
+                  frequency: 1
+                };
+              uniqueAnswers.push(newAnswer);
+            }
+            frequencyCheck += 1;
+        }
+
+        else if (quantIds.includes(response.qid)) {
+            var found = averages.find(ans => ans.answer === parseInt(response.answer));
+            if (found) {
+              console.log(response);
+              var foundId = averages.indexOf(found);
+              averages[foundId].frequency += 1
+              }
+            else {
+              var newAnswer = {
+                  question: response.qid,
+                  answer: parseInt(response.answer),
+                  takerId: response.SurveyTakerUid,
+                  frequency: 1
+                };
+              averages.push(newAnswer);
+            }
+            frequencyCheck += 1;
+        }
+
+      });
+      console.log("Total Frequency: " + frequencyCheck)
+      this.setState({ uniqueAnswers, averages }, () => (this.checkPopulations()));
+    }
+  }
+
+  checkPopulations = () => {
+    console.log("Unique Answers");
+    console.log(this.state.uniqueAnswers);
+    console.log("Averages");
+    console.log(this.state.averages);
+  }
+
+  getSurveyResponses = async () => {
+    var uid = this.state.analyzedSurvey.uid;
+    if (uid != null) {
+        console.log(uid);
+        const response = await axios.get(`/api/survey/${uid}/responses`, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+            }
+        }).then(response => {
+            response = response.data;
+            this.setState({
+                responses: response
+            }, () => (console.log(this.state.responses)));
+        });
+    }
+  }
+
+  getSubjects = async () => {
+    var uid = this.state.analyzedSurvey.uid;
+    if (uid != null) {
+        console.log(uid);
+        const response = await axios.get(`/api/survey/${uid}/takers`, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+            }
+        }).then(response => {
+            response = response.data;
+            this.setState({
+                subjects: response
+            }, () => (console.log(this.state.subjects)));
+        });
     }
   }
 
@@ -41,17 +185,15 @@ export default class SurveyAnalytics extends Component {
     }
 
     navBack = () => {
-    this.props.history.push({
-        pathname: '/surveys',
-        state: this.state  // need this for moving to different component
-         });
+      this.props.history.push({
+          pathname: '/surveys',
+          state: this.state  // need this for moving to different component
+           });
     }
 
-    getSurveyResponses = () => {
-      
+    setLoading = (value) => {
+      this.setState({ loading: value })
     }
-
-
 
   render() {
       return (
@@ -115,12 +257,13 @@ export default class SurveyAnalytics extends Component {
 
               </div>
 
-
-
-
-
-
-         </div>)
+              <Dialog open={this.state.loading}
+                style={{backgroundColor: 'transparent'}}
+                maxWidth="lg">
+                <div style={{overflow: 'hidden'}}>{"   "}<CircularProgress/>{"   "}</div>
+              </Dialog>
+         </div>
+       )
     }
 
 }
