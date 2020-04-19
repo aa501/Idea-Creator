@@ -47,6 +47,10 @@ export default class SurveyAnalytics extends Component {
          });
     }
 
+    getSurveyResponses = () => {
+      
+    }
+
 
 
   render() {
@@ -79,7 +83,7 @@ export default class SurveyAnalytics extends Component {
                           <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                               Back to Surveys
                         </NavText>
-                      </NavItem>                    
+                      </NavItem>
                       <NavItem role="menuitem" eventKey="logout" onClick={() => this.navLogout()}>
                           <NavIcon>
                               <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
@@ -97,11 +101,11 @@ export default class SurveyAnalytics extends Component {
 
                   <h3 id="survey-name" >"Survey-Name"</h3>
                   <hr id="hr-1" />
-                  <div id="surveyID">                                         
-                          <h6>Unique ID: 123456</h6>                  
+                  <div id="surveyID">
+                          <h6>Unique ID: 123456</h6>
                   </div>
-                  <div id="status" style={{marginTop: "25px", marginBottom: "35px"}}>                 
-                          <h4 id="status-text">Status: <h4 style={{ color: "green" }}><strong>Complete</strong></h4></h4>                   
+                  <div id="status" style={{marginTop: "25px", marginBottom: "35px"}}>
+                          <h4 id="status-text">Status: <h4 style={{ color: "green" }}><strong>Complete</strong></h4></h4>
                   </div>
 
                   <div id="results">
@@ -110,10 +114,10 @@ export default class SurveyAnalytics extends Component {
                   </div>
 
               </div>
-                  
-                  
 
-          
+
+
+
 
 
          </div>)

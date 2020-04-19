@@ -16,7 +16,6 @@ import * as FileSaver from 'file-saver';
 import './ProjectPrototype.css';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import * as FileSaver from 'file-saver';
 
 export default class ProjectPrototype extends Component {
     constructor(props) {

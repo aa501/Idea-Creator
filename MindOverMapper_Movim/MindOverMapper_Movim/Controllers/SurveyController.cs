@@ -203,7 +203,21 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(questions);
         }
 
+        [Authorize]
+        [HttpGet("{uid}/responses")]
+        public ActionResult GetResponses(string uid)
+        {
+            var responses = _context.SurveyAnswer.Where(a => a.SurveyUid == uid);
+            return Ok(responses);
+        }
 
+        [Authorize]
+        [HttpGet("{uid}/takers")]
+        public ActionResult GetTakers(string uid)
+        {
+            var takers = _context.SurveyAnswer.Where(a => a.SurveyUid == uid);
+            return Ok(takers);
+        }
 
         //[Authorize]
         //[HttpPost("/turk")]
