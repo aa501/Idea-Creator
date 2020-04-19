@@ -478,7 +478,7 @@ namespace MindOverMapper_Movim.Models
                     .HasColumnName("turk")
                     .HasDefaultValue(false);
 
-                entity.Property(e => e.SurveyUid)
+                entity.Property(e => e.Notes)
                     .HasColumnName("notes")
                     .HasMaxLength(50)
                     .IsUnicode(false);

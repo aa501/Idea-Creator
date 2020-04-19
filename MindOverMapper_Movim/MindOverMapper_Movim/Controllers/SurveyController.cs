@@ -83,29 +83,25 @@ namespace MindOverMapper_Movim.Controllers
             SurveyTaker taker = new SurveyTaker();
             taker.Uid = Guid.NewGuid().ToString();
             taker.Turk = req.Turk;
-            taker.Notes = req.Demographics;
             taker.SurveyUid = req.SurveyUid;
             var answerList = req.AnswerList;
+            _context.SurveyTaker.Add(taker);
 
             foreach (var obj in answerList)
             {
                 if (obj != null)
                 {
-                    SurveyAnswer answer = new SurveyAnswer
-                    {
-                        Uid = Guid.NewGuid().ToString(),
-                        SurveyTakerUid = taker.Uid,
-                        SurveyUid = req.SurveyUid,
-                        Answer = obj,
-                        DateCompleted = DateTime.Now,
-                        Qid = Array.IndexOf(answerList, obj),
-                    };
-
+                    SurveyAnswer answer = new SurveyAnswer();
+                    answer.Uid = Guid.NewGuid().ToString();
+                    answer.SurveyTakerUid = taker.Uid;
+                    answer.SurveyUid = req.SurveyUid;
+                    answer.Answer = obj;
+                    answer.DateCompleted = DateTime.Now;
+                    answer.Qid = Array.IndexOf(answerList, obj);
                     _context.SurveyAnswer.Add(answer);
                 }
             }
 
-            _context.SurveyTaker.Add(taker);
             _context.SaveChanges();
 
             return Ok(new { message = "Success!" });
