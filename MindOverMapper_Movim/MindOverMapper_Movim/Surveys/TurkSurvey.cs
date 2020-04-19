@@ -69,6 +69,11 @@ namespace MindOverMapper_Movim.Surveys
             hitRequest.Title = this._survey.SurveyName;
             hitRequest.Reward = this._survey.Reward;
             hitRequest.Question = questionXML;
+            Qualification qualification = new Qualification();
+            qualification.QualificationTypeId = "00000000000000000071";
+            QualificationType qType = new QualificationType();
+            
+            }
             return "hello";
         }
     }
