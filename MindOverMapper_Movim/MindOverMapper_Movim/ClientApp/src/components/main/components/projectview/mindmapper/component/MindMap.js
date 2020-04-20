@@ -31,7 +31,7 @@ export default class MindMap extends React.Component {
       userData: this.props.userData,
       projectInfo: this.props.projectInfo,
       projectConcept: '',
-      bestIdea: this.props.bestIdea,
+      bestIdea: '',
       tempBestIdea: '',
       pushBack: '',
       change: false,
@@ -310,15 +310,9 @@ export default class MindMap extends React.Component {
                 <Button color="secondary" onClick={this.viewProject}><FontAwesomeIcon icon="arrow-left"/> Back to Project</Button>
             </div>
           </Col>
-          <Col md={{ span: 1.5 }}>
-            <div id="conceptButton" align="right">
-                <Button color="primary" onClick={this.toggleModal.bind(this)}><FontAwesomeIcon icon="plus"/> Concept</Button>
-            </div>
-          </Col>
-
           <Col md={{ span: 1 }}>
             <div id="conceptButton" align="right">
-                 <Button color="primary" onClick={this.toggleModal2.bind(this)}>Best Idea</Button>
+                <Button color="primary" onClick={this.toggleModal.bind(this)}><FontAwesomeIcon icon="plus"/> Concept</Button>
             </div>
           </Col>
         </Row>
@@ -341,23 +335,6 @@ export default class MindMap extends React.Component {
                   <Button color="primary" onClick={this.goToConcept}>Add Concept</Button>
             </ModalFooter>
         </Modal>
-
-        <Modal isOpen={this.state.modalIsOpen2}>
-          <ModalHeader toggle={this.toggleModal2.bind(this)}>Add Promising Idea</ModalHeader>
-          <ModalBody>
-              Promising Ideas: {this.props.bestIdea}
-              <div className='best-idea'>
-                  <TextField
-                      value={this.state.bestIdea}
-                      onChange={this.handleBestIdea}
-                      label="Idea"
-                      margin="normal"
-                      placeholder="Enter Idea..."
-                      variant="outlined">
-                  </TextField>
-              </div>
-          </ModalBody>
-      </Modal>
       </div>
     );
   }
