@@ -16,5 +16,8 @@ namespace MindOverMapper_Movim.Models.Requests
         public string Qualifications { get; set; }
         public string Questions { get; set; }
         public string Status { get; set; }
+        public string reward {get;set;}
+        public string country {get;set;}
+        public string subDivision{get;set;}
     }
 }

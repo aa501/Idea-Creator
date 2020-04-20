@@ -256,9 +256,9 @@ namespace MindOverMapper_Movim.Controllers
 
             TurkSurvey turkSurvey = new TurkSurvey(_appSettings);
 
-            var resut = turkSurvey.createHit(survey);
+            var result = turkSurvey.createHit(survey, req.reward);
             
-            return Ok();
+            return Ok(result);
         }
 
         //[Authorize]

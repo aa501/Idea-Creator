@@ -65,7 +65,7 @@ namespace MindOverMapper_Movim.Surveys
             throw new Exception("Uh OH! Something went wrong!");
         }
 
-        public async Task<string> createHit(Survey survey)
+        public async Task<string> createHit(Survey survey, string reward)
         {
             try
             {
@@ -74,29 +74,34 @@ namespace MindOverMapper_Movim.Surveys
                 string questionXML = "";
                 CreateHITRequest hitRequest = new CreateHITRequest();
                 hitRequest.Title = this._survey.SurveyName;
-                hitRequest.Reward = this._survey.Reward;
+                hitRequest.Reward = reward;
                 hitRequest.Question = this.getExternalForm();
-                hitRequest.extn
+                hitRequest.Description = this._survey.Notes;
+                hitRequest.AssignmentDurationInSeconds = 7200;
+                hitRequest.LifetimeInSeconds = 7200;
                 Qualification qualification = new Qualification();
                 qualification.QualificationTypeId = "00000000000000000071";
                 QualificationType qType = new QualificationType();
                 System.Threading.CancellationToken token = new System.Threading.CancellationToken();
-                CreateHITResponse response = client.CreateHITAsync(hitRequest, token);
-            }catch(Exception e)
+                CreateHITResponse response = await client.CreateHITAsync(hitRequest, token);
+                return "https://workersandbox.mturk.com/projects/" + response.HIT.HITTypeId + "/tasks";
+            }
+            catch(Exception e)
             {
                 Console.Write(e);
+                return "";
             }
-            return "https://workersandbox.mturk.com/projects/" + response.HIT.HITTypeId +"/tasks";
+           
            
         }
 
         private String getExternalForm()
         {
-            string externalForm = @"<?xml version='1.0' encoding='UTF - 8'?>
-                < ExternalQuestion >
-                < ExternalURL > https://idea-creator.com/surveys/</ExternalURL>
-                < FrameHeight > 0 </ FrameHeight >
-                </ ExternalQuestion > ";
+            string externalForm = @"<?xml version='1.0' encoding='UTF-8'?>
+                <ExternalQuestion xmlns='http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd'>
+                    <ExternalURL>https://idea-creator.com/surveys</ExternalURL>
+                    <FrameHeight>0</FrameHeight>
+                </ExternalQuestion>";
 
             return externalForm;
         }
