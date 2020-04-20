@@ -163,19 +163,32 @@ export default class SurveyLandingPage extends Component {
     /* Submits answer list to the controller */
     submitAnswers = async () => {
         var completedAnswerCount = 0
-        const answers = this.state.answers;
+        var answers = this.state.answers;
+        answers.forEach(function(ans) {
+          var type = typeof(ans)
+          console.log(type)
+          if (type == "object") {
+            var newAns = ans.join()
+            var index = answers.indexOf(ans);
+            answers[index] = newAns;
+            console.log(answers[index]);
+          }
+        });
+        console.log(answers)
+
+
         answers.forEach(function(answer) {
-          if (answer.replace(/\s/g, '').length && answer != null)
+          if (answer != null)
           completedAnswerCount += 1;
         })
-        console.log(completedAnswerCount)
 
+        console.log(completedAnswerCount)
         if (completedAnswerCount == this.state.electedQuestions.length)
         {
-            axios.post(`/api/survey/post-answers`,
+            axios.post('/api/survey/post-answers',
                   {
                       'surveyUid': this.state.survey.uid,
-                      'answerList': this.state.answers,
+                      'answerList': answers,
                       'turk': false,
                       'demographics': this.state.demographics
                   },

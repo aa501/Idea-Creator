@@ -60,12 +60,12 @@ export default class ProjectSurvey extends Component {
         projectName: this.props.location.state.projectName,
         specificSurveys: [],
         analyzedSurvey: [],
-        responseGroups: [],
-        responses: [],
+        subjects: [],
         surveyTakers: [],
         validDate: false,
         closeCheck: false,
     }
+    this.getResponseCount = this.getResponseCount.bind(this);
   }
 
     componentDidMount = async () => {
@@ -82,7 +82,6 @@ export default class ProjectSurvey extends Component {
 
     runDataRetrieval = async () => {
       await this.getSurveys();
-      await this.getSurveyResponses();
     }
 
     getSurveys = () => {
@@ -96,54 +95,40 @@ export default class ProjectSurvey extends Component {
           this.setState({ specificSurveys: response.data });
           if (this.state.closeCheck == false)
           this.checkEndDates(response.data);
+          this.getSubjects();
         });
     }
 
-    getSurveyResponses = async () => {
-        const response = await axios.get(`/api/survey/all-responses`, {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
-            }
-        }).then(response => {
-            response = response.data;
-            this.setState({
-                responses: response
-          }, () => (this.organizeResponses()));
-      });
-    }
+    getSubjects = async () => {
+      const token = this.state.userData.token;
 
-    organizeResponses = async () => {
-      var group;
       const specificSurveys = this.state.specificSurveys;
-      const responseGroups = this.state.responseGroups;
-      specificSurveys.forEach(function(survey) {
-        group = {
-          surveyUid: survey.uid,
-          responses: 0
-        };
-        responseGroups.push(group);
-      });
-      const responses = this.state.responses;
-      responses.forEach(function(res) {
-        var found = responseGroups.find(grp => grp.surveyUid === res.uid)
-        if (found) {
-          group.responses += 1
+      const subjects = [];
+
+      specificSurveys.forEach(function (survey) {
+        var uid = survey.uid
+        if (uid != null) {
+            const response = axios.get(`/api/survey/${uid}/takers`, {
+                headers: {
+                    Authorization: 'Bearer ' + token //the token is a variable which holds the token
+                }
+            }).then(response => {
+                response = response.data;
+                console.log(survey.uid);
+                subjects.push(response);
+            });
         }
       });
-      this.setState({ responseGroups });
+      this.setState({ subjects });
+
     }
 
-    getResponseCount = async (surveyUid) => {
-      return 0
-      // const responseGroups = this.state.responseGroups;
-      // if (surveyUid) {
-      //   var found = responseGroups.find(grp => grp.surveyUid === surveyUid)
-      //   console.log(found)
-      //   return 1
-      // }
-      // else {
-      //   return 0
-      // }
+    getResponseCount = (index) => {
+      console.log(index)
+      const subjects = this.state.subjects;
+      var length = subjects[index].length;
+
+      return 0;
     }
 
 
@@ -338,7 +323,7 @@ export default class ProjectSurvey extends Component {
                       currentUid: uid,
                       settingStatus: surveyStates.Deployed
                     })
-                  }
+    }
 
     closeDeployDialog = () => {
       this.setState({ deployDialog: false })
@@ -558,7 +543,13 @@ export default class ProjectSurvey extends Component {
                                                         </div>
                                                       </Typography>
                                                       <Typography gutterBottom component="h5">
-                                                        <div className="d-flex flex-wrap justify-content-around">
+                                                        <div hidden={survey.status == "Deployed"} align="center">
+                                                          <b>{survey.uid}</b>
+                                                        </div>
+                                                        <div hidden={survey.status != "Deployed"} align="center">
+                                                          <b>Sharing Info:</b>
+                                                          <div>idea-creator.com/survey</div>
+                                                          <div>Unique Survey Code:</div>
                                                           <b>{survey.uid}</b>
                                                         </div>
                                                       </Typography>
@@ -571,10 +562,10 @@ export default class ProjectSurvey extends Component {
                                                           <FontAwesomeIcon id='font-awesome-space-right' icon="question" style={{ fontSize: '1.4em' }}/>
                                                           <strong>Questions</strong> {JSON.parse(survey.questions).length}
                                                       </Typography>
-                                                      <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                      {/* <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                           <FontAwesomeIcon id='font-awesome-space-right' icon="comments" style={{ fontSize: '1.4em' }}/>
-                                                          <strong>Responses</strong> #
-                                                      </Typography>
+                                                          <strong>Responses</strong> {this.getResponseCount(index)}
+                                                      </Typography> */}
                                                       <hr />
                                                       <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                           <FontAwesomeIcon id='font-awesome-space-right' icon="scroll" style={{ fontSize: '1.4em' }}/>
@@ -586,9 +577,9 @@ export default class ProjectSurvey extends Component {
                                                       <div className="d-flex flex-wrap justify-content-around">
                                                         <div hidden={survey.status != "Written"}><Button color="warning" onClick={() => this.editSurvey(survey)}>Edit</Button></div>
                                                         <div hidden={survey.status != "Written"}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>Deploy</Button></div>
-                                                        <div hidden={survey.status != "Deployed"}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>View Options</Button></div>
+                                                        <div hidden={survey.status != "Deployed"}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>Extend</Button></div>
+                                                        <div hidden={survey.status == "Written"}><Button color="success" onClick={() => this.analyzeSurvey(survey)}>View Data</Button></div>
                                                         <div hidden={survey.status != "Deployed"}><Button color="danger" onClick={() => this.handleOpenEndConfirmationModal(survey.uid)}>End Now</Button></div>
-                                                        <div hidden={survey.status != "Closed"}><Button color="success" onClick={() => this.analyzeSurvey(survey)}>View Results</Button></div>
                                                       </div>
                                                       </Typography>
                                                   </CardContent>
@@ -608,36 +599,30 @@ export default class ProjectSurvey extends Component {
                                       <div><h6>Enter an end date for your survey. <br />
                                                Your choice must be at least 24 hours from now.</h6></div>
                                       <div>
-                                      <TextField
-                                        id="date"
-                                        label="End Date"
-                                        value={this.state.endDate}
-                                        onChange={this.setEndDate}
-                                        type="date"
-                                        InputLabelProps={{
-                                          shrink: true,
-                                        }}
-                                      />
-                                      <TextField
-                                        id="time"
-                                        label="End Time"
-                                        value={this.state.endTime}
-                                        onChange={this.setEndTime}
-                                        type="time"
-                                        InputLabelProps={{
-                                          shrink: true,
-                                        }}
-                                        inputProps={{
-                                          step: 300, // 5 min
-                                        }}
-                                      />
-                                      <hr />
-                                      <div align="center">
-                                      <b>Sharing Info:</b>
-                                      <div>idea-creator.com/survey</div>
-                                      <div>Unique Survey Code:</div>
-                                      <b>{this.state.currentUid}</b>
-                                      </div>
+                                        <TextField
+                                          id="date"
+                                          label="End Date"
+                                          value={this.state.endDate}
+                                          onChange={this.setEndDate}
+                                          type="date"
+                                          InputLabelProps={{
+                                            shrink: true,
+                                          }}
+                                        />
+                                        <TextField
+                                          id="time"
+                                          label="End Time"
+                                          value={this.state.endTime}
+                                          onChange={this.setEndTime}
+                                          type="time"
+                                          InputLabelProps={{
+                                            shrink: true,
+                                          }}
+                                          inputProps={{
+                                            step: 300, // 5 min
+                                          }}
+                                        />
+                                        <hr />
                                       </div>
                                   </DialogContent>
                                   <DialogActions>
