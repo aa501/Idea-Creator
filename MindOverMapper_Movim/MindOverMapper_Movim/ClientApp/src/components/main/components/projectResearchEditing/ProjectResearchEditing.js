@@ -7,10 +7,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { Button, Label } from 'reactstrap';
 import Slide from '@material-ui/core/Slide';
-import { Container, Row, Col, FormGroup, InputGroup, Form, Input} from 'react-bootstrap';
+import { Container, Row, Col, FormGroup, InputGroup, Form, Input, Card} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
+import * as FileSaver from 'file-saver';
 import Snackbar from '@material-ui/core/Snackbar';
 import Portal from '@material-ui/core/Portal';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -41,6 +42,8 @@ export default class ProjectResearchEditing extends Component {
             projectResearchLink2: '',
             projectResearchLink1: '',
             projectNotes: '',
+            files: [],
+            researchFiles: []
         }
     }
 
@@ -163,7 +166,8 @@ export default class ProjectResearchEditing extends Component {
                       Authorization: 'Bearer ' + this.state.userData.token
                   }
               }
-          ).then(() => {
+          ).then(response => {
+              this.uploadFiles(response.data)
               this.setState({ successMessage: "Research updated! "})
               this.openSuccessModal();
               console.log(response);
@@ -173,6 +177,30 @@ export default class ProjectResearchEditing extends Component {
           });
       }
 
+
+      uploadFiles = (project) => {
+        let formData = new FormData();
+        this.state.files.map(file => {
+            formData.append('Files', file);
+        });
+        formData.append('uid', this.state.projectName.uid);
+        axios.post("/api/research/file/",  formData,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token, //the token is a variable which holds the token
+                    'Content-Type': 'multipart/form-data'
+                }
+            }           
+            ).then(response => {
+                this.setState({researchFiles: response.data});
+                
+            });
+        }
+
+        onDrop = (files) => {
+            this.setState({ files: files });
+        }
+
     getProjectInfo = async (uid) => {
         let r1 = '';
         let r2 = '';
@@ -181,12 +209,21 @@ export default class ProjectResearchEditing extends Component {
         let r2l = '';
         let r3l = '';
         let ex = '';
-
+        
+        axios.get(`/api/research/${uid}`, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+            }
+        })
+        .then( response => {
+            this.setState({researchFiles: response.data});
+        })
         const response = await axios.get(`/api/project/${uid}`, {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
             }
         }).then(response => response.data);
+    
         console.log(response)
         if (response.areasOfResearch.length === 1) {
             console.log("1");
@@ -326,6 +363,21 @@ export default class ProjectResearchEditing extends Component {
       this.setState({
           successModal: true
       });
+    }
+
+    downloadFile = (file) => {
+        axios.get('/api/research/file/' + file, {
+            responseType: 'arraybuffer',
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token,
+                'Content-Type': 'text/html'
+
+            }
+        })
+        .then(response => {
+            let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
+            FileSaver.saveAs(downloadedFile, file);
+        });
     }
 
     state = { showing: true };
@@ -521,7 +573,41 @@ export default class ProjectResearchEditing extends Component {
                                     </TextField>
                                 </Row>
                             </Col>
-                        </Row>
+                    </Row>
+                    <Row>
+                        <div>
+                            <Button color="success" onClick={() => this.setState({ showing: !showing })}><FontAwesomeIcon icon="upload" />Upload Files</Button>                      {showing
+                                ? <div className="zone">
+                                    <Dropzone onDrop={this.onDrop} multiple>
+                                        {({ getRootProps, getInputProps, isDragActive, acceptedFiles }) => (
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                {isDragActive ? "Drop your file here" : 'Click or drag a file to upload'}
+                                                <ul className="list-group mt-2">
+                                                    {acceptedFiles.length > 0 && acceptedFiles.map(acceptedFile => (
+                                                        <li className="list-group-item list-group-item-success">
+                                                            {acceptedFile.name}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </Dropzone>
+                                </div>
+                                : null}
+                        </div>
+
+                        <div>
+                            {
+                                this.state.researchFiles.map( file => 
+                                    <Card>
+                                        <a href="javascript:void(0);" onClick={() => { this.downloadFile(file.fileName) }}>{file.fileName}</a>
+                                    </Card>
+                                )
+                            }
+                            
+                        </div>
+                    </Row>
                         <Row>
                             <Col md={{ span: 6, offset: 0 }}>
                                 <div id='project-id-holder'>
