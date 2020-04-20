@@ -1,27 +1,26 @@
-@import url(https://fonts.googleapis.com/css?family=Exo+2:400,700,500,300);
 
-#prototype-container {
-    width: 100%;
-    overflow-y: scroll;
-    height: 89vh;
-    max-height: 89vh;
-    padding-bottom: 1vh;
+#research-container{
+    width:80%;
 }
-#prototype-main-content{
-    margin-left: 17%;
+
+#research-main-content {
+    width: 80%;
+    margin-left: 27%;
     margin-top: 3%;
 }
+
 .project-creator-container {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
+
 .blue-card-container {
     width: 100%;
-    overflow-y: scroll;
     height: 89vh;
     max-height: 89vh;
     padding-bottom: 1vh;
+
 }
 
 .project-creator-header {
@@ -65,11 +64,12 @@
     height: 45vh;
 }
 
-#prototype-definition-holder {
+#project-definition-holder {
     display: flex;
     flex-direction: row;
     margin-left: 5%;
     margin-right: 5%;
+    width: 90%;
     height: 100vh;
 }
 
@@ -192,6 +192,7 @@
     margin-left: 15px;
     height: 70px;
 }
+
 
 .zone {
     text-align: center;

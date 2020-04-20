@@ -227,11 +227,8 @@ export default class ProjectStimuli extends Component {
           Authorization: 'Bearer ' + this.state.userData.token
         }
       }
-    ).then(() => {
-      this.openSuccessModal();
-      this.setState({
-        successMessage: 'Project ' + this.state.projectName + ' has successfully been created!'
-      });
+    ).then(response => {
+      this.uploadFiles(response.data);
     }).catch(() => {
       this.openErrorModal();
       this.setState({
@@ -242,6 +239,29 @@ export default class ProjectStimuli extends Component {
 
 
   }
+
+  uploadFiles = (project) => {
+    let formData = new FormData();
+    this.props.location.state.files.map(file => {
+        formData.append('Files', file);
+    });
+    formData.append('uid', project.uid);
+    axios.post("/api/research/file/", formData, 
+        {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token, //the token is a variable which holds the token
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        
+    ).then(response => {
+        this.setState({researchFiles: response.data});
+        this.openSuccessModal();
+        this.setState({
+          successMessage: 'Project ' + this.state.projectName + ' has successfully been created!'
+        });
+    });
+}
 
   sortStimulus = () => {
     let stimuli = this.state.stimuli

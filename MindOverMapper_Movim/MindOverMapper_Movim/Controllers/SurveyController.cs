@@ -83,29 +83,25 @@ namespace MindOverMapper_Movim.Controllers
             SurveyTaker taker = new SurveyTaker();
             taker.Uid = Guid.NewGuid().ToString();
             taker.Turk = req.Turk;
-            taker.Notes = req.Demographics;
             taker.SurveyUid = req.SurveyUid;
             var answerList = req.AnswerList;
+            _context.SurveyTaker.Add(taker);
 
             foreach (var obj in answerList)
             {
                 if (obj != null)
                 {
-                    SurveyAnswer answer = new SurveyAnswer
-                    {
-                        Uid = Guid.NewGuid().ToString(),
-                        SurveyTakerUid = taker.Uid,
-                        SurveyUid = req.SurveyUid,
-                        Answer = obj,
-                        DateCompleted = DateTime.Now,
-                        Qid = Array.IndexOf(answerList, obj),
-                    };
-
+                    SurveyAnswer answer = new SurveyAnswer();
+                    answer.Uid = Guid.NewGuid().ToString();
+                    answer.SurveyTakerUid = taker.Uid;
+                    answer.SurveyUid = req.SurveyUid;
+                    answer.Answer = obj;
+                    answer.DateCompleted = DateTime.Now;
+                    answer.Qid = Array.IndexOf(answerList, obj);
                     _context.SurveyAnswer.Add(answer);
                 }
             }
 
-            _context.SurveyTaker.Add(taker);
             _context.SaveChanges();
 
             return Ok(new { message = "Success!" });
@@ -207,7 +203,52 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(questions);
         }
 
+        [Authorize]
+        [HttpGet("{uid}/responses")]
+        public ActionResult GetResponses(string uid)
+        {
+            var responses = _context.SurveyAnswer.Where(a => a.SurveyUid == uid);
+            return Ok(responses);
+        }
 
+        [Authorize]
+        [HttpGet("{uid}/takers")]
+        public ActionResult GetTakers(string uid)
+        {
+            var takers = _context.SurveyAnswer.Where(a => a.SurveyUid == uid);
+            return Ok(takers);
+        }
+
+        [Authorize]
+        [HttpPost("turk")]
+        public ActionResult CreateTurkSurvey(CreateTurkSurveyRequest req)
+        {
+            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
+            Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
+
+
+            Survey survey = new Survey();
+            survey.Uid = req.UniqueId;
+            survey.ProjectId = proj.Id;
+            survey.Prototypes = req.Prototypes;
+            if (cpt != null)
+            survey.ConceptId = cpt.Id;
+            survey.SurveyName = req.SurveyName;
+            survey.Notes = req.Notes;
+            survey.Qualifications = req.Qualifications;
+            survey.DateCreated = DateTime.Now;
+            survey.Questions = req.Questions;
+            survey.Status = req.Status;
+
+            _context.Survey.Add(survey);
+            _context.SaveChanges();
+
+            ISurvey turkSurvey = SurveyFactory.Build(SurveyTypes.TurkSurvey);
+            
+            turkSurvey.LoadSurvey(survey);
+            turkSurvey.execute();
+            return Ok();
+        }
 
         //[Authorize]
         //[HttpPost("/turk")]

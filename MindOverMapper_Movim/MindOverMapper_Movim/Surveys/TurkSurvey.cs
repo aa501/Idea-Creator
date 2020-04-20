@@ -35,11 +35,6 @@ namespace MindOverMapper_Movim.Surveys
             netSDKFile.RegisterProfile(profile);
         }
 
-        public void ReceivedAccountBalance(GetAccountBalanceResponse response)
-        {
-
-        }
-
         public AmazonMTurkClient getMTurkClient()
         {
             var chain = new CredentialProfileStoreChain();

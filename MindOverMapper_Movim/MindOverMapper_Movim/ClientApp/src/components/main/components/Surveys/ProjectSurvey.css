@@ -4,18 +4,18 @@
   overflow-y: scroll;
   max-height: 89vh;
 }
-#main-content {
+#survey-main-content {
     margin-left: 0%;
     margin-top: 3%;
 }
 
 #survey-id {
-    margin-left: 28%;
+    margin-left: 23%;
     margin-top: 3%;
 }
 
 #push {
-  margin-left: 28%;
+  margin-left: 23%;
 }
 
 .survey-paper-holder{

@@ -7,16 +7,23 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { Button, Label } from 'reactstrap';
 import Slide from '@material-ui/core/Slide';
-import { Container, Row, Col, FormGroup, InputGroup, Form, Input} from 'react-bootstrap';
+import { Container, Row, Col, FormGroup, InputGroup, Form, Input, Card} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
-import './ProjectResearch.css';
+import * as FileSaver from 'file-saver';
+import Snackbar from '@material-ui/core/Snackbar';
+import Portal from '@material-ui/core/Portal';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import './ProjectResearchEditing.css';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import * as FileSaver from 'file-saver';
 
-export default class ProjectResearch extends Component {
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
+
+export default class ProjectResearchEditing extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,7 +34,7 @@ export default class ProjectResearch extends Component {
             projectExclusions: this.props.location.state.projectExclusions,
             projectConstraints: this.props.location.state.projectConstraints,
             projectDescription: this.props.location.state.projectDescription,
-            projectExplorationAreas: this.props.location.state.projectExplorationAreas,        
+            projectExplorationAreas: this.props.location.state.projectExplorationAreas,
             projectResearch1: '',
             projectResearch2: '',
             projectResearch3: '',
@@ -41,7 +48,18 @@ export default class ProjectResearch extends Component {
     }
 
     componentDidMount = () => {
-        console.log(this.props)
+        if (this.props.location.state === undefined) {
+            this.props.history.push({
+                pathname: '/'
+            });
+        } else {
+            this.setState({
+                userData: this.props.location.state.userData,
+                projectName: this.props.location.state.projectName,
+            });
+        }
+        this.getProjectInfo(this.state.projectName.uid);
+        console.log(this.state.projectName)
     }
 
     resetFields = () => {
@@ -56,11 +74,6 @@ export default class ProjectResearch extends Component {
         })
     }
 
-    handleProjectNameChange = (event) => {
-        this.setState({
-            projectName: event.target.value
-        });
-    }
     handleProjectResearch1Change = (event) => {
         this.setState({
             projectResearch1: event.target.value
@@ -114,49 +127,148 @@ export default class ProjectResearch extends Component {
         });
     }
 
-    submitProject = () => {
-        axios.post('/api/project', {
+    submitProject = () =>
+      {
+          console.log(this.state.projectResearchLink1, "space" , this.state.projectResearchLink3)
+          const response = axios.put(`/api/project/${this.state.projectName.uid}`,
+              {
+                  'title': this.state.projectName.title,
+                  'description': this.state.projectName.description,
+                  'definition': this.state.projectDefinition,
+                  'exclusions': [{
+                      'content': this.state.projectExclusions
+                  }],
+                  'areasOfResearch': [{
+                      'content': this.state.projectResearch1,
+                      'link': {
+                          'href': this.state.projectResearchLink1,
+                          'hrefName': this.state.projectResearchLink1
+                      }
+                  },
+                  {
+                      'content': this.state.projectResearch2,
+                      'link': {
+                          'href': this.state.projectResearchLink2,
+                          'hrefName': this.state.projectResearchLink2
+                      }
+                  },
+                  {
+                      'content': this.state.projectResearch3,
+                      'link': {
+                          'href': this.state.projectResearchLink3,
+                          'hrefName': this.state.projectResearchLink3
+                      }
+                  }
+                  ],
+              },
+              {
+                  headers: {
+                      Authorization: 'Bearer ' + this.state.userData.token
+                  }
+              }
+          ).then(response => {
+              this.uploadFiles(response.data)
+              this.setState({ successMessage: "Research updated! "})
+              this.openSuccessModal();
+              console.log(response);
+          }).catch(() => {
+              this.setState({ errorMessage: "Research failed to update. "})
+              this.openErrorModal();
+          });
+      }
+
+
+      uploadFiles = (project) => {
+        let formData = new FormData();
+        this.state.files.map(file => {
+            formData.append('Files', file);
+        });
+        formData.append('uid', this.state.projectName.uid);
+        axios.post("/api/research/file/",  formData,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token, //the token is a variable which holds the token
+                    'Content-Type': 'multipart/form-data'
+                }
+            }           
+            ).then(response => {
+                this.setState({researchFiles: response.data});
+                
+            });
+        }
+
+        onDrop = (files) => {
+            this.setState({ files: files });
+        }
+
+    getProjectInfo = async (uid) => {
+        let r1 = '';
+        let r2 = '';
+        let r3 = '';
+        let r1l = '';
+        let r2l = '';
+        let r3l = '';
+        let ex = '';
+        
+        axios.get(`/api/research/${uid}`, {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
-            },
-            data: {
-                'title': this.state.projectName,
-                'description': this.state.projectDescription,
-                'problemStatement': {
-                    'title': this.state.projectName,
-                    'description': this.state.projectDescription,
-                    'link*': {
-                        'href': this.state.projectResearchLink1,
-                        'hrefName': this.state.projectResearchLink1
-                    }
-                },
-                'exclusion': [{
-                    'content': this.state.projectExclusions,
-                    'link*': {
-                        'href': this.state.projectResearchLink3,
-                        'hrefName': this.state.projectResearchLink3
-                    }
-                }],
-                'constraints': [{
-                    'content': this.state.projectDefinition,
-                    'link*': {
-                        'href': this.state.projectResearchLink3,
-                        'hrefName': this.state.projectResearchLink3
-                    }
-                }],
-                'areasOfResearch': [{
-                    'content': this.state.projectResearch1,
-                    'link*': {
-                        'href': this.state.projectResearchLink1,
-                        'hrefName': this.state.projectResearchLink1
-                    }
-                }],
-                'stimulus': []
             }
         })
-        .then(response => {
+        .then( response => {
+            this.setState({researchFiles: response.data});
+        })
+        const response = await axios.get(`/api/project/${uid}`, {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+            }
+        }).then(response => response.data);
+    
+        console.log(response)
+        if (response.areasOfResearch.length === 1) {
+            console.log("1");
+            r1 = (response.areasOfResearch[0].content ? response.areasOfResearch[0].content : '')
+            r1l = (response.areasOfResearch[0].link.hrefName !== 'undefined' ? response.areasOfResearch[0].link.hrefName : '')
+        }
 
-        });
+        if (response.areasOfResearch.length === 2) {
+            console.log("2");
+            r1 = (response.areasOfResearch[0].content ? response.areasOfResearch[0].content : '')
+            r1l = (response.areasOfResearch[0].link.hrefName !== 'undefined' ? response.areasOfResearch[0].link.hrefName : '')
+            r2 = (response.areasOfResearch[1].content ? response.areasOfResearch[1].content : '')
+            r2l = (response.areasOfResearch[1].link.hrefName !== 'undefined' ? response.areasOfResearch[1].link.hrefName : '')
+        }
+
+        if (response.areasOfResearch.length === 3) {
+            console.log("3");
+            r1 = (response.areasOfResearch[0].content ? response.areasOfResearch[0].content : '')
+            r1l = (response.areasOfResearch[0].link.hrefName !== 'undefined' ? response.areasOfResearch[0].link.hrefName : '')
+            r2 = (response.areasOfResearch[1].content ? response.areasOfResearch[1].content : '')
+            r2l = (response.areasOfResearch[1].link.hrefName !== 'undefined' ? response.areasOfResearch[1].link.hrefName : '')
+            r3 = (response.areasOfResearch[2].content ? response.areasOfResearch[2].content : '')
+            r3l = (response.areasOfResearch[2].link.hrefName !== 'undefined' ? response.areasOfResearch[2].link.hrefName : '')
+        }
+
+        if (response.exclusions.length === 1) {
+            ex = response.exclusions[0].content
+        }
+
+
+        this.setState({
+            projectResearch1: r1,
+            projectResearch2: r2,
+            projectResearch3: r3,
+            projectResearchLink3: r3l,
+            projectResearchLink2: r2l,
+            projectResearchLink1: r1l,
+            projectDefinition: '',
+            projectExclusions: ex,
+            projectDescription: response.description,
+            projectDefinition: response.definition,
+            projectTitle: response.title
+        })
+
+        console.log(response);
     }
 
     nextPage = () => {
@@ -179,7 +291,7 @@ export default class ProjectResearch extends Component {
             state: this.state  // need this for moving to different component
         });
     }
-    
+
     pushToMindMap = () => {
         this.props.history.push({
             pathname: '/project-view',
@@ -222,29 +334,57 @@ export default class ProjectResearch extends Component {
         });
     }
 
-     downloadFile = (file) => {
-            axios.get('/api/prototype/file/' + file, {
-                responseType: 'arraybuffer',
-                headers: {
-                    Authorization: 'Bearer ' + this.state.userData.token,
-                    'Content-Type': 'text/html'
+    nextPage = () => {
+        this.props.history.push({
+            pathname: '/project-landing-page',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
-                }
-            })
-                .then(response => {
-                    let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
-                    FileSaver.saveAs(downloadedFile, file);
-                });
-        }
+    handleCloseErrorModal = () => {
+      this.setState({
+          errorModal: false
+      });
+    }
 
-    onDrop = (files) => {
-        this.setState({ files: files });
+    openErrorModal = () => {
+      this.setState({
+          errorModal: true
+      });
+    }
+
+    handleCloseSuccessModal = () => {
+      this.setState({
+          successModal: false
+      });
+    }
+
+    openSuccessModal = () => {
+      this.setState({
+          successModal: true
+      });
+    }
+
+    downloadFile = (file) => {
+        axios.get('/api/research/file/' + file, {
+            responseType: 'arraybuffer',
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token,
+                'Content-Type': 'text/html'
+
+            }
+        })
+        .then(response => {
+            let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
+            FileSaver.saveAs(downloadedFile, file);
+        });
     }
 
     state = { showing: true };
 
     render() {
-       const { showing } = this.state;
+        const { showing } = this.state;
+
         return (
 
             <div id="research-container">
@@ -256,8 +396,6 @@ export default class ProjectResearch extends Component {
                         // Add your code here
                     }}
                 >
-
-
 
                     <SideNav.Nav defaultSelected="">
 
@@ -331,10 +469,10 @@ export default class ProjectResearch extends Component {
 
                 <div id='research-main-content'>
                     <div>
-                        <h3 id="subtitle">Research</h3>
+                        <h3 id="subtitle">Update Research</h3>
                         <hr style={{ width: "30%" }} id="hr-1" />
                     </div>
-                   
+
                         <Row id='r-and-d-col'>
                             <Col md={{ span: 5, offset: 0 }}>
                                 <Row>
@@ -435,10 +573,10 @@ export default class ProjectResearch extends Component {
                                     </TextField>
                                 </Row>
                             </Col>
-                        </Row>
-                        <Row>
-                         <div>
-                            <Button color="success" onClick={() => this.setState({ showing: !showing })}><FontAwesomeIcon icon="upload"/>Upload Files</Button>                      {showing
+                    </Row>
+                    <Row>
+                        <div>
+                            <Button color="success" onClick={() => this.setState({ showing: !showing })}><FontAwesomeIcon icon="upload" />Upload Files</Button>                      {showing
                                 ? <div className="zone">
                                     <Dropzone onDrop={this.onDrop} multiple>
                                         {({ getRootProps, getInputProps, isDragActive, acceptedFiles }) => (
@@ -457,15 +595,21 @@ export default class ProjectResearch extends Component {
                                     </Dropzone>
                                 </div>
                                 : null}
-                            </div>
-                        </Row>
+                        </div>
+
+                        <div>
+                            {
+                                this.state.researchFiles.map( file => 
+                                    <Card>
+                                        <a href="javascript:void(0);" onClick={() => { this.downloadFile(file.fileName) }}>{file.fileName}</a>
+                                    </Card>
+                                )
+                            }
+                            
+                        </div>
+                    </Row>
                         <Row>
-                            <Col md={{ span: 3, offset: 0 }}>
-                                <div id='project-id-holder'>
-                                    Project ID: <input type="text" disabled='true' class="form-control" id="projectId-input" value={'#' + this.state.projectNumber} />
-                                </div>
-                            </Col>
-                            <Col md={{ span: 3, offset: 0 }}>
+                            <Col md={{ span: 6, offset: 0 }}>
                                 <div id='project-id-holder'>
                                     Project Owner: <input type="text" disabled='true' class="form-control" id="projectId-input" value={this.props.location.state.userData.firstName + ' ' + this.props.location.state.userData.lastName} />
                                 </div>
@@ -473,13 +617,51 @@ export default class ProjectResearch extends Component {
                             <Col md={{ span: 2, offset: 1 }}>
                                 <div id='confirmation-button-holder'>
                                     <Button color='warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
-                                    <Button color='primary' id='submit-project' disabled={this.state.projectName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
+                                    <Button color='primary' id='submit-project' disabled={this.state.projectName === ''} onClick={this.submitProject}><FontAwesomeIcon icon="check" /> Submit</Button>
                                 </div>
                             </Col>
                         </Row>
-                   
-                </div>
+                    </div>
 
+                    <div>
+                      <Dialog
+                        open={this.state.errorModal}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        maxWidth='lg'
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                      >
+                        <DialogTitle id="responsibe-alert-dialog-slide-title">
+                          {this.state.errorMessage}
+                        </DialogTitle>
+                        <DialogActions>
+                          <Button onClick={this.handleCloseErrorModal} color="primary">
+                            Close
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </div>
+                    <div>
+                      <Dialog
+                        open={this.state.successModal}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        maxWidth='lg'
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                      >
+                        <DialogTitle id="responsibe-alert-dialog-slide-title">
+                          {this.state.successMessage}
+                        </DialogTitle>
+                        <DialogActions>
+                          <Button onClick={this.handleCloseSuccessModal} color="primary">
+                            Close
+                          </Button>
+                          <Button onClick={this.nextPage} color="primary">Return to Project</Button>
+                        </DialogActions>
+                      </Dialog>
+                    </div>
             </div>
         );
     }

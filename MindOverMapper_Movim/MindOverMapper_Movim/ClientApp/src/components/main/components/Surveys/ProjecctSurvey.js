@@ -99,10 +99,11 @@ export default class ProjectSurvey extends Component {
       console.log(surveys)
       const token = this.state.userData.token;
       surveys.forEach(function(survey) {
-        var dateNumber = parseInt(survey.endDate);
+        var dateNumber = parseFloat(survey.endDate);
         var date = Date.now();
         console.log(date + ' ' + survey.endDate);
         if (date > dateNumber) {
+          console.log("Closing survey" + " " + survey.uid)
           var convertedDate = date.toString();
           axios.put(`/api/survey/${survey.uid}/pass`,
               {
@@ -311,6 +312,7 @@ export default class ProjectSurvey extends Component {
 
     setValidDate = () => {
       var parsedDate = Date.parse(this.state.endDate);
+      console.log(parsedDate)
       var time = this.state.endTime
       if (time && parsedDate) {
         var parsedTime = Number(time.split(':')[0])*3600000+Number(time.split(':')[1])*1000;
@@ -412,7 +414,7 @@ export default class ProjectSurvey extends Component {
                   <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home">
+                      <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
@@ -479,7 +481,7 @@ export default class ProjectSurvey extends Component {
               </SideNav>
 
 
-              <div id="main-content">
+              <div id="survey-main-content">
                   <div id="push" >
                       <h3>Surveys for {this.state.projectName.title}</h3>
                       <hr style={{ width: "30%" }} id="hr-1" />

@@ -30,6 +30,7 @@ namespace MindOverMapper_Movim.Models
         public virtual DbSet<SurveyPrototype> SurveyPrototype { get; set; }
         public virtual DbSet<SurveyTaker> SurveyTaker { get; set; }
         public virtual DbSet<SurveyAnswer> SurveyAnswer { get; set; }
+        public virtual DbSet<ResearchFile> ResearchFile { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -478,7 +479,7 @@ namespace MindOverMapper_Movim.Models
                     .HasColumnName("turk")
                     .HasDefaultValue(false);
 
-                entity.Property(e => e.SurveyUid)
+                entity.Property(e => e.Notes)
                     .HasColumnName("notes")
                     .HasMaxLength(50)
                     .IsUnicode(false);

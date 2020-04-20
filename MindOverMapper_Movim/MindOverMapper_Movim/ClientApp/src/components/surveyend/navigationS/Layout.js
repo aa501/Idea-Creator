@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavMenuS } from './NavMenu';
+import { NavMenuS } from './NavMenuS';
 
 import './Layout.css';
 
