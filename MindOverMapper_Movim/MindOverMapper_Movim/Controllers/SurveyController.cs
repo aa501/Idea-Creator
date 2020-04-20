@@ -232,7 +232,7 @@ namespace MindOverMapper_Movim.Controllers
 
         [Authorize]
         [HttpPost("turk")]
-        public ActionResult CreateTurkSurvey([FromBody] CreateTurkSurveyRequest req)
+        public async ActionResult CreateTurkSurvey([FromBody] CreateTurkSurveyRequest req)
         {
             Project proj = _context.Project.Where(p => p.Uid == req.projectUid).FirstOrDefault<Project>();
             Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
@@ -256,7 +256,7 @@ namespace MindOverMapper_Movim.Controllers
 
             TurkSurvey turkSurvey = new TurkSurvey(_appSettings);
 
-            var result = turkSurvey.createHit(survey, req.reward);
+            var result = await turkSurvey.createHit(survey, req.reward);
             
             return Ok(result);
         }
