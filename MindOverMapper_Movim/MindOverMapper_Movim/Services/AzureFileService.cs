@@ -68,5 +68,24 @@ namespace MindOverMapper_Movim
             }
         }
 
+        public Boolean DeleteFile(String path, string fileName)
+        {
+            
+            CloudFileClient fileClient = this.storageAccount.CreateCloudFileClient();
+            CloudFileShare fileShare = fileClient.GetShareReference(this._appSettings.AzureFIleStoreName);
+            if (fileShare.Exists())
+            {
+                CloudFileDirectory root = fileShare.GetRootDirectoryReference();
+                CloudFileDirectory folder = root.GetDirectoryReference(path);
+                CloudFile file = folder.GetFileReference(fileName);
+                var result = file.DeleteIfExists();
+                return result;
+            }
+            else
+            {
+                throw new Exception("File Share does not exists");
+            }
+        }
+
     }
 }
