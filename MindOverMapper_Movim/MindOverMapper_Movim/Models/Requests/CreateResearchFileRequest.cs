@@ -7,7 +7,7 @@ namespace MindOverMapper_Movim.Models
     public partial class CreateResearchFileRequest
     {
       public string FileName { get; set; }
-      public int ProjectId { get; set; }
+      public int uid { get; set; }
       public List<IFormFile> Files { get; set; }
     }
 }

@@ -99,7 +99,8 @@ namespace MindOverMapper_Movim.Controllers
         public ActionResult StoreFile(CreateResearchFileRequest req)
         {   
             string path = Path.Combine(_env.WebRootPath, "files");   
-            IList<ResearchFile> researchFiles = new List<ResearchFile>();         
+            IList<ResearchFile> researchFiles = new List<ResearchFile>();    
+            Project project = _context.Project.Where(proj => proj.Uid = req.uid).first<Project>();     
             foreach(IFormFile file in req.Files)
             {
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
@@ -111,7 +112,7 @@ namespace MindOverMapper_Movim.Controllers
                 fileService.storeFile("files", fileName, filepath);
                 ResearchFile researchFile = new ResearchFile();
                 researchFile.FileName = fileName;
-                researchFile.ProjectId = req.ProjectId;
+                researchFile.ProjectId = project.Id;
                 researchFiles.Add(researchFile);
                 _context.ResearchFile.Add(researchFile);
             }

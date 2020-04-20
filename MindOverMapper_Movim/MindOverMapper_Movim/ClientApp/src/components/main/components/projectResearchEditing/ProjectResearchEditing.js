@@ -183,7 +183,7 @@ export default class ProjectResearchEditing extends Component {
         this.state.files.map(file => {
             formData.append('Files', file);
         });
-        formData.append('ProjectId', project.Id);
+        formData.append('uid', this.state.projectName.uid);
         axios.post("/api/research/file/",  formData,
             {
                 headers: {
