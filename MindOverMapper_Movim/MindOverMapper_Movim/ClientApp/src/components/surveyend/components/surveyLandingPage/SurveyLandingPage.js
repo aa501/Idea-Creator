@@ -9,7 +9,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { RadioGroup, FormControlLabel, Radio, Checkbox, FormControl, FormLabel, CircularProgress } from '@material-ui/core';
+import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
+import * as FileSaver from 'file-saver';
 import Grid from '@material-ui/core/Grid';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
@@ -22,11 +24,6 @@ import './SurveyLandingPage.css';
 const useStyles = makeStyles(theme => ({
   toggleContainer: {
     margin: theme.spacing(2, 0),
-  },
-
-  toggleStyles: {
-    borderColor: 'rgb(51, 153, 255)',
-    width: '50px'
   },
 
   root: {
@@ -60,6 +57,7 @@ export default class SurveyLandingPage extends Component {
             ratings: [],
             questions: [],
             electedQuestions: [],
+            prototypes: [],
             checkedHold: [],
             surveyCode: '',
             retrieved: false,
@@ -96,7 +94,7 @@ export default class SurveyLandingPage extends Component {
           this.openErrorModal();
           this.setState({
             errorMessage: 'Error loading survey. Please contact your system administrator.'
-          });
+          }, () => (this.setLoading(false)));
         });
     }
 
@@ -104,10 +102,12 @@ export default class SurveyLandingPage extends Component {
       console.log(this.state.survey)
       if (this.state.survey.status.includes("Deployed"))
       {
-        this.getQuestions();
+        await this.getQuestions();
+        await this.getPrototypes();
       }
 
       else if (!this.state.survey.status.includes("Deployed")) {
+        this.setLoading(false);
         console.log(this.state.survey.status);
         this.openErrorModal();
         this.setState({
@@ -128,25 +128,67 @@ export default class SurveyLandingPage extends Component {
     }
 
     getPrototypes = () => {
+      const survey = this.state.survey;
+      var prototypes = JSON.parse(survey.prototypes);
 
+      this.setState({ prototypes});
+    }
+
+    downloadFile = (file) => {
+        axios.get('/api/prototype/anon-file/' + file, {
+            responseType: 'arraybuffer',
+            headers: {
+                'Content-Type': 'text/html'
+
+            }
+        })
+            .then(response => {
+                console.log([response.data])
+                let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
+                FileSaver.saveAs(downloadedFile, file);
+            }).catch(() => {
+              // this.openErrorModal();
+              // this.setState({
+              //   errorMessage: 'Error downloading prototype.'
+              // });
+            });
+    }
+
+    projectPaths = (item) => {
+        let pathArray = JSON.parse(item.prototypePath);
+        console.log(pathArray);
+        return pathArray;
     }
 
     /* Submits answer list to the controller */
     submitAnswers = async () => {
         var completedAnswerCount = 0
-        const answers = this.state.answers;
+        var answers = this.state.answers;
+        answers.forEach(function(ans) {
+          var type = typeof(ans)
+          console.log(type)
+          if (type == "object") {
+            var newAns = ans.join()
+            var index = answers.indexOf(ans);
+            answers[index] = newAns;
+            console.log(answers[index]);
+          }
+        });
+        console.log(answers)
+
+
         answers.forEach(function(answer) {
-          if (answer.replace(/\s/g, '').length && answer != null)
+          if (answer != null)
           completedAnswerCount += 1;
         })
-        console.log(completedAnswerCount)
 
+        console.log(completedAnswerCount)
         if (completedAnswerCount == this.state.electedQuestions.length)
         {
-            axios.post(`/api/survey/post-answers`,
+            axios.post('/api/survey/post-answers',
                   {
                       'surveyUid': this.state.survey.uid,
-                      'answerList': this.state.answers,
+                      'answerList': answers,
                       'turk': false,
                       'demographics': this.state.demographics
                   },
@@ -309,7 +351,7 @@ export default class SurveyLandingPage extends Component {
     renderQuestion(qsn) {
 
         const toggleStyles = {
-          width: "50px",
+          width: "70px",
           textColor: "rgb(51, 153, 255)",
           borderWidth: "2px",
           borderColor: "rgb(51, 153, 255)"
@@ -449,14 +491,62 @@ export default class SurveyLandingPage extends Component {
       }
     }
 
+    renderSurveyNotes () {
+      if (this.state.survey) {
+        return ( <div>
+                <div align="center"><h3>Welcome!</h3></div>
+                <hr />
+                <div hidden={!this.state.survey.notes}>
+                  <h5 align="center">{this.state.survey.notes}</h5>
+                </div>
+                </div>
+               )
+      }
+    }
+
+    renderSurveyPrototypes () {
+      if (this.state.survey && this.state.survey.prototypes) {
+        return (
+          <div align="center">
+            <h5>Concept Prototype Images</h5>
+            <h6>Please download all concept images before taking the survey.</h6>
+            <hr />
+
+                <TableContainer style={{ width: "80%" }} component={Paper}>
+                  <Table size="small" aria-label="a dense table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Description</TableCell>
+                        <TableCell></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      { this.state.prototypes.map((Item) => (
+                          <TableRow>
+                              <TableCell style={{maxWidth:"130px", wordWrap: 'break-word'}}>{Item.prototypeName}</TableCell>
+                              <TableCell style={{maxWidth:"500px", wordWrap: 'break-word'}}>{Item.prototypeDescription}</TableCell>
+                              <TableCell style={{maxWidth:"70px"}}>{this.projectPaths(Item).map(file =>
+                                               <a href="javascript:void(0);" onClick={() => { this.downloadFile(file) }}><Button color="primary">Download</Button></a>)
+                                         }</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+            </div>
+               )
+      }
+    }
+
     renderSurvey () {
 
       if (this.state.survey) {
           return (
           <div class="d-flex align-content-justify flex-column">
-                  <div align="center"><h3>Survey Question View</h3></div>
+                  <div align="center"><h3>Questions</h3></div>
                   <hr />
-                  {this.state.survey.notes}
+
                 <p></p>
                   <Container>
                   <div>
@@ -502,6 +592,14 @@ export default class SurveyLandingPage extends Component {
 
                       </div>
                   </Container>
+              </div>
+
+              <div hidden={this.state.completed || !this.state.retrieved} class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+                {this.renderSurveyNotes()}
+              </div>
+
+              <div hidden={this.state.completed || !this.state.retrieved} class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+                {this.renderSurveyPrototypes()}
               </div>
 
                 <div hidden={this.state.completed || !this.state.retrieved} class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>

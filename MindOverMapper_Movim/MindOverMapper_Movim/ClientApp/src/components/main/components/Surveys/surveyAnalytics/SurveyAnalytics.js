@@ -71,7 +71,7 @@ export default class SurveyAnalytics extends Component {
     const responses = this.state.responses;
     const qualitatives = this.state.qualitatives;
     const quantitatives = this.state.quantitatives;
-    const answerCorrelations = this.state.answerCorrelations;
+    var answerCorrelations = this.state.answerCorrelations;
     var frequencyCheck = 0;
     var numResponses = this.state.numResponses;
 
@@ -150,6 +150,9 @@ export default class SurveyAnalytics extends Component {
            numResponses+=1;
          }
       });
+
+      answerCorrelations = answerCorrelations.sort((a, b) => (a.question < b.question) ? -1 : 1)
+
       console.log("Total Frequency: " + frequencyCheck)
       this.setState({ uniqueAnswers, averages, answerCorrelations, numResponses }, () => (this.checkPopulations()));
     }
