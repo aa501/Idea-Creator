@@ -219,6 +219,37 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(takers);
         }
 
+        [Authorize]
+        [HttpPost("turk")]
+        public ActionResult CreateTurkSurvey(CreateTurkSurveyRequest req)
+        {
+            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
+            Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
+
+
+            Survey survey = new Survey();
+            survey.Uid = req.UniqueId;
+            survey.ProjectId = proj.Id;
+            survey.Prototypes = req.Prototypes;
+            if (cpt != null)
+            survey.ConceptId = cpt.Id;
+            survey.SurveyName = req.SurveyName;
+            survey.Notes = req.Notes;
+            survey.Qualifications = req.Qualifications;
+            survey.DateCreated = DateTime.Now;
+            survey.Questions = req.Questions;
+            survey.Status = req.Status;
+
+            _context.Survey.Add(survey);
+            _context.SaveChanges();
+
+            ISurvey turkSurvey = SurveyFactory.Build(SurveyTypes.TurkSurvey);
+            
+            turkSurvey.LoadSurvey(survey);
+            turkSurvey.execute();
+            return Ok();
+        }
+
         //[Authorize]
         //[HttpPost("/turk")]
         //public ActionResult TurkSurvey([FromBody]CreateTurkSurveyRequest req)
