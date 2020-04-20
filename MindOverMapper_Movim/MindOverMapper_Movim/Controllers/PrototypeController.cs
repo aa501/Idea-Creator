@@ -92,5 +92,20 @@ namespace MindOverMapper_Movim.Controllers
             mimeProvider.TryGetContentType(Path.Combine(path, FileName), out mimeType);
             return File(stream, mimeType);
         }
+
+        [AllowAnonymous]
+        [HttpGet("anon-file/{FileName}")]
+        public ActionResult getFileAnon(String FileName)
+        {
+            AzureFileService fileService = new AzureFileService(this._appSettings);
+            CloudFile cloudFile = fileService.getFIle("files", FileName);
+            string path = Path.Combine(_env.WebRootPath, "files");
+            cloudFile.DownloadToFile(Path.Combine(path, FileName), FileMode.Create);
+            var stream = new FileStream(Path.Combine(path, FileName), FileMode.Open);
+            var mimeProvider = new FileExtensionContentTypeProvider();
+            string mimeType;
+            mimeProvider.TryGetContentType(Path.Combine(path, FileName), out mimeType);
+            return File(stream, mimeType);
+        }
     }
 }

@@ -215,7 +215,7 @@ namespace MindOverMapper_Movim.Controllers
         [HttpGet("{uid}/takers")]
         public ActionResult GetTakers(string uid)
         {
-            var takers = _context.SurveyAnswer.Where(a => a.SurveyUid == uid);
+            var takers = _context.SurveyTaker.Where(a => a.SurveyUid == uid);
             return Ok(takers);
         }
 

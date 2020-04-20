@@ -220,7 +220,7 @@ export default class EditSurvey extends Component {
              'projectUid': this.state.projectName.uid,
              'prototypes': JSON.stringify(this.state.chosenPrototypes),
              'conceptUid': '',
-             'notes': '',
+             'notes': this.state.surveyNotes,
              'qualifications': '',
              'questions': JSON.stringify(this.state.finalQuestionSet),
              'status': surveyStates.Written,
