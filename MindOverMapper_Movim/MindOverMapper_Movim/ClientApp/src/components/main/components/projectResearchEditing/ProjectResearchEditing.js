@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { Button, Label } from 'reactstrap';
 import Slide from '@material-ui/core/Slide';
-import { Container, Row, Col, FormGroup, InputGroup, Form, Input} from 'react-bootstrap';
+import { Container, Row, Col, FormGroup, InputGroup, Form, Input, Card} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
@@ -184,14 +184,13 @@ export default class ProjectResearchEditing extends Component {
             formData.append('Files', file);
         });
         formData.append('ProjectId', project.Id);
-        axios.post("/api/research/file/",
+        axios.post("/api/research/file/",  formData,
             {
                 headers: {
                     Authorization: 'Bearer ' + this.state.userData.token, //the token is a variable which holds the token
                     'Content-Type': 'multipart/form-data'
                 }
-            },
-            formData
+            }           
             ).then(response => {
                 this.setState({researchFiles: response.data});
                 
@@ -217,7 +216,7 @@ export default class ProjectResearchEditing extends Component {
             }
         })
         .then( response => {
-            this.setState({researchFiles: response.date});
+            this.setState({researchFiles: response.data});
         })
         const response = await axios.get(`/api/project/${uid}`, {
             headers: {
@@ -600,11 +599,11 @@ export default class ProjectResearchEditing extends Component {
 
                         <div>
                             {
-                                this.state.researchFiles.map( file => {
+                                this.state.researchFiles.map( file => 
                                     <Card>
-                                        <a href="javascript:void(0);" onClick={this.downloadFile(FileName)}>{FileName}</a>
+                                        <a href="javascript:void(0);" onClick={() => { this.downloadFile(file.fileName) }}>{file.fileName}</a>
                                     </Card>
-                                })
+                                )
                             }
                             
                         </div>

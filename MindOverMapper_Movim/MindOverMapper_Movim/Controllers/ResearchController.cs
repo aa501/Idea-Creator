@@ -94,6 +94,8 @@ namespace MindOverMapper_Movim.Controllers
             return NotFound();
         }
 
+        [Authorize]
+        [HttpPost("file")]
         public ActionResult StoreFile(CreateResearchFileRequest req)
         {   
             string path = Path.Combine(_env.WebRootPath, "files");   
