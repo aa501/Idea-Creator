@@ -100,7 +100,7 @@ namespace MindOverMapper_Movim.Controllers
         {   
             string path = Path.Combine(_env.WebRootPath, "files");   
             IList<ResearchFile> researchFiles = new List<ResearchFile>();    
-            Project project = _context.Project.Where(proj => proj.Uid = req.uid).first<Project>();     
+            Project project = _context.Project.Where(proj => proj.Uid == req.uid).First<Project>();     
             foreach(IFormFile file in req.Files)
             {
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
