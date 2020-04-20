@@ -19,5 +19,6 @@ namespace MindOverMapper_Movim.Models.Requests
         public string reward {get;set;}
         public string country {get;set;}
         public string subDivision{get;set;}
+        public int maxSurveys{ get; set;}
     }
 }

@@ -20,5 +20,6 @@ namespace MindOverMapper_Movim.Models
         public string Status { get; set; }
         public string EndDate { get; set; }
         public string Reward { get; set; }
+        public string HitId { get; set; }
     }
 }

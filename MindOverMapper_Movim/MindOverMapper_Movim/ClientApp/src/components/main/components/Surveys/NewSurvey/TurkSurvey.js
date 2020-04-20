@@ -25,7 +25,8 @@ export default class TurkSurvey extends Component {
             subDivision: null,
             adult: false,
             hitUrl: null,
-            successModal: false
+            successModal: false,
+            maxSurveys: 10,
                     
         }
     }
@@ -49,6 +50,7 @@ export default class TurkSurvey extends Component {
             'reward': this.state.reward,
             'country': this.state.country,
             'subDivision': this.state.subDivision,
+            'maxSurveys': this.state.maxSurveys,
         }
         axios.post('/api/survey/turk', data, {
             headers: {
@@ -93,6 +95,10 @@ export default class TurkSurvey extends Component {
     adultChanged = (evt) => {
         this.setState({adult: evt.target.checked});
     }
+
+    maxSurveysChanged = (evt) => {
+        this.setState({maxSurveys: evt.target.value});
+    }
     render () {
         return (
             <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
@@ -112,6 +118,11 @@ export default class TurkSurvey extends Component {
                                     shrink: true,
                                 }}
                                 />
+                        </FormGroup>
+                        <FormGroup>
+                            <h5>Max # of Surveys</h5>
+                            <TextField type="number" value={this.state.maxSurveys} onChange={this.maxSurveysChanged}></TextField>
+
                         </FormGroup>
                         <FormGroup>
                             <h5>Regional Restrictions</h5>
@@ -138,8 +149,11 @@ export default class TurkSurvey extends Component {
                         aria-describedby="alert-dialog-slide-description"
                         >
                         <DialogTitle id="responsibe-alert-dialog-slide-title">
-                            Hit Created Successfully.  Preview: {this.state.hitUrl}
+                            Hit Created Successfully.  
                         </DialogTitle>
+                        <DialogContent>
+                            Preview the survey: <a href={this.state.hitUrl}>{this.state.hitUrl}</a>
+                        </DialogContent>
                         <DialogActions>
                             <Button onClick={this.handleCloseConfirmationModal} variant="primary">close</Button>
                             

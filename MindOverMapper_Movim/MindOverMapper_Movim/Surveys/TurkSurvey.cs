@@ -65,8 +65,9 @@ namespace MindOverMapper_Movim.Surveys
             throw new Exception("Uh OH! Something went wrong!");
         }
 
-        public async Task<string> createHit(Survey survey, string reward)
+        public async Task<CreateHITResponse> createHit(Survey survey, string reward, int maxSurveys)
         {
+            CreateHITResponse response = new CreateHITResponse();
             try
             {
                 this._survey = survey;
@@ -79,17 +80,18 @@ namespace MindOverMapper_Movim.Surveys
                 hitRequest.Description = this._survey.Notes;
                 hitRequest.AssignmentDurationInSeconds = 7200;
                 hitRequest.LifetimeInSeconds = 7200;
+                hitRequest.MaxAssignments = maxSurveys;
                 Qualification qualification = new Qualification();
                 qualification.QualificationTypeId = "00000000000000000071";
                 QualificationType qType = new QualificationType();
                 System.Threading.CancellationToken token = new System.Threading.CancellationToken();
-                CreateHITResponse response = await client.CreateHITAsync(hitRequest, token);
-                return "https://workersandbox.mturk.com/projects/" + response.HIT.HITTypeId + "/tasks";
+                response = await client.CreateHITAsync(hitRequest, token);
+                return response;
             }
             catch(Exception e)
             {
                 Console.Write(e);
-                return "";
+                return response;
             }
            
            

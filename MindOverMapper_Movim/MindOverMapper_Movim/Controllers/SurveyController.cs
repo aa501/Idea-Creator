@@ -78,6 +78,20 @@ namespace MindOverMapper_Movim.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("hitid/{hitid}/retrieve")]
+        public ActionResult GetHitSurvey(string hitid)
+        {
+            var survey = _context.Survey.Where(u => u.HitId == hitid);
+
+            if (survey == null)
+            {
+                return BadRequest(new { message = "Survey does not exist!" });
+            }
+
+            return Ok(survey);
+        }
+
+        [AllowAnonymous]
         [HttpPost("post-answers")]
         public ActionResult PostAnswers([FromBody] SurveyAnswerRequest req) {
 
@@ -232,7 +246,7 @@ namespace MindOverMapper_Movim.Controllers
 
         [Authorize]
         [HttpPost("turk")]
-        public async ActionResult CreateTurkSurvey([FromBody] CreateTurkSurveyRequest req)
+        public async Task<ActionResult> CreateTurkSurvey([FromBody] CreateTurkSurveyRequest req)
         {
             Project proj = _context.Project.Where(p => p.Uid == req.projectUid).FirstOrDefault<Project>();
             Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
@@ -251,14 +265,17 @@ namespace MindOverMapper_Movim.Controllers
             survey.Questions = req.Questions;
             survey.Status = req.Status;
 
-            _context.Survey.Add(survey);
-            _context.SaveChanges();
+            
 
             TurkSurvey turkSurvey = new TurkSurvey(_appSettings);
 
-            var result = await turkSurvey.createHit(survey, req.reward);
-            
-            return Ok(result);
+            var result = await turkSurvey.createHit(survey, req.reward, req.maxSurveys);
+            survey.HitId = result.HIT.HITTypeId;
+            _context.Survey.Add(survey);
+            _context.SaveChanges();
+
+            var response = "https://workersandbox.mturk.com/projects/" + result.HIT.HITTypeId + "/tasks";
+            return Ok(response);
         }
 
         //[Authorize]

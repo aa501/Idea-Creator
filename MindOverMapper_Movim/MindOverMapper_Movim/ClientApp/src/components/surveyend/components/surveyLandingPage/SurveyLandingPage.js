@@ -72,6 +72,37 @@ export default class SurveyLandingPage extends Component {
       this.setState({ surveyCode: event.target.value });
     }
 
+    componentDidMount = () => {
+      let hitId = window.location.search.substr(1).split("&")
+      if(hitId[0] !== ""){
+        this.getHitIdSurvey((hitId[0].split("="))[1])
+      }
+      
+    }
+
+    getHitIdSurvey = async (hitId) => {
+        this.setLoading(true);
+        const response = await axios.get(`/api/survey/hitid/${hitId}/retrieve`, {
+        }).then(response => {
+          response = response.data;
+          if (response.length > 0) {
+            this.setState({
+                survey: response[0],
+            }, () => (this.verifySurvey()));
+          }
+          else {
+            this.openErrorModal();
+            this.setState({
+              errorMessage: 'No survey was found with that code.'
+            }, () => (this.setLoading(false)));
+          }
+      }).catch(() => {
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'Error loading survey. Please contact your system administrator.'
+          }, () => (this.setLoading(false)));
+        });
+    }
     /* Todo: Change controller to pull only relevant questions based on a unique survey code.
        Requirements: Change api link in both this file and the controller with {uid} */
     getSurvey = async () => {
@@ -193,7 +224,17 @@ export default class SurveyLandingPage extends Component {
                       'demographics': this.state.demographics
                   },
             ).then(() => {
-                this.reset();
+              let hitId = window.location.search.substr(1).split("&")
+              if(hitId[0] !== ""){
+                let query = "";
+                answers.forEach( (value, key) => {
+                  query += "&" + key + "=" + value;
+                })
+                let url = window.location.search + query;
+                window.location.href ="https://workersandbox.mturk.com/mturk/externalSubmit" + url;
+              }
+              this.reset();
+
             }).catch(() => {
               this.openErrorModal();
               this.setState({
