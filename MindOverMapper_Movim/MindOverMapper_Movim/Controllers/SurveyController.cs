@@ -12,6 +12,7 @@ using MindOverMapper_Movim.Surveys;
 using System.Security.Claims;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace MindOverMapper_Movim.Controllers
 {
@@ -218,17 +219,27 @@ namespace MindOverMapper_Movim.Controllers
             var takers = _context.SurveyTaker.Where(a => a.SurveyUid == uid);
             return Ok(takers);
         }
+        
+        [Authorize]
+        [HttpGet("turk-balance")]
+        public async Task<ActionResult> GetTurkBalance(CreateTurkSurveyRequest req)
+        {
+            TurkSurvey turkSurvey = new TurkSurvey(_appSettings);
+             var balance = await turkSurvey.getBalance();
+             return Ok(balance);
+        }
+
 
         [Authorize]
         [HttpPost("turk")]
-        public ActionResult CreateTurkSurvey(CreateTurkSurveyRequest req)
+        public ActionResult CreateTurkSurvey([FromBody] CreateTurkSurveyRequest req)
         {
-            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
+            Project proj = _context.Project.Where(p => p.Uid == req.projectUid).FirstOrDefault<Project>();
             Concept cpt = _context.Concept.Where(c => c.Uid == req.ConceptUid).FirstOrDefault<Concept>();
 
 
             Survey survey = new Survey();
-            survey.Uid = req.UniqueId;
+            survey.Uid = req.uniqueId;
             survey.ProjectId = proj.Id;
             survey.Prototypes = req.Prototypes;
             if (cpt != null)
@@ -243,10 +254,10 @@ namespace MindOverMapper_Movim.Controllers
             _context.Survey.Add(survey);
             _context.SaveChanges();
 
-            ISurvey turkSurvey = SurveyFactory.Build(SurveyTypes.TurkSurvey);
+            TurkSurvey turkSurvey = new TurkSurvey(_appSettings);
+
+            var resut = turkSurvey.createHit(survey);
             
-            turkSurvey.LoadSurvey(survey);
-            turkSurvey.execute();
             return Ok();
         }
 
