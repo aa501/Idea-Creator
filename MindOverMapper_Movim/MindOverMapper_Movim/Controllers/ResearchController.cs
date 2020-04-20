@@ -100,21 +100,24 @@ namespace MindOverMapper_Movim.Controllers
         {   
             string path = Path.Combine(_env.WebRootPath, "files");   
             IList<ResearchFile> researchFiles = new List<ResearchFile>();    
-            Project project = _context.Project.Where(proj => proj.Uid == req.uid).First<Project>();     
-            foreach(IFormFile file in req.Files)
+            Project project = _context.Project.Where(proj => proj.Uid == req.uid).First<Project>();
+            if (req.Files != null)
             {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                string filepath = Path.Combine(path, fileName);
-                FileStream fileStream = new FileStream(filepath, FileMode.Create);
-                file.CopyTo(fileStream);
-                fileStream.Close();
-                AzureFileService fileService = new AzureFileService(this._appSettings);
-                fileService.storeFile("files", fileName, filepath);
-                ResearchFile researchFile = new ResearchFile();
-                researchFile.FileName = fileName;
-                researchFile.ProjectId = project.Id;
-                researchFiles.Add(researchFile);
-                _context.ResearchFile.Add(researchFile);
+                foreach (IFormFile file in req.Files)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string filepath = Path.Combine(path, fileName);
+                    FileStream fileStream = new FileStream(filepath, FileMode.Create);
+                    file.CopyTo(fileStream);
+                    fileStream.Close();
+                    AzureFileService fileService = new AzureFileService(this._appSettings);
+                    fileService.storeFile("files", fileName, filepath);
+                    ResearchFile researchFile = new ResearchFile();
+                    researchFile.FileName = fileName;
+                    researchFile.ProjectId = project.Id;
+                    researchFiles.Add(researchFile);
+                    _context.ResearchFile.Add(researchFile);
+                }
             }
 
             _context.SaveChanges();
