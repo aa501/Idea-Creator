@@ -682,7 +682,7 @@ namespace MindOverMapper_Movim.Controllers
             _context.ProjectParameters.AddRange(parameters);
             _context.SaveChanges();
 
-            return Ok(new { message = "Success!" });
+            return Ok(proj);
         }
 
         [Authorize]

@@ -155,26 +155,7 @@ export default class ProjectResearch extends Component {
             }
         })
         .then(response => {
-          this.uploadFiles(response.data)
-        });
-    }
 
-    uploadFiles = (project) => {
-        let formData = new FormData();
-        this.state.files.map(file => {
-            formData.append('Files', file);
-        });
-        formData.append('ProjectId', project.Id);
-        axios.post("/api/research/file/", formData, 
-            {
-                headers: {
-                    Authorization: 'Bearer ' + this.state.userData.token, //the token is a variable which holds the token
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
-            
-        ).then(response => {
-            this.setState({researchFiles: response.data});
         });
     }
 
