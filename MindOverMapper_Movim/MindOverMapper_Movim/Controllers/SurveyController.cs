@@ -233,7 +233,7 @@ namespace MindOverMapper_Movim.Controllers
             var takers = _context.SurveyTaker.Where(a => a.SurveyUid == uid);
             return Ok(takers);
         }
-        
+
         [Authorize]
         [HttpGet("turk-balance")]
         public async Task<ActionResult> GetTurkBalance(CreateTurkSurveyRequest req)
@@ -265,7 +265,7 @@ namespace MindOverMapper_Movim.Controllers
             survey.Questions = req.Questions;
             survey.Status = req.Status;
 
-            
+
 
             TurkSurvey turkSurvey = new TurkSurvey(_appSettings);
 
@@ -278,6 +278,35 @@ namespace MindOverMapper_Movim.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [HttpPut("turk/{uid}")]
+        public async Task<ActionResult> UpdateTurkSurvey(string uid, [FromBody] UpdateTurkSurvey req)
+        {
+            Survey surv = _context.Survey.Where(u => u.Uid == uid).FirstOrDefault<Survey>();
+
+            if (surv == null)
+            {
+                return BadRequest(new { message = "Invalid Survey" });
+            }
+
+            surv.Prototypes = req.Prototypes;
+            surv.SurveyName = req.SurveyName;
+            surv.Notes = req.Notes;
+            surv.Qualifications = req.Qualifications;
+            surv.DateCreated = DateTime.Now;
+            surv.Questions = req.Questions;
+            surv.Status = req.Status;
+
+            TurkSurvey turkSurvey = new TurkSurvey(_appSettings);
+
+            var result = await turkSurvey.createHit(survey, req.reward, req.maxSurveys);
+            survey.HitId = result.HIT.HITTypeId;
+            _context.Survey.Add(survey);
+            _context.SaveChanges();
+
+            var response = "https://workersandbox.mturk.com/projects/" + result.HIT.HITTypeId + "/tasks";
+            return Ok(response);
+        }
         //[Authorize]
         //[HttpPost("/turk")]
         //public ActionResult TurkSurvey([FromBody]CreateTurkSurveyRequest req)

@@ -265,17 +265,19 @@ export default class SurveyAnalytics extends Component {
 
     renderSpecificAnswers = (id, idx) => {
       var filtered = this.state.uniqueAnswers.filter(ans => ans.question == id);
-      if (filtered.length && idx < 1)
+      console.log(filtered)
       {
         return (
           <div>
           {
             filtered.map((ans, index) => {
+              if (index < 3) {
               return (
                 <div>
-                {ans.answer}
+                <b>{index +1}{") "}</b>{ans.answer}
                 </div>
               )
+            }
             })
           }
           </div>
@@ -285,20 +287,21 @@ export default class SurveyAnalytics extends Component {
 
     renderUniqueAnswers = () => {
       const questions = JSON.parse(this.state.analyzedSurvey.questions)
+      console.log(questions)
+      const uniqueAnswers = this.state.uniqueAnswers;
       const filtered = [];
       questions.forEach(function(qsn) {
-        if (!filtered.includes(qsn.text))
-        filtered.push(qsn.text)
+      if (qsn.type != "Rating")
+        filtered.push(qsn)
       });
-      const uniqueAnswers = this.state.uniqueAnswers
+      console.log(filtered)
       return (
-        <div>
+        <div id ="question-container">
           {filtered.map((qsn, index) => {
               return (
                 <div>
-                    <h5><b>Question:</b></h5>
                     <div>
-                    {qsn}
+                    <h5>{qsn.text}</h5>
                     </div>
                     <p></p>
                     <h6><b>Top 3 Answers:</b></h6>
@@ -319,16 +322,13 @@ export default class SurveyAnalytics extends Component {
 
 
     renderAverages = () => {
-      const questions = JSON.parse(this.state.analyzedSurvey.questions);
-      console.log(questions)
       return (
         <div id ="question-container">
               {this.state.compiledAverages.map((average, index) => {
                   return (
                     <div>
-                      <h5><b>Question:</b></h5>
                       <div>
-                      {this.renderQuestion(average.question)}
+                      <h5>{this.renderQuestion(average.question)}</h5>
                       </div>
                       <p></p>
                       <h6><b>Average: {average.average.toFixed(2)} / 10 </b></h6>
@@ -429,8 +429,11 @@ export default class SurveyAnalytics extends Component {
                       <hr id="hr-2" />
                   </div>
               </div>
-              <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
-              {this.renderAverages()}
+              <div id ="push-container">
+                <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+                {this.renderAverages()}
+                {this.renderUniqueAnswers()}
+                </div>
               </div>
 
               <Dialog open={this.state.loading}

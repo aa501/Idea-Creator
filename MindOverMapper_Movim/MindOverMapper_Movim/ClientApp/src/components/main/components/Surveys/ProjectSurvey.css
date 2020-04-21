@@ -18,6 +18,10 @@
   margin-left: 23%;
 }
 
+.offset {
+  margin-left: 32px;
+}
+
 .survey-paper-holder{
     height: 40%;
     width: 50%;

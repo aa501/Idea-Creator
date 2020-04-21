@@ -556,16 +556,16 @@ export default class ProjectSurvey extends Component {
                                                       <hr />
                                                       <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                           <FontAwesomeIcon id='font-awesome-space-right' icon="info-circle" style={{ fontSize: '1.4em' }}/>
-                                                          <strong>Status</strong> {survey.status}
+                                                          <strong style={{marginRight: "20px"}}>Status:</strong> {survey.status}
                                                       </Typography>
                                                       <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                           <FontAwesomeIcon id='font-awesome-space-right' icon="question" style={{ fontSize: '1.4em' }}/>
-                                                          <strong>Questions</strong> {JSON.parse(survey.questions).length}
+                                                          <strong>Questions:</strong> {JSON.parse(survey.questions).length}
                                                       </Typography>
-                                                      {/* <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
-                                                          <FontAwesomeIcon id='font-awesome-space-right' icon="comments" style={{ fontSize: '1.4em' }}/>
-                                                          <strong>Responses</strong> {this.getResponseCount(index)}
-                                                      </Typography> */}
+                                                      <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                          <Row style={{marginLeft: "3px"}}><FontAwesomeIcon id='font-awesome-space-right' icon="comments" style={{ fontSize: '1.4em' }}/>
+                                                          <strong>Turk:</strong> { this.state.mTurk ? <div class="offset">Yes</div> : <div class="offset">No</div>}</Row>
+                                                      </Typography>
                                                       <hr />
                                                       <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                           <FontAwesomeIcon id='font-awesome-space-right' icon="scroll" style={{ fontSize: '1.4em' }}/>

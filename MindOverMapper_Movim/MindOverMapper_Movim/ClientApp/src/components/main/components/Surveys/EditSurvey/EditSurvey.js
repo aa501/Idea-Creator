@@ -43,6 +43,7 @@ export default class NewSurvey extends Component {
             loading: false,
             surveyName: this.props.location.state.template.surveyName,
             surveyNotes: this.props.location.state.template.notes,
+            hitId: this.props.location.state.template.hitId,
             pulledQuestions: [],
             questions: [],
             chosenQuestions: [],
@@ -70,6 +71,7 @@ export default class NewSurvey extends Component {
 
             choices: '',
             choiceArray: [],
+            turkChanged: false,
         }
     }
 
@@ -78,21 +80,44 @@ export default class NewSurvey extends Component {
         await this.loadData();
     }
 
+    turkOptions = () => {
+      var test = this.validateSurvey();
+      if (test == false) {
+        this.openErrorModal();
+        this.setState({
+          errorMessage: 'You are missing parts of your survey!'
+        });
+      }
+
+      this.props.history.push({
+        pathname: '/edit-turk-survey',
+        state: {...this.state, ...this.props.location.state}
+      })
+    }
+
     loadData = async () => {
+      var mTurk = false;
+      var hitId = this.state.hitId
       this.setLoading(true);
       await this.getAllSurveys();
       await this.getQuestions();
       await this.loadTemplateQuestions();
       await this.getPrototypes();
+      if (hitId != undefined)
+      {
+        mTurk = true;
+      }
       const prototypes = this.state.chosenPrototypes;
 
       const loadedPrototypes = JSON.parse(this.state.template.prototypes);
       loadedPrototypes.forEach(function(pro) {
             prototypes.push(pro);
       });
+      console.log(mTurk, hitId)
       this.setState({
+        mTurk,
         chosenPrototypes: prototypes
-      }, () => (console.log(this.state.chosenPrototypes)));
+      }, () => (console.log(this.state.mTurk)));
       await this.setLoading(false);
     }
 
@@ -223,7 +248,7 @@ export default class NewSurvey extends Component {
         if (test == false) {
           this.openErrorModal();
           this.setState({
-            errorMessage: 'You are part(s) of your survey!'
+            errorMessage: 'You are missing part(s) of your survey!'
           });
         }
 
@@ -705,6 +730,10 @@ export default class NewSurvey extends Component {
       }
     }
 
+    MTurkChanged = (evt) => {
+      this.setState({mTurk: evt.target.checked});
+    }
+
     renderQuestions = () => {
       const finalQuestionSet = this.state.finalQuestionSet;
       if (finalQuestionSet.length > 0) {
@@ -981,9 +1010,11 @@ export default class NewSurvey extends Component {
                             <TextField id="name" variant="outlined" onChange={this.handleSurveyNameChange} fullWidth value={this.state.surveyName} label="Survey Name (Respondents will not see this name)" />
                         </FormGroup>
                         <FormGroup>
-                            <h5>2. If using MTurk, add demographics here.</h5>
-                            <TextField variant="outlined" fullWidth label="Survey Demographics" multiline rows={3} placeholder="Survey comments" />
-
+                          <h5>2. Use Amazon Mechanical turk?</h5>
+                          <div>
+                            <div hidden={!this.state.hitId}>This survey is using mTurk. This cannot be changed.</div>
+                            <FormControlLabel hidden={this.state.turkChanged} control={ <Checkbox onChange={this.MTurkChanged} checked={this.state.mTurk}/>} label="Check to use Turk" labelPlacement="end"/>
+                          </div>
                         </FormGroup>
 
                         <FormGroup>
@@ -1043,10 +1074,13 @@ export default class NewSurvey extends Component {
                     <div class="d-flex justify-content-around flex-row">
                             <Button variant="danger" onClick={this.cancel} >Cancel</Button>
                             <span>
-                                <Button variant="success" onClick={this.saveSurvey}>Save and Exit</Button>
-                              {/*  <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
-                                <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button> */}
-                            </span>
+                            { this.state.mTurk
+                              ? <Button variant="success" onClick={this.turkOptions}>Next</Button>
+                              : <Button variant="success" onClick={this.saveSurvey}>Save and Exit</Button>
+                            }
+                            {/*  <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
+                              <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button> */}
+                          </span>
                     </div>
                     <Dialog
                     open={this.state.questionDialog}

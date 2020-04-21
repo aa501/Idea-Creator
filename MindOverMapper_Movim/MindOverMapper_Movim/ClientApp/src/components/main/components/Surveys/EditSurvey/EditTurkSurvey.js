@@ -13,7 +13,7 @@ const surveyStates = {
   function Transition(props) {
     return <Slide direction="up" {...props} />;
   }
-export default class TurkSurvey extends Component {
+export default class EditTurkSurvey extends Component {
 
     constructor(props) {
         super(props);
@@ -44,7 +44,7 @@ export default class TurkSurvey extends Component {
     }
 
     saveSurvey = () => {
-      axios.post('/api/survey', {
+      axios.post('/api/survey/', {
            'surveyName': this.state.surveyName,
            'uniqueId': this.state.uniqueId,
            'projectUid': this.state.projectName.uid,
@@ -73,6 +73,7 @@ export default class TurkSurvey extends Component {
       }
 
     SubmitTurk = () => {
+        var uid = this.state.template.uid;
         let data = {
             'SurveyName': this.state.surveyName,
             'uniqueId': this.state.uniqueId,
@@ -88,7 +89,7 @@ export default class TurkSurvey extends Component {
             'subDivision': this.state.subDivision,
             'maxSurveys': this.state.maxSurveys,
         }
-        axios.post('/api/survey/turk', data, {
+        axios.post(`/api/survey/turk/${uid}`, data, {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token
             }
@@ -97,12 +98,13 @@ export default class TurkSurvey extends Component {
             this.setState({hitUrl: response.data});
             this.setState({successModal: true});
         }).catch(() => {
-          this.handleOpenOptionModal();
+          this.openErrorModal();
           this.setState({
-            errorMessage: 'Error: Survey could not be saved!'
-          });
+            errorMessage: 'There was an error configuring Turk. This survey will be saved without the connection.'
+          }, () => (this.saveSurvey()));
         });
     }
+
 
     componentDidMount = () => {
         this.getBalance();
