@@ -18,7 +18,7 @@ import ProjectSurvey from './components/Surveys/ProjecctSurvey.js';
 import NewSurvey from './components/Surveys/NewSurvey/NewSurvey.js';
 import SurveyAnalytics from './components/Surveys/surveyAnalytics/SurveyAnalytics.js';
 import EditSurvey from './components/Surveys/EditSurvey/EditSurvey.js';
-
+import TurkSurvey from './components/Surveys/NewSurvey/TurkSurvey.js';
 
 export class Main extends Component {
     static displayName = Main.name;
@@ -58,6 +58,7 @@ export class Main extends Component {
                         <Route path='/add-prototype' component={ProjectPrototype} />
                         <Route path='/surveys' component={ProjectSurvey} />
                         <Route path='/new-survey' component={NewSurvey} />
+                        <Route path='/turk-survey/' component={TurkSurvey} />
                         <Route path='/survey-analytics' component={SurveyAnalytics} />
                         <Route path='/edit-survey' component={EditSurvey} />
                     </Layout>
