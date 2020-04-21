@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ProgressBar from 'react-bootstrap/ProgressBar'
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -32,6 +33,8 @@ export default class SurveyAnalytics extends Component {
         quantitatives: [],
         uniqueAnswers: [],
         averages: [],
+        compiledAverages: [],
+        combinedUniques: [],
     }
   }
 
@@ -68,6 +71,7 @@ export default class SurveyAnalytics extends Component {
     var uniqueAnswers = [];
     var averages = [];
     var uniqueResponseIds = [];
+    var compiledAverages = [];
     const responses = this.state.responses;
     const qualitatives = this.state.qualitatives;
     const quantitatives = this.state.quantitatives;
@@ -152,9 +156,36 @@ export default class SurveyAnalytics extends Component {
       });
 
       answerCorrelations = answerCorrelations.sort((a, b) => (a.question < b.question) ? -1 : 1)
+      averages = averages.sort((a, b) => (a.question < b.question) ? -1 : 1);
+      uniqueAnswers = uniqueAnswers.sort((a, b) => (a.question - b.question) || b.frequency - a.frequency);
+
+      averages.forEach(function(ans) {
+        var search = compiledAverages.find(aws => aws.question === ans.question)
+        if (!search) {
+          var avgObj =
+          {
+            question: ans.question,
+            average: ans.answer,
+            frequency: ans.frequency
+          }
+          compiledAverages.push(avgObj);
+        }
+
+        else {
+          var index = compiledAverages.indexOf(search)
+          console.log(compiledAverages[index])
+
+          compiledAverages[index].average = (compiledAverages[index].average * compiledAverages[index].frequency) + (ans.answer * ans.frequency)
+          compiledAverages[index].frequency += ans.frequency
+          compiledAverages[index].average =  compiledAverages[index].average /  compiledAverages[index].frequency
+
+          console.log(compiledAverages[index].frequency)
+        }
+
+      });
 
       console.log("Total Frequency: " + frequencyCheck)
-      this.setState({ uniqueAnswers, averages, answerCorrelations, numResponses }, () => (this.checkPopulations()));
+      this.setState({ uniqueAnswers, averages, answerCorrelations, numResponses, compiledAverages }, () => (this.checkPopulations()));
     }
   }
 
@@ -167,6 +198,8 @@ export default class SurveyAnalytics extends Component {
     console.log(this.state.answerCorrelations);
     console.log("Number of Responses");
     console.log(this.state.numResponses);
+    console.log("Compiled Averages");
+    console.log(this.state.compiledAverages);
   }
 
   getSurveyResponses = async () => {
@@ -202,6 +235,114 @@ export default class SurveyAnalytics extends Component {
         });
     }
   }
+
+    renderStatus = () => {
+      if (this.state.analyzedSurvey.status == "Deployed")
+      {
+        return (
+          <h4 id="status-text">Status: <h4 style={{ color: "orange" }}><strong>Deployed</strong></h4></h4>
+        )
+      }
+      else if (this.state.analyzedSurvey.status == "Closed")
+      {
+        return (
+          <h4 id="status-text">Status: <h4 style={{ color: "green" }}><strong>Closed</strong></h4></h4>
+        )
+      }
+      else
+      {
+        return (
+          <h4 id="status-text">Status: <h4 style={{ color: "red" }}><strong>Not Deployed</strong></h4></h4>
+        )
+      }
+    }
+
+    renderQuestion = (id) => {
+      var found = this.state.questions.find(qsn => qsn.id == id);
+      if (found)
+      return found.text
+    }
+
+    renderSpecificAnswers = (id, idx) => {
+      var filtered = this.state.uniqueAnswers.filter(ans => ans.question == id);
+      if (filtered.length && idx < 1)
+      {
+        return (
+          <div>
+          {
+            filtered.map((ans, index) => {
+              return (
+                <div>
+                {ans.answer}
+                </div>
+              )
+            })
+          }
+          </div>
+        )
+      }
+    }
+
+    renderUniqueAnswers = () => {
+      const questions = JSON.parse(this.state.analyzedSurvey.questions)
+      const filtered = [];
+      questions.forEach(function(qsn) {
+        if (!filtered.includes(qsn.text))
+        filtered.push(qsn.text)
+      });
+      const uniqueAnswers = this.state.uniqueAnswers
+      return (
+        <div>
+          {filtered.map((qsn, index) => {
+              return (
+                <div>
+                    <h5><b>Question:</b></h5>
+                    <div>
+                    {qsn}
+                    </div>
+                    <p></p>
+                    <h6><b>Top 3 Answers:</b></h6>
+                    {
+                      this.renderSpecificAnswers(qsn.id, index)
+                    }
+                    <div>
+
+                    </div>
+                    <hr />
+                </div>
+              )
+          })
+          }
+        </div>
+      )
+    }
+
+
+    renderAverages = () => {
+      const questions = JSON.parse(this.state.analyzedSurvey.questions);
+      console.log(questions)
+      return (
+        <div id ="question-container">
+              {this.state.compiledAverages.map((average, index) => {
+                  return (
+                    <div>
+                      <h5><b>Question:</b></h5>
+                      <div>
+                      {this.renderQuestion(average.question)}
+                      </div>
+                      <p></p>
+                      <h6><b>Average: {average.average.toFixed(2)} / 10 </b></h6>
+                      <div>
+                      <ProgressBar now={average.average} max={10} />
+
+                      </div>
+                      <hr />
+                    </div>
+                  )
+              })
+              }
+          </div>
+    )}
 
     navHome = () => {
         this.props.history.push({
@@ -274,20 +415,22 @@ export default class SurveyAnalytics extends Component {
 
               <div id="analytics-main-content">
 
-                  <h3 id="survey-name" >"Survey-Name"</h3>
-                  <hr id="hr-1" />
+                  <h3 id="survey-name" >Results for Survey: <b>{this.state.analyzedSurvey.surveyName}</b></h3>
                   <div id="surveyID">
-                          <h6>Unique ID: 123456</h6>
+                          <h5>Unique ID: {this.state.analyzedSurvey.uid}</h5>
                   </div>
                   <div id="status" style={{marginTop: "25px", marginBottom: "35px"}}>
-                          <h4 id="status-text">Status: <h4 style={{ color: "green" }}><strong>Complete</strong></h4></h4>
+                  {this.renderStatus()}
                   </div>
+
 
                   <div id="results">
                       <h3 id="results-header" >Survey Results</h3>
                       <hr id="hr-2" />
                   </div>
-
+              </div>
+              <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+              {this.renderAverages()}
               </div>
 
               <Dialog open={this.state.loading}

@@ -14,6 +14,7 @@ import Dropzone from 'react-dropzone'
 import './ProjectResearch.css';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import * as FileSaver from 'file-saver';
 
 export default class ProjectResearch extends Component {
     constructor(props) {
@@ -34,6 +35,8 @@ export default class ProjectResearch extends Component {
             projectResearchLink2: '',
             projectResearchLink1: '',
             projectNotes: '',
+            files: [],
+            researchFiles: []
         }
     }
 
@@ -150,9 +153,11 @@ export default class ProjectResearch extends Component {
                 }],
                 'stimulus': []
             }
+        })
+        .then(response => {
+
         });
     }
-
 
     nextPage = () => {
         this.props.history.push({
@@ -215,6 +220,25 @@ export default class ProjectResearch extends Component {
             pathname: '/project-landing-page',
             state: this.state  // need this for moving to different component
         });
+    }
+
+     downloadFile = (file) => {
+            axios.get('/api/prototype/file/' + file, {
+                responseType: 'arraybuffer',
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token,
+                    'Content-Type': 'text/html'
+
+                }
+            })
+                .then(response => {
+                    let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
+                    FileSaver.saveAs(downloadedFile, file);
+                });
+        }
+
+    onDrop = (files) => {
+        this.setState({ files: files });
     }
 
     state = { showing: true };

@@ -5,7 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { Container, Row, Col, FormGroup, InputGroup, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Input } from 'reactstrap';
 import { Chip, List, ListSubheader, ListItem, ListItemText, Select, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
-import { Checkbox, RadioGroup, FormControlLabel, Radio, TextareaAutosize, CircularProgress } from '@material-ui/core';
+import { Checkbox, RadioGroup, FormLabel, Radio, TextareaAutosize, CircularProgress } from '@material-ui/core';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
@@ -71,6 +71,7 @@ export default class EditSurvey extends Component {
 
             choices: '',
             choiceArray: [],
+            mTurk: false
         }
     }
 
@@ -81,6 +82,12 @@ export default class EditSurvey extends Component {
         this.setLoading(false);
     }
 
+    turkOptions = () => {
+      this.props.history.push({
+        pathname: '/turk-survey',
+        state: {...this.state, ...this.props.location.state}
+    })
+    }
     getAllSurveys = () => {
       axios.get('/api/survey/', {
           headers: {
@@ -789,6 +796,11 @@ export default class EditSurvey extends Component {
       }
     }
 
+    MTurkChanged = (evt) => {
+      this.setState({mTurk: evt.target.checked});
+    }
+
+
     renderResult() {
       if (this.state.qstType === "Text") {
         return(
@@ -951,8 +963,8 @@ export default class EditSurvey extends Component {
                             <TextField id="name" variant="outlined" onChange={this.handleSurveyNameChange} fullWidth value={this.state.surveyName} label="Survey Name (Respondents will not see this name)" />
                         </FormGroup>
                         <FormGroup>
-                            <h5>2. If using MTurk, add demographics here.</h5>
-                            <TextField variant="outlined" fullWidth label="Survey Demographics" multiline rows={3} placeholder="Survey comments" />
+                            <h5>2. Use Amazon Mechanical turk?</h5>
+                            <Checkbox onChange={this.MTurkChanged} checked={this.state.mTurk}/>
 
                         </FormGroup>
 
@@ -1011,7 +1023,10 @@ export default class EditSurvey extends Component {
                     <div class="d-flex justify-content-around flex-row">
                             <Button variant="danger" onClick={this.cancel} >Cancel</Button>
                             <span>
-                                <Button variant="success" onClick={this.saveSurvey}>Save and Exit</Button>
+                              { this.state.mTurk
+                                ? <Button variant="success" onClick={this.turkOptions}>Next</Button>
+                                : <Button variant="success" onClick={this.saveSurvey}>Save and Exit</Button>
+                              }
                               {/*  <Button variant="success" onClick={this.finalizeSurvey}>Save and Preview Survey</Button>
                                 <Button variant="success" onClick={this.saveAndTurk}>Save and Collect Live</Button> */}
                             </span>

@@ -40,3 +40,7 @@
     height: 1px;
     background-color: darkgray;
 }
+
+#question-container {
+  margin-left: 50px
+}
