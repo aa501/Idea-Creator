@@ -24,6 +24,7 @@
     "classnames": "^2.2.6",
     "fbjs": "^1.0.0",
     "file-saver": "^2.0.2",
+    "filesaver": "0.0.13",
     "jquery": "^3.4.1",
     "mdbootstrap": "^4.13.0",
     "react": "^16.13.0",

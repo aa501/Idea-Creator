@@ -402,7 +402,7 @@ export default class AdminPanel extends Component {
     }
 
 
-    renderSwitch(param) {
+     /* renderSwitch(param) {
         switch(param % 6) {
           case 1:
             return require("../../../../static/City.jpg");
@@ -415,15 +415,16 @@ export default class AdminPanel extends Component {
             case 5:
             return require("../../../../static/Mountain.jpg");
           default:
-            return require("../../../../static/Underwater.jpg");
-        }
-      }
+            return require("../../../../static/Underwater.jpg");*/
+      //  }
+    // }
 
 
     render() {
 
         return (
             <div className='dashboard-container'>
+               
                 <div className='dashboard-header'>
                 </div>
                 <div className='dashboard-body'>
@@ -435,12 +436,12 @@ export default class AdminPanel extends Component {
                     {this.state.projectList.map((project, index) => {
                         return (
                             <div className='project-paper-holder'>
-                                <Card style={{ height: 400 }}>
+                              <Card style={{ marginTop: 200 }}>
                                     <Paper className='project-paper'>
                                         <CardActionArea>
                                             <CardMedia
-                                                style={{ height: 0, paddingTop: '10em' }}
-                                                image={this.renderSwitch(index)}
+                                                
+                                          //      image={this.renderSwitch(index)}
                                                 title="Idea"
                                             />
                                             <CardContent>
@@ -486,7 +487,7 @@ export default class AdminPanel extends Component {
                     }
                     {this.state.userData.type === 'admin' ? (
                         <div className='project-paper-holder'>
-                            <Card>
+                            <Card style={{ marginTop: 250 }}>
                                 <Paper className='project-paper' onClick={this.editAdminsClick}>
                                     <CardActionArea>
                                         <CardMedia
