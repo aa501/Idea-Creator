@@ -44,7 +44,8 @@ export default class EditTurkSurvey extends Component {
     }
 
     saveSurvey = () => {
-      axios.post('/api/survey/', {
+      var uid = this.state.template.uid;
+      axios.put(`/api/survey/${uid}`, {
            'surveyName': this.state.surveyName,
            'uniqueId': this.state.uniqueId,
            'projectUid': this.state.projectName.uid,
@@ -73,6 +74,7 @@ export default class EditTurkSurvey extends Component {
       }
 
     SubmitTurk = () => {
+
         var uid = this.state.template.uid;
         let data = {
             'SurveyName': this.state.surveyName,
@@ -97,12 +99,15 @@ export default class EditTurkSurvey extends Component {
         then(response => {
             this.setState({hitUrl: response.data});
             this.setState({successModal: true});
-        }).catch(() => {
-          this.openErrorModal();
-          this.setState({
-            errorMessage: 'There was an error configuring Turk. This survey will be saved without the connection.'
-          }, () => (this.saveSurvey()));
         });
+
+        // .catch(() => {
+        //   console.log(data)
+        //   this.openErrorModal();
+        //   this.setState({
+        //     errorMessage: 'There was an error configuring Turk. This survey will be saved without the connection.'
+        //   }, () => (this.saveSurvey()));
+        // });
     }
 
 

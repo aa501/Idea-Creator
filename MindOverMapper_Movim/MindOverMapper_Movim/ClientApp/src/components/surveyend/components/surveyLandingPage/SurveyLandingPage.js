@@ -77,7 +77,7 @@ export default class SurveyLandingPage extends Component {
       if(hitId[0] !== ""){
         this.getHitIdSurvey((hitId[0].split("="))[1])
       }
-      
+
     }
 
     getHitIdSurvey = async (hitId) => {
@@ -199,7 +199,7 @@ export default class SurveyLandingPage extends Component {
           var type = typeof(ans)
           console.log(type)
           if (type == "object") {
-            var newAns = ans.join()
+            var newAns = ans.join("{%}")
             var index = answers.indexOf(ans);
             answers[index] = newAns;
             console.log(answers[index]);

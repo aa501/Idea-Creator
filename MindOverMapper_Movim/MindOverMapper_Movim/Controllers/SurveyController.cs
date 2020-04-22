@@ -102,17 +102,17 @@ namespace MindOverMapper_Movim.Controllers
             var answerList = req.AnswerList;
             _context.SurveyTaker.Add(taker);
 
-            foreach (var obj in answerList)
+            for (int i = 0; i < answerList.Length; i++)
             {
-                if (obj != null)
+                if (answerList[i] != null)
                 {
                     SurveyAnswer answer = new SurveyAnswer();
                     answer.Uid = Guid.NewGuid().ToString();
                     answer.SurveyTakerUid = taker.Uid;
                     answer.SurveyUid = req.SurveyUid;
-                    answer.Answer = obj;
+                    answer.Answer = answerList[i];
                     answer.DateCompleted = DateTime.Now;
-                    answer.Qid = Array.IndexOf(answerList, obj);
+                    answer.Qid = i;
                     _context.SurveyAnswer.Add(answer);
                 }
             }
@@ -282,20 +282,20 @@ namespace MindOverMapper_Movim.Controllers
         [HttpPut("turk/{uid}")]
         public async Task<ActionResult> UpdateTurkSurvey(string uid, [FromBody] UpdateTurkSurvey req)
         {
-            Survey surv = _context.Survey.Where(u => u.Uid == uid).FirstOrDefault<Survey>();
+            Survey survey = _context.Survey.Where(u => u.Uid == uid).FirstOrDefault<Survey>();
 
-            if (surv == null)
+            if (survey == null)
             {
                 return BadRequest(new { message = "Invalid Survey" });
             }
 
-            surv.Prototypes = req.Prototypes;
-            surv.SurveyName = req.SurveyName;
-            surv.Notes = req.Notes;
-            surv.Qualifications = req.Qualifications;
-            surv.DateCreated = DateTime.Now;
-            surv.Questions = req.Questions;
-            surv.Status = req.Status;
+            survey.Prototypes = req.Prototypes;
+            survey.SurveyName = req.SurveyName;
+            survey.Notes = req.Notes;
+            survey.Qualifications = req.Qualifications;
+            survey.DateCreated = DateTime.Now;
+            survey.Questions = req.Questions;
+            survey.Status = req.Status;
 
             TurkSurvey turkSurvey = new TurkSurvey(_appSettings);
 

@@ -135,14 +135,13 @@ export default class ProjectSurvey extends Component {
 
     checkEndDates = (surveys) => {
       console.log("Running...")
-      console.log(surveys)
+      var date = Date.now();
+      console.log("Current time: " + ' ' + date )
       const token = this.state.userData.token;
       surveys.forEach(function(survey) {
         var dateNumber = parseFloat(survey.endDate);
-        var date = Date.now();
-        console.log(date + ' ' + survey.endDate);
         if (date > dateNumber) {
-          console.log("Closing survey" + " " + survey.uid)
+          console.log("Closing survey" + " " + survey.uid + ' ' + survey.endDate)
           var convertedDate = date.toString();
           axios.put(`/api/survey/${survey.uid}/pass`,
               {
