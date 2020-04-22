@@ -5,7 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { Container, Row, Col, FormGroup, InputGroup, Form, Button, Card, Alert } from 'react-bootstrap';
 import { Input } from 'reactstrap';
 import { Chip, List, ListSubheader, ListItem, ListItemText, Select, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
-import { Checkbox, RadioGroup, FormLabel, Radio, TextareaAutosize, CircularProgress } from '@material-ui/core';
+import { FormControlLabel, Checkbox, RadioGroup, FormLabel, Radio, TextareaAutosize, CircularProgress } from '@material-ui/core';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
@@ -83,11 +83,20 @@ export default class EditSurvey extends Component {
     }
 
     turkOptions = () => {
+      var test = this.validateSurvey();
+      if (test == false) {
+        this.openErrorModal();
+        this.setState({
+          errorMessage: 'You are missing parts of your survey!'
+        });
+      }
+
       this.props.history.push({
         pathname: '/turk-survey',
         state: {...this.state, ...this.props.location.state}
-    })
+      })
     }
+
     getAllSurveys = () => {
       axios.get('/api/survey/', {
           headers: {
@@ -682,6 +691,10 @@ export default class EditSurvey extends Component {
       }
     }
 
+    MTurkChanged = (evt) => {
+      this.setState({mTurk: evt.target.checked});
+    }
+
     renderQuestions = () => {
       const finalQuestionSet = this.state.finalQuestionSet;
       if (finalQuestionSet.length > 0) {
@@ -795,11 +808,6 @@ export default class EditSurvey extends Component {
         )
       }
     }
-
-    MTurkChanged = (evt) => {
-      this.setState({mTurk: evt.target.checked});
-    }
-
 
     renderResult() {
       if (this.state.qstType === "Text") {
@@ -964,8 +972,7 @@ export default class EditSurvey extends Component {
                         </FormGroup>
                         <FormGroup>
                             <h5>2. Use Amazon Mechanical turk?</h5>
-                            <Checkbox onChange={this.MTurkChanged} checked={this.state.mTurk}/>
-
+                            <FormControlLabel control={ <Checkbox onChange={this.MTurkChanged} checked={this.state.mTurk}/>} label="Check to use Turk" labelPlacement="end"/>
                         </FormGroup>
 
                         <FormGroup>

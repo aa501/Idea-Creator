@@ -16,6 +16,17 @@ import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/rea
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+const chipColors = [
+  'rgb(51, 153, 255)',
+  'rgb(102, 178, 255)',
+  'rgb(153, 204, 255)'
+];
+
+const chipTextColors = [
+  'rgb(255, 255, 255)',
+  'rgb(0, 0, 0)',
+  'rgb(0, 0, 0)'
+];
 
 export default class SurveyAnalytics extends Component {
   constructor(props) {
@@ -32,9 +43,8 @@ export default class SurveyAnalytics extends Component {
         qualitatives: [],
         quantitatives: [],
         uniqueAnswers: [],
-        averages: [],
-        compiledAverages: [],
-        combinedUniques: [],
+        quantGroups: [],
+        qualGroups: []
     }
   }
 
@@ -67,173 +77,167 @@ export default class SurveyAnalytics extends Component {
     this.setState({ qualitatives, quantitatives }, () => this.processResponses());
   }
 
+    getSurveyResponses = async () => {
+      var uid = this.state.analyzedSurvey.uid;
+      if (uid != null) {
+          console.log(uid);
+          const response = await axios.get(`/api/survey/${uid}/responses`, {
+              headers: {
+                  Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+              }
+          }).then(response => {
+              response = response.data;
+              this.setState({
+                  responses: response
+              }, () => (console.log(this.state.responses)));
+          });
+      }
+    }
+
+    getSubjects = async () => {
+      var uid = this.state.analyzedSurvey.uid;
+      if (uid != null) {
+          console.log(uid);
+          console.log("Subjects")
+          const response = await axios.get(`/api/survey/${uid}/takers`, {
+              headers: {
+                  Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+              }
+          }).then(response => {
+              response = response.data;
+              this.setState({
+                  subjects: response
+              }, () => (
+                console.log(this.state.subjects)));
+          });
+      }
+    }
+
   processResponses = () => {
-    var uniqueAnswers = [];
-    var averages = [];
-    var uniqueResponseIds = [];
-    var compiledAverages = [];
     const responses = this.state.responses;
     const qualitatives = this.state.qualitatives;
     const quantitatives = this.state.quantitatives;
-    var answerCorrelations = this.state.answerCorrelations;
+    var modeGroup = [];
     var frequencyCheck = 0;
-    var numResponses = this.state.numResponses;
 
-    var qualIds = [];
-    var quantIds = [];
+    var qualGroups = [];
+    var quantGroups = [];
 
     qualitatives.forEach(function(qual) {
-      qualIds.push(qual.id);
+      var qualObject = {
+        id: qual.id,
+        question: qual.text,
+        answerGroup: []
+      }
+      qualGroups.push(qualObject)
     });
 
     quantitatives.forEach(function(quant) {
-      quantIds.push(quant.id);
+      var quantObject = {
+        id: quant.id,
+        question: quant.text,
+        answerGroup: []
+      }
+      quantGroups.push(quantObject)
     });
+
+    console.log(responses)
 
     if (responses.length)
     {
       responses.forEach(function(response) {
+        var found = qualGroups.find(qsn => qsn.id === response.qid)
+        if (found) {
+          var index = qualGroups.indexOf(found);
+          console.log("Pushing " + response.answer + " to group " + qualGroups[index]);
+          var splitStr = response.answer.split("{%}")
 
-        if (qualIds.includes(response.qid)) {
-            var aCAnswer = {
-              takerUid: response.surveyTakerUid,
-              question: response.qid,
-              answer: response.answer
-            };
-            answerCorrelations.push(aCAnswer);
-            var found = uniqueAnswers.find(ans => ans.answer === response.answer);
-            if (found) {
-              console.log(response);
-              var foundId = uniqueAnswers.indexOf(found);
-              uniqueAnswers[foundId].frequency += 1
-              }
-            else {
-              var newAnswer = {
-                  question: response.qid,
-                  answer: response.answer,
-                  frequency: 1
-                };
-              uniqueAnswers.push(newAnswer);
-            }
-            frequencyCheck += 1;
+          splitStr.forEach(function(str) {
+            qualGroups[index].answerGroup.push(str);
+          });
         }
 
-        else if (quantIds.includes(response.qid)) {
-            var aCAnswer = {
-              takerUid: response.surveyTakerUid,
-              question: response.qid,
-              answer: parseInt(response.answer)
-            };
-            answerCorrelations.push(aCAnswer);
-            var found = averages.find(ans => ans.answer === parseInt(response.answer));
-            if (found) {
-              console.log(response);
-              var foundId = averages.indexOf(found);
-              averages[foundId].frequency += 1
-              }
-            else {
-              var newAnswer = {
-                  question: response.qid,
-                  answer: parseInt(response.answer),
-                  frequency: 1
-                };
-              averages.push(newAnswer);
-            }
-            frequencyCheck += 1;
+        found = quantGroups.find(qsn => qsn.id === response.qid)
+        if (found) {
+          var index = quantGroups.indexOf(found);
+          console.log("Pushing " + response.answer + " to group " + quantGroups[index])
+          quantGroups[index].answerGroup.push(parseInt(response.answer));
         }
 
         else {
-          console.log("Question could not be organized.")
+          console.log("Error processing response")
         }
-
-      });
-
-      responses.forEach(function(res) {
-         if (!uniqueResponseIds.includes(res.surveyTakerUid)) {
-           uniqueResponseIds.push(res.surveyTakerUid);
-           numResponses+=1;
-         }
-      });
-
-      answerCorrelations = answerCorrelations.sort((a, b) => (a.question < b.question) ? -1 : 1)
-      averages = averages.sort((a, b) => (a.question < b.question) ? -1 : 1);
-      uniqueAnswers = uniqueAnswers.sort((a, b) => (a.question - b.question) || b.frequency - a.frequency);
-
-      averages.forEach(function(ans) {
-        var search = compiledAverages.find(aws => aws.question === ans.question)
-        if (!search) {
-          var avgObj =
-          {
-            question: ans.question,
-            average: ans.answer,
-            frequency: ans.frequency
-          }
-          compiledAverages.push(avgObj);
-        }
-
-        else {
-          var index = compiledAverages.indexOf(search)
-          console.log(compiledAverages[index])
-
-          compiledAverages[index].average = (compiledAverages[index].average * compiledAverages[index].frequency) + (ans.answer * ans.frequency)
-          compiledAverages[index].frequency += ans.frequency
-          compiledAverages[index].average =  compiledAverages[index].average /  compiledAverages[index].frequency
-
-          console.log(compiledAverages[index].frequency)
-        }
-
+        frequencyCheck+=1
       });
 
       console.log("Total Frequency: " + frequencyCheck)
-      this.setState({ uniqueAnswers, averages, answerCorrelations, numResponses, compiledAverages }, () => (this.checkPopulations()));
+      this.setState({ qualGroups, quantGroups }, () => (this.checkPopulations()));
     }
+  }
+
+  getMode = (array, limit) =>
+  {
+      var highest = [];
+      var modes = [];
+      var iter = 0
+
+      if(array.length == 0)
+          return null;
+      var modeMap = {};
+
+      var maxEl = array[0]
+      var maxCount = 1;
+
+      while (iter < limit) {
+
+        for(var i = 0; i < array.length; i++)
+        {
+            var el = array[i];
+            if(modeMap[el] == null)
+                modeMap[el] = 1;
+            else
+                modeMap[el]++;
+            if(modeMap[el] > maxCount)
+            {
+                maxEl = el;
+                maxCount = modeMap[el];
+            }
+        }
+
+        highest.push(maxEl);
+        modes.push(maxCount);
+
+        array = array.filter(el => el != maxEl)
+        iter+=1;
+      }
+
+      console.log(highest);
+      highest.reverse();
+
+      return (
+          <div>
+            <b id="answer-container">Top 3 Answers</b>
+            <div id="answer-container" class="row">
+            {
+              highest.map((ans, index) => {
+                return (
+                  <div>
+                    <Chip style={{marginRight: "10px", marginTop: "10px", backgroundColor: chipColors[index], textColor: chipTextColors[index]}} size="medium" color="rgb(255, 0, 0)" label={ans}></Chip>
+                  </div>
+                )
+              }
+              )
+            }
+            </div>
+          </div>
+        )
   }
 
   checkPopulations = () => {
-    console.log("Unique Answers");
-    console.log(this.state.uniqueAnswers);
-    console.log("Averages");
-    console.log(this.state.averages);
-    console.log("Total Correlations");
-    console.log(this.state.answerCorrelations);
-    console.log("Number of Responses");
-    console.log(this.state.numResponses);
-    console.log("Compiled Averages");
-    console.log(this.state.compiledAverages);
-  }
-
-  getSurveyResponses = async () => {
-    var uid = this.state.analyzedSurvey.uid;
-    if (uid != null) {
-        console.log(uid);
-        const response = await axios.get(`/api/survey/${uid}/responses`, {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
-            }
-        }).then(response => {
-            response = response.data;
-            this.setState({
-                responses: response
-            }, () => (console.log(this.state.responses)));
-        });
-    }
-  }
-
-  getSubjects = async () => {
-    var uid = this.state.analyzedSurvey.uid;
-    if (uid != null) {
-        console.log(uid);
-        const response = await axios.get(`/api/survey/${uid}/takers`, {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
-            }
-        }).then(response => {
-            response = response.data;
-            this.setState({
-                subjects: response
-            }, () => (console.log(this.state.subjects)));
-        });
-    }
+    console.log("Quality Groups")
+    console.log(this.state.qualGroups)
+    console.log("Quantity Groups")
+    console.log(this.state.quantGroups)
   }
 
     renderStatus = () => {
@@ -265,17 +269,19 @@ export default class SurveyAnalytics extends Component {
 
     renderSpecificAnswers = (id, idx) => {
       var filtered = this.state.uniqueAnswers.filter(ans => ans.question == id);
-      if (filtered.length && idx < 1)
+      console.log(filtered)
       {
         return (
           <div>
           {
             filtered.map((ans, index) => {
+              if (index < 3) {
               return (
                 <div>
-                {ans.answer}
+                <b>{index +1}{") "}</b>{ans.answer}
                 </div>
               )
+            }
             })
           }
           </div>
@@ -284,65 +290,50 @@ export default class SurveyAnalytics extends Component {
     }
 
     renderUniqueAnswers = () => {
-      const questions = JSON.parse(this.state.analyzedSurvey.questions)
-      const filtered = [];
-      questions.forEach(function(qsn) {
-        if (!filtered.includes(qsn.text))
-        filtered.push(qsn.text)
-      });
-      const uniqueAnswers = this.state.uniqueAnswers
-      return (
-        <div>
-          {filtered.map((qsn, index) => {
-              return (
-                <div>
-                    <h5><b>Question:</b></h5>
-                    <div>
-                    {qsn}
-                    </div>
-                    <p></p>
-                    <h6><b>Top 3 Answers:</b></h6>
-                    {
-                      this.renderSpecificAnswers(qsn.id, index)
-                    }
-                    <div>
+      const qualGroups = this.state.qualGroups;
 
-                    </div>
-                    <hr />
-                </div>
-              )
-          })
-          }
-        </div>
-      )
+      return (
+        <div> {
+        this.state.qualGroups.map((question, index) => {
+          return (
+            <div id="question-container">
+              <h5>{question.question}</h5>
+              <div class="row">{this.getMode(question.answerGroup, 3)}</div>
+              <hr />
+            </div>
+          )
+        })
+      } </div>
+    )}
+
+    getAverage = (group) => {
+      console.log("running")
+      var length = group.length;
+      var sum = 0;
+      group.forEach(function (ans) {
+        sum += ans;
+      })
+      var average = sum/length;
+      console.log(sum)
+      return average;
     }
 
 
     renderAverages = () => {
-      const questions = JSON.parse(this.state.analyzedSurvey.questions);
-      console.log(questions)
-      return (
-        <div id ="question-container">
-              {this.state.compiledAverages.map((average, index) => {
-                  return (
-                    <div>
-                      <h5><b>Question:</b></h5>
-                      <div>
-                      {this.renderQuestion(average.question)}
-                      </div>
-                      <p></p>
-                      <h6><b>Average: {average.average.toFixed(2)} / 10 </b></h6>
-                      <div>
-                      <ProgressBar now={average.average} max={10} />
+      const quantGroups = this.state.quantGroups;
 
-                      </div>
-                      <hr />
-                    </div>
-                  )
-              })
-              }
-          </div>
-    )}
+      return (
+        this.state.quantGroups.map((question, index) => {
+          return (
+            <div id="question-container">
+              <h5>{question.question}</h5>
+              <b>Average: {this.getAverage(question.answerGroup).toFixed(2)} / 10 </b>
+              <ProgressBar style={{marginTop: "5px"}} now={this.getAverage(question.answerGroup)} max={10}/>
+              <hr />
+            </div>
+          )
+        }));
+      }
 
     navHome = () => {
         this.props.history.push({
@@ -417,7 +408,7 @@ export default class SurveyAnalytics extends Component {
 
                   <h3 id="survey-name" >Results for Survey: <b>{this.state.analyzedSurvey.surveyName}</b></h3>
                   <div id="surveyID">
-                          <h5>Unique ID: {this.state.analyzedSurvey.uid}</h5>
+                        <h5>Unique ID: {this.state.analyzedSurvey.uid}</h5>
                   </div>
                   <div id="status" style={{marginTop: "25px", marginBottom: "35px"}}>
                   {this.renderStatus()}
@@ -425,12 +416,17 @@ export default class SurveyAnalytics extends Component {
 
 
                   <div id="results">
-                      <h3 id="results-header" >Survey Results</h3>
+                      <h3 id="results-header">Results</h3>
                       <hr id="hr-2" />
                   </div>
               </div>
-              <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
-              {this.renderAverages()}
+              <div id ="push-container">
+                <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+                <h4 id="question-container"><b>Results for {this.state.subjects.length} Responses</b></h4>
+                <hr />
+                {this.renderAverages()}
+                {this.renderUniqueAnswers()}
+                </div>
               </div>
 
               <Dialog open={this.state.loading}
