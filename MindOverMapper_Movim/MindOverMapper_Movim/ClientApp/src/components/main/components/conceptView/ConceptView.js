@@ -383,6 +383,7 @@ export default class ConceptView extends Component {
           errorMessage: 'Error: Concept could not be updated!'
         });
       });
+      this.pullConcepts();
     }
 
 
@@ -403,6 +404,7 @@ export default class ConceptView extends Component {
             errorMessage: 'Error: Concept could not be updated!'
           });
         });
+        this.pullConcepts();
       }
 
       showCombinedArray = () => {
@@ -462,6 +464,7 @@ export default class ConceptView extends Component {
             errorMessage: 'Error: Concept could not be created!'
           });
         }
+        this.pullConcepts();
       }
 
     addQuestion = () => {
@@ -540,7 +543,7 @@ export default class ConceptView extends Component {
             state: this.state  // need this for moving to different component
         });
     }
-    
+
     navLogout = () => {
         this.props.history.push({
             pathname: '/',
@@ -584,7 +587,7 @@ export default class ConceptView extends Component {
                                 Home
                             </NavText>
 
-                        </NavItem>                      
+                        </NavItem>
 
                         <NavItem expanded="true" role="menuitem" eventKey="project">
                             <NavIcon>
@@ -647,7 +650,7 @@ export default class ConceptView extends Component {
 
                         </NavItem>
 
-                        
+
 
                     </SideNav.Nav>
 

@@ -714,14 +714,15 @@ namespace MindOverMapper_Movim.Controllers
 
             var conc = _context.Concept.Where(c => c.Uid == new_uid).FirstOrDefault<Concept>();
 
-            foreach (var obj in answerls){
-                if (obj != null) {
+            for (int i = 0; i < answerls.Length; i++){
+
+                if (answerls[i] != null) {
                     IdeationAnswers ans = new IdeationAnswers
                     {
                         Uid = Guid.NewGuid().ToString(),
                         Cid = conc.Id,
-                        Qid = Array.IndexOf(answerls, obj),
-                        Answer = obj
+                        Qid = i,
+                        Answer = answerls[i]
                     };
 
                     _context.IdeationAnswers.Add(ans);
@@ -739,15 +740,6 @@ namespace MindOverMapper_Movim.Controllers
         {
             var queryString = "concept";
             var questions = _context.Question.Where(q => q.Type == queryString);
-
-            return Ok(questions);
-        }
-
-        [AllowAnonymous]
-        [HttpGet("retrieve-survey")]
-        public ActionResult GetSurveyQuestions()
-        {
-            var questions = _context.Question;
 
             return Ok(questions);
         }
