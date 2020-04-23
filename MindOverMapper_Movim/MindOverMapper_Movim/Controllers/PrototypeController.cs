@@ -57,7 +57,6 @@ namespace MindOverMapper_Movim.Controllers
                     filePaths.Add(fileName);
                 }
             }
-
             Project Project = _context.Project.Where(project => project.Uid == req.ProjectId).First<Project>();
             Prototype prototype = new Prototype();
             prototype.ProjectId = Project.Id;
