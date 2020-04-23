@@ -8,6 +8,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -37,16 +38,16 @@ function Transition(props) {
 }
 
 function getIndex(array, value) {
-    console.log("Searching array for " + typeof(value) + " " + value + " to update index:");
+    // console.log("Searching array for " + typeof(value) + " " + value + " to update index:");
     for (var i = 0; i < array.length; i+=1)
     {
       if (array[i].qid.toString() == value)
       {
-        console.log("Search successful")
+        // console.log("Search successful")
         return i;
       }
     }
-    console.log("Search failed")
+    // console.log("Search failed")
     return -1;
 }
 
@@ -100,7 +101,6 @@ export default class ConceptView extends Component {
               this.setState({
               concepts: response
           });
-        const test = await console.log(this.state.concepts);
     }
 
     getQuestions = async () => {
@@ -119,7 +119,7 @@ export default class ConceptView extends Component {
 
     getAnswers = async (uid) => {
         if (uid != null) {
-            console.log(uid);
+            // console.log(uid);
             const response = await axios.get(`/api/project/${uid}/answers`, {
                 headers: {
                     Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
@@ -128,7 +128,7 @@ export default class ConceptView extends Component {
                 response = response.data;
                 this.setState({
                     answers: response
-                }, () => (console.log("Answers" + this.state.answers)));
+                });
             });
         }
         else { console.log("could not load answers") }
@@ -178,11 +178,14 @@ export default class ConceptView extends Component {
           }, () => {
           this.getQuestions();
         });
+        this.setLoading(true);
+        setTimeout(1000);
         const getA = await this.getAnswers(concept.uid);
+        this.setLoading(false);
       }
 
     handleOpenQuestionModal = async (concept) => {
-        console.log("Answers: " + this.state.answers);
+        // console.log("Answers: " + this.state.answers);
         const cA = await this.computeArrays();
         this.setState({
             learnModal: false,
@@ -198,7 +201,7 @@ export default class ConceptView extends Component {
     }
 
     handleOpenOldQuestionModal = () => {
-      console.log(this.state.combinedAnswered.length);
+      // console.log(this.state.combinedAnswered.length);
       if (this.state.combinedAnswered.length > 0) {
         this.setState({
             oldQuestionModal: true,
@@ -286,7 +289,7 @@ export default class ConceptView extends Component {
     }
 
     handleAnswer = (event, i) => {
-        console.log(event.target.value)
+        // console.log(event.target.value)
         const newAnswers = this.state.newAnswers;
         newAnswers[i] = event.target.value;
         this.setState({ newAnswers });
@@ -294,14 +297,14 @@ export default class ConceptView extends Component {
 
     handleUpdatedAnswer = (event, i) => {
         const answers = this.state.answers;
-        console.log(answers);
+        // console.log(answers);
         var el = getIndex(answers, i);
-        console.log("Searched Answer index: " + el);
+        // console.log("Searched Answer index: " + el);
         try {
             answers[el].answer = event.target.value;
             this.setState({ answers });
         } catch(e) { console.log("Error!")}
-        console.log(this.state.answers);
+        // console.log(this.state.answers);
     }
 
     computeArrays = () => {
@@ -316,28 +319,28 @@ export default class ConceptView extends Component {
             }
         });
 
-        console.log("List of IDs" + ids);
-        console.log(answers)
+        // console.log("List of IDs" + ids);
+        // console.log(answers)
 
         this.state.questions.forEach(function (question) {
            var foundAnswer = answers.find(ans => { return ans.qid === question.id})
-                console.log(foundAnswer)
+                // console.log(foundAnswer)
               if (foundAnswer != undefined) {
                 if (ids.includes(foundAnswer.qid)) {
-                console.log("Found: " + question.id + " in answered questions.");
-                console.log(question);
+                // console.log("Found: " + question.id + " in answered questions.");
+                // console.log(question);
                 var combination = {answer: foundAnswer, question: question}
                 answered.push(combination);
                 }
               }
             else {
-                console.log("Didn't find: " + question.id + " in answered questions.");
-                console.log(question);
+                // console.log("Didn't find: " + question.id + " in answered questions.");
+                // console.log(question);
                 unanswered.push(question);
             }
         });
-        console.log(answered);
-        console.log(unanswered);
+        // console.log(answered);
+        // console.log(unanswered);
 
         this.setAnswered(answered, unanswered);
     }
@@ -348,15 +351,15 @@ export default class ConceptView extends Component {
             combinedAnswered: ans,
             unansweredQuestions: unans
         });
-        const sU = await (console.log("Unanswered: "));
-        console.log(this.state.unansweredQuestions);
-        const sA = await (console.log("Answered: "));
-        console.log(this.state.combinedAnswered);
+        // const sU = await (console.log("Unanswered: "));
+        // // console.log(this.state.unansweredQuestions);
+        // const sA = await (console.log("Answered: "));
+        // // console.log(this.state.combinedAnswered);
     }
 
 
     updateConcept = async () => {
-        console.log(this.state.conceptUid)
+        // console.log(this.state.conceptUid)
 
         axios.put(`/api/project/${this.state.conceptUid}/update-concept`,
             {
@@ -404,11 +407,13 @@ export default class ConceptView extends Component {
             errorMessage: 'Error: Concept could not be updated!'
           });
         });
+        this.setLoading(true);
         this.pullConcepts();
+        this.setLoading(false);
       }
 
       showCombinedArray = () => {
-        console.log(this.state.combinedAnswered.length)
+        // console.log(this.state.combinedAnswered.length)
         if (this.state.combinedAnswered.length > 0) {
           return (
             <div>
@@ -558,6 +563,9 @@ export default class ConceptView extends Component {
         });
     }
 
+    setLoading = (value) => {
+      this.setState({ loading: value })
+    }
 
     render() {
 
@@ -961,6 +969,13 @@ export default class ConceptView extends Component {
             </div>
 
               </div>
+
+              <Dialog open={this.state.loading}
+                  style={{backgroundColor: 'transparent'}}
+                  maxWidth="lg">
+                  <div style={{overflow: 'hidden'}}>{"   "}<CircularProgress/>{"   "}</div>
+              </Dialog>
+
             </div>
 
 

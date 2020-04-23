@@ -166,11 +166,12 @@ export default class Dashboard extends Component {
 
 
     pullProjectsForUser = async () => {
-        const response = await axios.get('/api/project', {
+        var response = await axios.get('/api/project', {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
             }
         }).then(response => response.data);
+        response = response.reverse();
         this.setState({
             projectList: response
         });
@@ -452,7 +453,7 @@ export default class Dashboard extends Component {
                             {this.state.projectList.map((project, index) => {
                                 return (
                                     <div class='project-paper-holder'>
-                                        <Card style={{ height: 150, width: 240, borderTop: "solid", borderTopWidth: "6px", borderTopColor: "#028ECC"}}>
+                                        <Card style={{ height: 200, width: 240, borderTop: "solid", borderTopWidth: "6px", borderTopColor: "#028ECC"}}>
                                             <Paper className='project-paper'>
                                                 <CardActionArea style={{ height: 200 }} onClick={() => this.viewProject(project)}>
 

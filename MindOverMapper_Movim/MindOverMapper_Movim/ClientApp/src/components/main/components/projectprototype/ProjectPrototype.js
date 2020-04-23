@@ -292,57 +292,58 @@ export default class ProjectPrototype extends Component {
                         </Table>
                       </TableContainer>
                       </div>
-                      <div>
-                      <p></p>
-                          <h5 id="subtitle">Add Prototype</h5>
-                          <hr style={{ width: "30%" }} id="hr-1" />
-                      </div>
-                      <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
-                        <Container>
-                        <div className='prototype-definition-holder'>
-                            <TextField style={{width: "400px"}}
-                                value={this.state.prototypetName}
-                                onChange={this.handlePrototypeNameChange}
-                                label="Name"
-                                margin="normal"
-                                placeholder="Enter Name..."
-                                variant="outlined">
-                            </TextField>
+                      <div hidden={this.state.userData.type != "admin"}>
+                        <div>
+                        <p></p>
+                            <h5 id="subtitle">Add Prototype</h5>
+                            <hr style={{ width: "30%" }} id="hr-1" />
                         </div>
-                        <div className='prototype-definition-holder'>
-                            <TextField style={{width: "400px"}}
-                                value={this.state.prototypeDescription}
-                                onChange={this.handlePrototypeDescriptionChange}
-                                label="Description"
-                                margin="normal"
-                                rows="4"
-                                multiline
-                                placeholder="Enter Description..."
-                                 variant="outlined">
-                            </TextField>
-                        </div>
-
-                    <div className = "zone">
-                    <Dropzone onDrop={this.onDrop} multiple>
-                        {({ getRootProps, getInputProps, isDragActive, acceptedFiles}) => (
-                            <div {...getRootProps()}>
-                                <input {...getInputProps()} />
-                                    {isDragActive ? "Drop your file here" : 'Click or drag a file to upload'}
-                                    <ul className="list-group mt-2">
-                                        {acceptedFiles.length > 0 && acceptedFiles.map(acceptedFile => (
-                                            <li className="list-group-item list-group-item-success">
-                                                {acceptedFile.name}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </Dropzone>
-                    </div>
-                    <div>
+                        <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
+                          <Container>
+                          <div className='prototype-definition-holder'>
+                              <TextField style={{width: "400px"}}
+                                  value={this.state.prototypetName}
+                                  onChange={this.handlePrototypeNameChange}
+                                  label="Name"
+                                  margin="normal"
+                                  placeholder="Enter Name..."
+                                  variant="outlined">
+                              </TextField>
+                          </div>
+                          <div className='prototype-definition-holder'>
+                              <TextField style={{width: "400px"}}
+                                  value={this.state.prototypeDescription}
+                                  onChange={this.handlePrototypeDescriptionChange}
+                                  label="Description"
+                                  margin="normal"
+                                  rows="4"
+                                  multiline
+                                  placeholder="Enter Description..."
+                                   variant="outlined">
+                              </TextField>
+                          </div>
+                                  <div className="zone">
+                                      <Dropzone onDrop={this.onDrop} multiple>
+                                          {({ getRootProps, getInputProps, isDragActive, acceptedFiles }) => (
+                                              <div {...getRootProps()}>
+                                                  <input {...getInputProps()} />
+                                                  {isDragActive ? "Drop your file here" : 'Click or drag a file to upload'}
+                                                  <ul className="list-group mt-2">
+                                                      {acceptedFiles.length > 0 && acceptedFiles.map(acceptedFile => (
+                                                          <li className="list-group-item list-group-item-success">
+                                                              {acceptedFile.name}
+                                                          </li>
+                                                      ))}
+                                                  </ul>
+                                              </div>
+                                          )}
+                                      </Dropzone>
+                                  </div>
+                        <div>
                     <Button style={{width: "100px", marginTop: "10px"}} variant="primary" type="submit" onClick={this.submitPrototype}>Upload</Button>
                     </div>
                 </Container>
+                </div>
                 </div>
           </div>
           </div>
