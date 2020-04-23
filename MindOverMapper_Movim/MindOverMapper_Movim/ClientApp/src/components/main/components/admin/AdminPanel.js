@@ -426,8 +426,10 @@ export default class AdminPanel extends Component {
             <div className='dashboard-container'>
                
                 <div className='dashboard-header'>
+                <h3>Edit Projects</h3>
+                <hr style={{width: "100%"}} id="hr-1" />
                 </div>
-                <div className='dashboard-body'>
+                <div className='dashboard-body' style={{marginTop: 50}}>
                     {this.state.projectList.length === 0 ? (
                         <img src={noProjectImage} id='no-projects-image' alt="No Projects Found" />
 
@@ -436,14 +438,9 @@ export default class AdminPanel extends Component {
                     {this.state.projectList.map((project, index) => {
                         return (
                             <div className='project-paper-holder'>
-                              <Card style={{ marginTop: 200 }}>
+                                <Card style={{ minHeight: 200, width: 240, borderTop: "solid", borderTopWidth: "6px", borderTopColor: "#028ECC"}}>
                                     <Paper className='project-paper'>
                                         <CardActionArea>
-                                            <CardMedia
-                                                
-                                          //      image={this.renderSwitch(index)}
-                                                title="Idea"
-                                            />
                                             <CardContent>
                                                 <Typography gutterBottom variant="h5" component="h2">
                                                     {project.title}
@@ -453,31 +450,24 @@ export default class AdminPanel extends Component {
                                                     {project.description.slice(0,75)}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary" component="p">
-                                                    <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" />
-                                                    Project ID: #{project.uid}
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
                                                     <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" />
                                                     Date Created: {project.dateCreated.slice(0, 10)}
                                                 </Typography>
+                                                <div id='share-learn-container' align="center">
+                                                    <Button size="small" style={{marginRight: 10}} onClick={() => { this.editUsersClick(project) }} color="primary">
+                                                        <FontAwesomeIcon id='font-awesome-space' icon="user-edit" />
+                                                    </Button>
+                                                        <Tooltip title="Delete Project">
+                                                            <Button id='learn-button' onClick={()=> {this.openErrorModal(project.uid)}}>
+                                                                <div id = 'trash-icon-button'><FontAwesomeIcon id='admin-delete' icon="trash-alt" /></div>
+
+                                                            </Button>
+                                                        </Tooltip>
+                                                    </div>
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions>
-                                        <div id='share-learn-container'>
-                                            <Button size="small" onClick={() => { this.editUsersClick(project) }} color="primary">
-                                                Edit Users
-                                                <FontAwesomeIcon id='font-awesome-space' icon="edit" />
-                                            </Button>
 
-
-                                                <Tooltip title="Delete Project">
-                                                    <Button id='learn-button' onClick={()=> {this.openErrorModal(project.uid)}}>
-                                                        Delete Project
-                                                        <div id = 'trash-icon-button'><FontAwesomeIcon id='admin-delete' icon="trash-alt" /></div>
-
-                                                    </Button>
-                                                </Tooltip>
-                                            </div>
                                         </CardActions>
                                     </Paper>
                                 </Card>

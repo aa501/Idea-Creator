@@ -190,24 +190,27 @@ export default class SurveyAnalytics extends Component {
 
       while (iter < limit) {
 
-        for(var i = 0; i < array.length; i++)
-        {
-            var el = array[i];
-            if(modeMap[el] == null)
-                modeMap[el] = 1;
-            else
-                modeMap[el]++;
-            if(modeMap[el] > maxCount)
-            {
-                maxEl = el;
-                maxCount = modeMap[el];
-            }
+        if (array.length > 0) {
+
+          for(var i = 0; i < array.length; i++)
+          {
+              var el = array[i];
+              if(modeMap[el] == null)
+                  modeMap[el] = 1;
+              else
+                  modeMap[el]++;
+              if(modeMap[el] > maxCount)
+              {
+                  maxEl = el;
+                  maxCount = modeMap[el];
+              }
+          }
+
+          highest.push(maxEl);
+          modes.push(maxCount);
+
+          array = array.filter(el => el != maxEl)
         }
-
-        highest.push(maxEl);
-        modes.push(maxCount);
-
-        array = array.filter(el => el != maxEl)
         iter+=1;
       }
 
@@ -422,7 +425,7 @@ export default class SurveyAnalytics extends Component {
               </div>
               <div id ="push-container">
                 <div class="mx-auto shadow my-5 p-3" style={{width: "60%", backgroundColor: "white"}}>
-                <h4 id="question-container"><b>Results for {this.state.subjects.length} Responses</b></h4>
+                <h4 id="question-container"><b>Total Responses: {this.state.subjects.length}</b></h4>
                 <hr />
                 {this.renderAverages()}
                 {this.renderUniqueAnswers()}
