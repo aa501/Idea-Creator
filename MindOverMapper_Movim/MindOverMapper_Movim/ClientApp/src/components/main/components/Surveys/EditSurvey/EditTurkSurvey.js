@@ -91,7 +91,7 @@ export default class EditTurkSurvey extends Component {
             'subDivision': this.state.subDivision,
             'maxSurveys': this.state.maxSurveys,
         }
-        axios.post(`/api/survey/turk/${uid}`, data, {
+        axios.put(`/api/survey/turk/${uid}`, data, {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token
             }
@@ -99,15 +99,13 @@ export default class EditTurkSurvey extends Component {
         then(response => {
             this.setState({hitUrl: response.data});
             this.setState({successModal: true});
+        }).catch(() => {
+          console.log(data)
+          this.openErrorModal();
+          this.setState({
+            errorMessage: 'There was an error configuring Turk. This survey will be saved without the connection.'
+          }, () => (this.saveSurvey()));
         });
-
-        // .catch(() => {
-        //   console.log(data)
-        //   this.openErrorModal();
-        //   this.setState({
-        //     errorMessage: 'There was an error configuring Turk. This survey will be saved without the connection.'
-        //   }, () => (this.saveSurvey()));
-        // });
     }
 
 
