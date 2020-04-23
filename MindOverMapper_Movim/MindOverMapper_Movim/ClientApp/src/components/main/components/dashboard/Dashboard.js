@@ -166,11 +166,12 @@ export default class Dashboard extends Component {
 
 
     pullProjectsForUser = async () => {
-        const response = await axios.get('/api/project', {
+        var response = await axios.get('/api/project', {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
             }
         }).then(response => response.data);
+        response = response.reverse();
         this.setState({
             projectList: response
         });
