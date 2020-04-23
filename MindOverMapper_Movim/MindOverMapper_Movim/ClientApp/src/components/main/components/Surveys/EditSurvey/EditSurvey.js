@@ -113,11 +113,11 @@ export default class NewSurvey extends Component {
       loadedPrototypes.forEach(function(pro) {
             prototypes.push(pro);
       });
-      console.log(mTurk, hitId)
+      //console.log(mTurk, hitId)
       this.setState({
         mTurk,
         chosenPrototypes: prototypes
-      }, () => (console.log(this.state.mTurk)));
+      });
       await this.setLoading(false);
     }
 
@@ -129,7 +129,6 @@ export default class NewSurvey extends Component {
       }
       ).then(response => {
           this.setState({ surveys: response.data });
-          console.log(response)
       });
     }
 
@@ -564,7 +563,6 @@ export default class NewSurvey extends Component {
         protoIds.push(file.id)
       });
 
-      console.log(choice);
       if (protoIds.includes(choice.id)) {
         prototypes = prototypes.filter(el => el !== choice)
       }

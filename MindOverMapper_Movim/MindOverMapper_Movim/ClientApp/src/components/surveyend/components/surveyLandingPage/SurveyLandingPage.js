@@ -130,7 +130,7 @@ export default class SurveyLandingPage extends Component {
     }
 
     verifySurvey = async () => {
-      console.log(this.state.survey)
+      // console.log(this.state.survey)
       if (this.state.survey.status.includes("Deployed"))
       {
         await this.getQuestions();
@@ -139,7 +139,7 @@ export default class SurveyLandingPage extends Component {
 
       else if (!this.state.survey.status.includes("Deployed")) {
         this.setLoading(false);
-        console.log(this.state.survey.status);
+        // console.log(this.state.survey.status);
         this.openErrorModal();
         this.setState({
           errorMessage: 'This survey is currently closed to responses.'
@@ -148,13 +148,13 @@ export default class SurveyLandingPage extends Component {
     }
 
     getQuestions = () => {
-      console.log("running");
+      // console.log("running");
       const survey = this.state.survey;
       var questions = JSON.parse(survey.questions);
       var electedQuestions = questions.sort((a, b) => (a.demographic > b.demographic) ? -1 : 1)
 
-      this.setState({ questions, electedQuestions, retrieved: true, length: electedQuestions.length }, () =>
-      (console.log("Question length: " + this.state.electedQuestions.length)));
+      this.setState({ questions, electedQuestions, retrieved: true, length: electedQuestions.length });
+      // (console.log("Question length: " + this.state.electedQuestions.length)));
       this.setLoading(false);
     }
 
@@ -174,7 +174,7 @@ export default class SurveyLandingPage extends Component {
             }
         })
             .then(response => {
-                console.log([response.data])
+                // console.log([response.data])
                 let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
                 FileSaver.saveAs(downloadedFile, file);
             }).catch(() => {
@@ -187,7 +187,7 @@ export default class SurveyLandingPage extends Component {
 
     projectPaths = (item) => {
         let pathArray = JSON.parse(item.prototypePath);
-        console.log(pathArray);
+        // console.log(pathArray);
         return pathArray;
     }
 
@@ -197,7 +197,7 @@ export default class SurveyLandingPage extends Component {
         var answers = this.state.answers;
         answers.forEach(function(ans) {
           var type = typeof(ans)
-          console.log(type)
+          // console.log(type)
           if (type == "object") {
             var newAns = ans.join("{%}")
             var index = answers.indexOf(ans);
@@ -205,7 +205,7 @@ export default class SurveyLandingPage extends Component {
             console.log(answers[index]);
           }
         });
-        console.log(answers)
+        // console.log(answers)
 
 
         answers.forEach(function(answer) {
@@ -213,7 +213,7 @@ export default class SurveyLandingPage extends Component {
           completedAnswerCount += 1;
         })
 
-        console.log(completedAnswerCount)
+        // console.log(completedAnswerCount)
         if (completedAnswerCount == this.state.electedQuestions.length)
         {
             axios.post('/api/survey/post-answers',
@@ -284,8 +284,7 @@ export default class SurveyLandingPage extends Component {
         });
         const answers = this.state.answers;
         answers[i] = event.target.value;
-        this.setState({ answers }, () =>
-        (console.log(this.state.answers)));
+        this.setState({ answers });
     }
 
     handleCloseErrorModal = () => {
@@ -384,8 +383,7 @@ export default class SurveyLandingPage extends Component {
     addCheckedAnswer(arr, i) {
       const answers = this.state.answers;
       answers[i] = arr;
-      this.setState({ answers }, () =>
-      (console.log(this.state.answers)));
+      this.setState({ answers });
     }
 
     /* Renders the HTML for each question type  */
@@ -473,7 +471,7 @@ export default class SurveyLandingPage extends Component {
     getRatingParam(arr, end) {
       var choices = arr;
       var convertString = JSON.parse(choices);
-      console.log(convertString);
+      // console.log(convertString);
       var i = 0;
       var newArray = [];
 
@@ -489,7 +487,7 @@ export default class SurveyLandingPage extends Component {
     createAnswerChoiceArray(qsn, type) {
       var choices = qsn.notes;
       var convertString = JSON.parse(choices);
-      console.log(convertString);
+      // console.log(convertString);
       var i = 0;
       var newArray = [];
 

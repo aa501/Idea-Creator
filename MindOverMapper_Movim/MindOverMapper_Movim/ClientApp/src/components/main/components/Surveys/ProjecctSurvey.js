@@ -30,6 +30,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Popover from '@material-ui/core/Popover';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import './ProjectSurvey.css';
 
@@ -85,6 +86,7 @@ export default class ProjectSurvey extends Component {
     }
 
     getSurveys = () => {
+      this.setLoading(true);
       const responseGroups = this.state.responseGroups;
       axios.get('/api/survey/' + this.state.projectName.uid, {
           headers: {
@@ -97,9 +99,11 @@ export default class ProjectSurvey extends Component {
           this.checkEndDates(response.data);
           this.getSubjects();
         });
+        this.setLoading(false);
     }
 
     getSubjects = async () => {
+      this.setLoading(true);
       const token = this.state.userData.token;
 
       const specificSurveys = this.state.specificSurveys;
@@ -119,8 +123,7 @@ export default class ProjectSurvey extends Component {
             });
         }
       });
-      this.setState({ subjects });
-
+      this.setState({ subjects }, () => (this.setLoading(false)));
     }
 
     getResponseCount = (index) => {
@@ -131,10 +134,8 @@ export default class ProjectSurvey extends Component {
       return 0;
     }
 
-
-
     checkEndDates = (surveys) => {
-      console.log("Running...")
+      this.setLoading(true);
       var date = Date.now();
       console.log("Current time: " + ' ' + date )
       const token = this.state.userData.token;
@@ -163,7 +164,7 @@ export default class ProjectSurvey extends Component {
 
       if (this.state.closeCheck == false) {
       this.getSurveys();
-      this.setState({ closeCheck: true})
+      this.setState({ closeCheck: true}, () => (this.setLoading(false)));
       }
     }
 
@@ -405,6 +406,10 @@ export default class ProjectSurvey extends Component {
           pathname: '/project-view',
           state: this.state  // need this for moving to different component
       });
+  }
+
+  setLoading = (value) => {
+    this.setState({ loading: value })
   }
 
   pushToResearch = () => {
@@ -755,6 +760,15 @@ export default class ProjectSurvey extends Component {
                       </DialogActions>
                     </Dialog>
                 </div>
+
+                <div>
+                    <Dialog open={this.state.loading}
+                    style={{backgroundColor: 'transparent'}}
+                    maxWidth="lg">
+                    <div style={{overflow: 'hidden'}}>{"   "}<CircularProgress/>{"   "}</div>
+                    </Dialog>
+                </div>
+
             </div>
 
     );

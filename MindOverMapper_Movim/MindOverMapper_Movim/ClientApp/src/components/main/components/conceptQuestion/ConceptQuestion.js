@@ -139,7 +139,6 @@ export default class ConceptQuestion extends Component {
     }
 
     handleAnswer = (event, i) => {
-        console.log(event.target.value)
         this.setState({
             answerQueue: event.target.value
         });
@@ -149,7 +148,6 @@ export default class ConceptQuestion extends Component {
     }
 
     submitConcept = () => {
-        console.log(this.state.answers)
 
         axios.post('/api/project/concept',
             {

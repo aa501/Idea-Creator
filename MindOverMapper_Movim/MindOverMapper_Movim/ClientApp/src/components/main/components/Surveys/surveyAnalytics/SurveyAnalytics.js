@@ -80,7 +80,6 @@ export default class SurveyAnalytics extends Component {
     getSurveyResponses = async () => {
       var uid = this.state.analyzedSurvey.uid;
       if (uid != null) {
-          console.log(uid);
           const response = await axios.get(`/api/survey/${uid}/responses`, {
               headers: {
                   Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
@@ -89,7 +88,7 @@ export default class SurveyAnalytics extends Component {
               response = response.data;
               this.setState({
                   responses: response
-              }, () => (console.log(this.state.responses)));
+              });
           });
       }
     }
@@ -97,8 +96,8 @@ export default class SurveyAnalytics extends Component {
     getSubjects = async () => {
       var uid = this.state.analyzedSurvey.uid;
       if (uid != null) {
-          console.log(uid);
-          console.log("Subjects")
+          // console.log(uid);
+          // console.log("Subjects")
           const response = await axios.get(`/api/survey/${uid}/takers`, {
               headers: {
                   Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
@@ -107,8 +106,7 @@ export default class SurveyAnalytics extends Component {
               response = response.data;
               this.setState({
                   subjects: response
-              }, () => (
-                console.log(this.state.subjects)));
+              });
           });
       }
     }
@@ -141,15 +139,13 @@ export default class SurveyAnalytics extends Component {
       quantGroups.push(quantObject)
     });
 
-    console.log(responses)
-
     if (responses.length)
     {
       responses.forEach(function(response) {
         var found = qualGroups.find(qsn => qsn.id === response.qid)
         if (found) {
           var index = qualGroups.indexOf(found);
-          console.log("Pushing " + response.answer + " to group " + qualGroups[index]);
+          // console.log("Pushing " + response.answer + " to group " + qualGroups[index]);
           var splitStr = response.answer.split("{%}")
 
           splitStr.forEach(function(str) {
@@ -160,7 +156,7 @@ export default class SurveyAnalytics extends Component {
         found = quantGroups.find(qsn => qsn.id === response.qid)
         if (found) {
           var index = quantGroups.indexOf(found);
-          console.log("Pushing " + response.answer + " to group " + quantGroups[index])
+          // console.log("Pushing " + response.answer + " to group " + quantGroups[index])
           quantGroups[index].answerGroup.push(parseInt(response.answer));
         }
 
@@ -170,7 +166,7 @@ export default class SurveyAnalytics extends Component {
         frequencyCheck+=1
       });
 
-      console.log("Total Frequency: " + frequencyCheck)
+      // console.log("Total Frequency: " + frequencyCheck)
       this.setState({ qualGroups, quantGroups }, () => (this.checkPopulations()));
     }
   }
@@ -214,7 +210,7 @@ export default class SurveyAnalytics extends Component {
         iter+=1;
       }
 
-      console.log(highest);
+      // console.log(highest);
       highest.reverse();
 
       return (
@@ -237,10 +233,10 @@ export default class SurveyAnalytics extends Component {
   }
 
   checkPopulations = () => {
-    console.log("Quality Groups")
-    console.log(this.state.qualGroups)
-    console.log("Quantity Groups")
-    console.log(this.state.quantGroups)
+    // console.log("Quality Groups")
+    // console.log(this.state.qualGroups)
+    // console.log("Quantity Groups")
+    // console.log(this.state.quantGroups)
   }
 
     renderStatus = () => {
@@ -272,7 +268,7 @@ export default class SurveyAnalytics extends Component {
 
     renderSpecificAnswers = (id, idx) => {
       var filtered = this.state.uniqueAnswers.filter(ans => ans.question == id);
-      console.log(filtered)
+      // console.log(filtered)
       {
         return (
           <div>
@@ -310,14 +306,14 @@ export default class SurveyAnalytics extends Component {
     )}
 
     getAverage = (group) => {
-      console.log("running")
+      // console.log("running")
       var length = group.length;
       var sum = 0;
       group.forEach(function (ans) {
         sum += ans;
       })
       var average = sum/length;
-      console.log(sum)
+      // console.log(sum)
       return average;
     }
 
