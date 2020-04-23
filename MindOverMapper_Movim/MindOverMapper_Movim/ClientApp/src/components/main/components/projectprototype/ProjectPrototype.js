@@ -321,24 +321,28 @@ export default class ProjectPrototype extends Component {
                                  variant="outlined">
                             </TextField>
                         </div>
-
-                    <div className = "zone">
-                    <Dropzone onDrop={this.onDrop} multiple>
-                        {({ getRootProps, getInputProps, isDragActive, acceptedFiles}) => (
-                            <div {...getRootProps()}>
-                                <input {...getInputProps()} />
-                                    {isDragActive ? "Drop your file here" : 'Click or drag a file to upload'}
-                                    <ul className="list-group mt-2">
-                                        {acceptedFiles.length > 0 && acceptedFiles.map(acceptedFile => (
-                                            <li className="list-group-item list-group-item-success">
-                                                {acceptedFile.name}
-                                            </li>
-                                        ))}
-                                    </ul>
+                            {this.state.userData.type === "admin" ?
+                                <div className="zone">
+                                    <Dropzone onDrop={this.onDrop} multiple>
+                                        {({ getRootProps, getInputProps, isDragActive, acceptedFiles }) => (
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                {isDragActive ? "Drop your file here" : 'Click or drag a file to upload'}
+                                                <ul className="list-group mt-2">
+                                                    {acceptedFiles.length > 0 && acceptedFiles.map(acceptedFile => (
+                                                        <li className="list-group-item list-group-item-success">
+                                                            {acceptedFile.name}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </Dropzone>
                                 </div>
-                            )}
-                        </Dropzone>
-                    </div>
+                                :
+                                <div>
+                                  </div>
+                                }
                     <div>
                     <Button style={{width: "100px", marginTop: "10px"}} variant="primary" type="submit" onClick={this.submitPrototype}>Upload</Button>
                     </div>
