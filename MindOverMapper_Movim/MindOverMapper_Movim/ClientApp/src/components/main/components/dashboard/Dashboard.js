@@ -28,7 +28,6 @@ import { textAlign } from '@material-ui/system';
 import noProjectImage from "../../../../static/NoProjectsFound.png";
 import City from "../../../../static/City.jpg";
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
-
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
 
@@ -137,6 +136,18 @@ export default class Dashboard extends Component {
         this.setState({
             projectExclusions: event.target.value
         });
+    }
+
+    getBestIdea = async () => {
+      console.log("test")
+      const response = await axios.get(`/api/${this.props.projectInfo.uid}/best-idea`, {
+          headers: {
+              Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
+          }
+      }).then(response => response.data);
+      this.setState({
+          bestIdea: response
+      });
     }
 
     copyToClipboard = () => {
@@ -346,6 +357,19 @@ export default class Dashboard extends Component {
         }
       }
 
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navLogout = () => {
+        this.props.history.push({
+            pathname: '/',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
     render() {
 
@@ -354,86 +378,46 @@ export default class Dashboard extends Component {
             <div className='dashboard-container'>
 
 
-                <SideNav
+                <SideNav expanded="true" style={{
+                    backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"}}
                     onSelect={(selected) => {
                         // Add your code here
                     }}
                 >
 
-                 <SideNav.Toggle />
+
 
                     <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem role="menuitem" eventKey="home">
+                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                             <NavIcon>
-                                    <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                    <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{paddingTop: 13, paddingRight: 32, fontSize: 18}}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 20, fontSize: 16}}>
                                 Home
                             </NavText>
 
                         </NavItem>
 
-                        <NavItem eventKey="charts">
+                        <NavItem role="menuitem" eventKey="project" onClick={() => this.addProject()}>
                             <NavIcon>
-                                    <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
-                            <NavText style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Add Project
                             </NavText>
-                            <NavItem eventKey="charts/linechart">
-                                <NavText>
-                                    Line Chart
-                                </NavText>
-                            </NavItem>
-                            <NavItem eventKey="charts/barchart">
-                                <NavText>
-                                    Bar Chart
-                                </NavText>
-                            </NavItem>
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="settings">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.75em' }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                Settings
-                            </NavText>
 
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="info">
+
+                        <NavItem role="menuitem" eventKey="logout" onClick={() => this.navLogout()}>
                             <NavIcon>
-                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black"  }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                About
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="help">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.75em' }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                Help
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="logout">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.75em' }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Logout
                             </NavText>
 
@@ -449,11 +433,13 @@ export default class Dashboard extends Component {
 
                 <div class="row" id="background-projects">
 
+                    <div style={{ marginLeft: "23%", marginTop: "28px", marginBottom: 0, height: "30px"}} id='subtitle'>
+                        <h3>Current Projects</h3>
+                        <hr style={{width: "100%"}} id="hr-1" />
+                    </div>
 
 
-
-
-                        <div className='dashboard-body'>
+                    <div className='dashboard-body' style={{marginLeft: "20%"}}>
                             {this.state.projectList.length === 0 ? (
                                 <img src={noProjectImage} id='no-projects-image' alt="No Projects Found" />
 
@@ -466,47 +452,26 @@ export default class Dashboard extends Component {
                             {this.state.projectList.map((project, index) => {
                                 return (
                                     <div class='project-paper-holder'>
-                                        <Card style={{ height: 400 }}>
+                                        <Card style={{ height: 150, width: 240, borderTop: "solid", borderTopWidth: "6px", borderTopColor: "#028ECC"}}>
                                             <Paper className='project-paper'>
-                                                <CardActionArea onClick={() => this.viewProject(project)}>
-                                                    <CardMedia
+                                                <CardActionArea style={{ height: 200 }} onClick={() => this.viewProject(project)}>
 
-                                                        style={{ height: 0, paddingTop: '10em' }}
-                                                        image={this.renderSwitch(index)}
-                                                        title="Idea"
-
-                                                    />
-                                                    <CardContent id='project-card-content'>
+                                                    <CardContent style={{ marginTop:-100 }} id='project-card-content'>
                                                         <Typography gutterBottom variant="h5" component="h2">
                                                             {project.title}
                                                         </Typography>
-                                                        <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
-                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="stream" style={{ fontSize: '1.4em' }}/>
+                                                        <Typography style={{ fontSize: 13 }} id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="stream" style={{ fontSize: '1.0em' }}/>
                                                             <strong>Description:</strong> {project.description.slice(0, 58)}...
                                                         </Typography>
-                                                        <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
-                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" style={{ fontSize: '1.1em' }}/>
-                                                                <strong>Project ID:</strong> #{project.uid}
-                                                        </Typography>
-                                                        <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
-                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" style={{ fontSize: '1.4em' }}/>
+
+                                                        <Typography style={{ fontSize: 13 }} id="description-logo" variant="body2" color="textSecondary" component="p">
+                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="calendar" style={{ fontSize: '1.0em' }}/>
                                                             <strong>Date Created:  </strong>{project.dateCreated.slice(0, 10)}
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>
-                                                <CardActions>
-                                                    <div id='share-learn-container'>
-                                                        <Button size="small" color="primary" onClick={this.openShareModal}>
-                                                            Share
-                                    <FontAwesomeIcon id='font-awesome-space' icon="share-square" />
-                                                        </Button>
 
-                                                        <Button id='learn-button' size="small" color="info" onClick={() => this.handleOpenLearnModal(project.uid)}>
-                                                            Learn More
-                                    <FontAwesomeIcon id='font-awesome-space' icon="info-circle" />
-                                                        </Button>
-                                                    </div>
-                                                </CardActions>
                                             </Paper>
                                         </Card>
                                     </div>

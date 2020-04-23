@@ -4,7 +4,7 @@
     overflow-y: scroll;
     height: 95vh;
     max-height: 95vh;
-    
+
 }
 
 .dashboard-header{
@@ -23,10 +23,10 @@
 
 .dashboard-body {
     display: flex;
-    height: 100vh;
-    margin-left: 26%;
-    margin-right: 5%;
-    width: 90%;
+    height: 40vh;
+    margin-left: 40%;
+   
+    width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
@@ -34,15 +34,14 @@
 
 .project-paper-holder{
     height: 30%;
-    width: 35%;
-    margin-right: 60px;
-    margin-top: 10px; 
-    margin-bottom: 260px;
+    width: 10%;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 170px;
 }
 
 .project-paper{
     width: 100%;
-    height: 90%;
 }
 
 #no-projects-image{
@@ -56,8 +55,12 @@
   height: auto;
 }
 
+#project-card{
+  height: 400px;
+}
+
 #project-card-content{
-    min-height: 15%;
+   
 }
 
 #font-awesome-space{
@@ -79,17 +82,16 @@
 
 #projectId-input-ds{
     height: 5vh;
-    min-width: 325px; 
+    min-width: 325px;
 }
 
 #save-changes{
     margin-top: 50px;
 }
 
-#share-learn-container{  
-    margin: auto;
-    margin-top: 0%;
-
+.learn{
+    text-align: center;
+    align-content: center;
 }
 
 #learn-button{
@@ -101,15 +103,23 @@
 }
 
 #dash-icon {
-    color: white;
+    color: black;
+
 }
 
 
-.sidenav{
-    background: black;
+Sidenav {
+    background: white;
+    border-right: solid;
+    border-right-color: #0278B6;
 }
 
+#nav-text{
+    color: black;
+}
 
-
-
-
+#hr-1 {
+    width: 38%;
+    height: 1px;
+    background-color: darkgray;
+}

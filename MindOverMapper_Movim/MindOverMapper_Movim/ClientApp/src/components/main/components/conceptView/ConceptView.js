@@ -29,7 +29,6 @@ import noProjectImage from "../../../../static/NoProjectsFound.png";
 import addProject from "../../../../static/addProject.jpg";
 import City from "../../../../static/City.jpg";
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
-
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
 
@@ -38,12 +37,12 @@ function Transition(props) {
 }
 
 function getIndex(array, value) {
-    console.log(array);
+    console.log("Searching array for " + typeof(value) + " " + value + " to update index:");
     for (var i = 0; i < array.length; i+=1)
     {
-      if (array[i].qid == value)
+      if (array[i].qid.toString() == value)
       {
-        console.log(i)
+        console.log("Search successful")
         return i;
       }
     }
@@ -71,6 +70,7 @@ export default class ConceptView extends Component {
             price: '',
             passion: '',
             deathThreats: '',
+            concepts: [],
             questions: [],
             answers: [],
             newAnswers: [],
@@ -86,9 +86,21 @@ export default class ConceptView extends Component {
         }
     }
 
-    componentDidMount = () => {
-        this.getQuestions();
+    componentDidMount = async () => {
+        this.pullConcepts();
         console.log(this.props);
+    }
+
+    pullConcepts = async () => {
+        const response = await axios.get('/api/project/' + this.state.projectName.uid + '/get-concepts', {
+            headers: {
+                Authorization: 'Bearer ' + this.state.userData.token
+              }//the token is a variable which holds the token
+          }).then(response => response.data);
+              this.setState({
+              concepts: response
+          });
+        const test = await console.log(this.state.concepts);
     }
 
     getQuestions = async () => {
@@ -105,7 +117,6 @@ export default class ConceptView extends Component {
         });
     }
 
-
     getAnswers = async (uid) => {
         if (uid != null) {
             console.log(uid);
@@ -117,9 +128,10 @@ export default class ConceptView extends Component {
                 response = response.data;
                 this.setState({
                     answers: response
-                }, () => (console.log(this.state.answers)));
+                }, () => (console.log("Answers" + this.state.answers)));
             });
-        };
+        }
+        else { console.log("could not load answers") }
     }
 
     handleCloseErrorModal = () => {
@@ -149,7 +161,7 @@ export default class ConceptView extends Component {
       });
     }
 
-    handleOpenLearnModal = (concept) => {
+    handleOpenLearnModal = async (concept) => {
         this.setState({
             learnModal: true,
             conceptUid: concept.uid,
@@ -164,13 +176,14 @@ export default class ConceptView extends Component {
             deathThreats: concept.deathThreats,
             completedConcept: true
           }, () => {
-          this.getAnswers(concept.uid);
+          this.getQuestions();
         });
+        const getA = await this.getAnswers(concept.uid);
       }
 
     handleOpenQuestionModal = async (concept) => {
-        console.log(this.state.answers);
-        this.computeArrays();
+        console.log("Answers: " + this.state.answers);
+        const cA = await this.computeArrays();
         this.setState({
             learnModal: false,
             questionModal: true,
@@ -185,10 +198,18 @@ export default class ConceptView extends Component {
     }
 
     handleOpenOldQuestionModal = () => {
+      console.log(this.state.combinedAnswered.length);
+      if (this.state.combinedAnswered.length > 0) {
         this.setState({
             oldQuestionModal: true,
             questionModal: false
         });
+      }
+      else {
+        this.setState({
+            questionModal: false
+        });
+      }
     }
 
     handleCloseOldQuestionModal = () => {
@@ -275,47 +296,62 @@ export default class ConceptView extends Component {
         const answers = this.state.answers;
         console.log(answers);
         var el = getIndex(answers, i);
-        console.log(el);
-        answers[el].answer = event.target.value;
-        this.setState({ answers });
+        console.log("Searched Answer index: " + el);
+        try {
+            answers[el].answer = event.target.value;
+            this.setState({ answers });
+        } catch(e) { console.log("Error!")}
         console.log(this.state.answers);
     }
 
     computeArrays = () => {
         var ids = [];
+        const answers = this.state.answers;
         var answered = [];
         var unanswered = [];
-        this.state.answers.forEach(answer => ids.push(answer.qid))
-        console.log(ids);
-        this.state.questions.forEach(function(question) {
-          if (ids.includes(question.id))
-          {
-            console.log("Found: " + question.id + " in answered questions.");
-            answered.push(question);
-          }
-          else
-          {
-            console.log("Didn't find: " + question.id + " in answered questions.");
-            unanswered.push(question);
-          }
+
+        answers.forEach(function (answer) {
+            if (!ids.includes(answer.qid)) {
+                ids.push(answer.qid);
+            }
+        });
+
+        console.log("List of IDs" + ids);
+        console.log(answers)
+
+        this.state.questions.forEach(function (question) {
+           var foundAnswer = answers.find(ans => { return ans.qid === question.id})
+                console.log(foundAnswer)
+              if (foundAnswer != undefined) {
+                if (ids.includes(foundAnswer.qid)) {
+                console.log("Found: " + question.id + " in answered questions.");
+                console.log(question);
+                var combination = {answer: foundAnswer, question: question}
+                answered.push(combination);
+                }
+              }
+            else {
+                console.log("Didn't find: " + question.id + " in answered questions.");
+                console.log(question);
+                unanswered.push(question);
+            }
         });
         console.log(answered);
         console.log(unanswered);
 
-        var ansQns = this.state.answers.map ( function(x, i){
-          return {"answer": x, "question": answered[i]}
-        }.bind(this));
-
-        this.setAnswered(ansQns, unanswered);
+        this.setAnswered(answered, unanswered);
     }
 
-    setAnswered = (ans, unans) =>
+    setAnswered = async (ans, unans) =>
     {
         this.setState({
-          combinedAnswered: ans,
-          unansweredQuestions: unans
-        }, () =>
-        console.log(this.state.unansweredQuestions));
+            combinedAnswered: ans,
+            unansweredQuestions: unans
+        });
+        const sU = await (console.log("Unanswered: "));
+        console.log(this.state.unansweredQuestions);
+        const sA = await (console.log("Answered: "));
+        console.log(this.state.combinedAnswered);
     }
 
 
@@ -347,6 +383,7 @@ export default class ConceptView extends Component {
           errorMessage: 'Error: Concept could not be updated!'
         });
       });
+      this.pullConcepts();
     }
 
 
@@ -367,6 +404,35 @@ export default class ConceptView extends Component {
             errorMessage: 'Error: Concept could not be updated!'
           });
         });
+        this.pullConcepts();
+      }
+
+      showCombinedArray = () => {
+        console.log(this.state.combinedAnswered.length)
+        if (this.state.combinedAnswered.length > 0) {
+          return (
+            <div>
+            <h4>Answer all that may apply.</h4>
+            <div> {
+             this.state.combinedAnswered.map(qsn => (
+              <div>
+                  <div>{qsn.question.text}</div>
+                  <TextField
+                      defaultValue={qsn.answer.answer}
+                      onChange={(event) => this.handleUpdatedAnswer(event, `${qsn.question.id}`)}
+                      multiline
+                      rows="3"
+                      fullWidth
+                      variant="outlined">
+                  </TextField>
+                  <p></p>
+             </div>
+             ))
+             }
+             </div>
+          </div>
+          )
+        }
       }
 
       updateAnswers = () => {
@@ -398,8 +464,22 @@ export default class ConceptView extends Component {
             errorMessage: 'Error: Concept could not be created!'
           });
         }
+        this.pullConcepts();
       }
 
+    addQuestion = () => {
+      this.props.history.push({
+          pathname: '/question-editor',
+          state: this.state  // need this for moving to different component
+      });
+    }
+
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
 
     copyToClipboard = () => {
         /* Get the text field */
@@ -420,109 +500,170 @@ export default class ConceptView extends Component {
                 pathname: '/concept',
                 state: this.state  // need this for moving to different component
             });
-          }
+    }
+
+    pushToMindMap = () => {
+        this.props.history.push({
+            pathname: '/project-view',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToResearch = () => {
+        this.props.history.push({
+            pathname: '/project-research-editing',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToConcepts = () => {
+        this.props.history.push({
+            pathname: '/concept-view',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToSurveys = () => {
+        this.props.history.push({
+            pathname: '/surveys',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToPrototypes = () => {
+        this.props.history.push({
+            pathname: '/add-prototype',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navLogout = () => {
+        this.props.history.push({
+            pathname: '/',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navProject = () => {
+        this.props.history.push({
+            pathname: '/project-landing-page',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
 
     render() {
 
 
         return (
-            <div className='dashboard-container'>
+            <div className='concept-container'>
 
-                <SideNav
+                <SideNav expanded="true" style={{
+                    backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"
+                }}
                     onSelect={(selected) => {
                         // Add your code here
                     }}
                 >
 
-                 <SideNav.Toggle />
+
 
                     <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem role="menuitem" eventKey="home">
+                    <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                             <NavIcon>
-                                    <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{paddingTop: 13, paddingRight: 32, fontSize: 18}}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 20, fontSize: 16 }}>
                                 Home
                             </NavText>
 
                         </NavItem>
 
-                        <NavItem eventKey="charts">
+                        <NavItem expanded="true" role="menuitem" eventKey="project">
                             <NavIcon>
-                                    <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
-                            <NavText style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                Add Project
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Project Options
                             </NavText>
-                            <NavItem eventKey="charts/linechart">
-                                <NavText>
-                                    Line Chart
+                            <NavItem eventKey="options" onClick={() => this.navProject()}>
+                                <NavText id="subnav">
+                                    Project Home
                                 </NavText>
                             </NavItem>
-                            <NavItem eventKey="charts/barchart">
-                                <NavText>
-                                    Bar Chart
+                            <NavItem eventKey="options" onClick={this.pushToResearch}>
+                                <NavText  id="subnav">
+                                    Research
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToConcepts}>
+                                <NavText style={{ color: "#0283C4" }} id="subnav">
+                                    Concepts
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToMindMap}>
+                                <NavText id="subnav">
+                                    Mind Map
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToPrototypes}>
+                                <NavText id="subnav">
+                                    Prototypes
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToSurveys}>
+                                <NavText id="subnav">
+                                    Surveys
                                 </NavText>
                             </NavItem>
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="settings">
+                        <NavItem role="menuitem" eventKey="add-question" onClick={() => this.addQuestion()}>
                             <NavIcon>
-                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                Settings
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Add Question
                             </NavText>
 
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="info">
+                        <NavItem role="menuitem" eventKey="logout"  onClick={() => this.navLogout()}>
                             <NavIcon>
-                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                About
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="help">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.75em' }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                Help
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="logout">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.75em' }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Logout
                             </NavText>
 
                         </NavItem>
 
 
+
                     </SideNav.Nav>
 
-               </SideNav>
+                </SideNav>
 
 
+                <div id="concept-main-content">
+                    <div>
+                        <h3>Concepts for {this.state.projectName.title}</h3>
+                        <hr style={{ width: "30%" }} id="hr-1" />
+                    </div>
+                   <div class="row" id="background-concepts">
 
-
-                <div class="row" id="background-concepts">
-                        <h3 id="page-title">Concepts for {this.state.projectName.title}</h3>
                         <div className='concept-board-body'>
                             {this.state.concepts.map((concept, index) => {
                                 return (
@@ -540,23 +681,11 @@ export default class ConceptView extends Component {
                                                             <strong>News Headline</strong> {concept.newsHeadline.slice(0, 58)}...
                                                         </Typography>
                                                         <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
-                                                            <FontAwesomeIcon id='font-awesome-space-right' icon="project-diagram" style={{ fontSize: '1.1em' }}/>
-                                                                <strong>ID:</strong> #{concept.uid}
-                                                        </Typography>
-                                                        <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                             <FontAwesomeIcon id='font-awesome-space-right' icon="heart" style={{ fontSize: '1.4em' }}/>
                                                             <strong>Promise </strong>{concept.promise}
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>
-                                                <CardActions>
-                                                    <div id='share-learn-container'>
-                                                        <Button id='learn-button' size="small" color="info">
-                                                            Edit
-                                                         <FontAwesomeIcon id='font-awesome-space' icon="info-circle" />
-                                                        </Button>
-                                                    </div>
-                                                </CardActions>
                                             </Paper>
                                         </Card>
                                     </div>
@@ -779,37 +908,21 @@ export default class ConceptView extends Component {
                         maxWidth='xl'
                         aria-labelledby="alert-dialog-slide-title"
                         aria-describedby="alert-dialog-slide-description">
-                    <DialogContent>
-                      <Container>
-                          <h4>Answer all that may apply.</h4>
-                          <div>
-                              {
-                                  this.state.combinedAnswered.map(qsn => (
-                                  <div>
-                                          <div key={`qText${qsn.question.id}`}>{qsn.question.text}</div>
-                                          <TextField key={`qsn${qsn.question.id}`}
-                                              defaultValue={qsn.answer.answer}
-                                              onChange={(event) => this.handleUpdatedAnswer(event, `${qsn.question.id}`)}
-                                              multiline
-                                              rows="3"
-                                              fullWidth
-                                              variant="outlined">
-                                          </TextField>
-                                          <p></p>
-                                  </div>
-                                ))
-                              }
-                          </div>
-                      </Container>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button color="danger" onClick={this.handleCloseOldQuestionModal}>Don't Save</Button>
-                        <Button color="primary" disabled={this.state.conceptName.length <= 0} onClick={() => { this.updateAnswers() }}>Save & Finish</Button>
-                    </DialogActions>
-                </Dialog>
-            </div>
-
-            <div>
+                        <DialogContent>
+                             <Container>
+                                <div>
+                                {this.showCombinedArray()}
+                                </div>
+                             </Container>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button color="danger" onClick={this.handleCloseOldQuestionModal}>Don't Save</Button>
+                            <Button color="primary" disabled={this.state.conceptName.length <= 0} onClick={() => { this.updateAnswers() }}>Save & Finish</Button>
+                        </DialogActions>
+                    </Dialog>
+                  </div>
+                </div>
+                <div>
               <Dialog
                 open={this.state.errorModal}
                 TransitionComponent={Transition}

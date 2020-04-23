@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using MindOverMapper_Movim.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -215,6 +214,8 @@ namespace MindOverMapper_Movim.Controllers
         public ActionResult DeleteProject(string uid)
         {
             var proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            AzureFileService fileService = new AzureFileService(this._appSettings);
+
 
             if (proj == null)
             {
@@ -223,6 +224,41 @@ namespace MindOverMapper_Movim.Controllers
 
             var perm = _context.Permissions.Where(p => p.ProjId == proj.Id);
             var param = _context.ProjectParameters.Where(p => p.ProjectId == proj.Id).ToList<ProjectParameters>();
+            var concepts = _context.Concept.Where(c => c.ProjectId == proj.Id).ToList<Concept>();
+            var surveys = _context.Survey.Where(u => u.ProjectId == proj.Id).ToList<Survey>();
+            var prototypes = _context.Prototype.Where(p => p.ProjectId == proj.Id).ToList<Prototype>();
+
+            foreach (Survey u in surveys)
+            {
+                if (u.Id != null)
+                {
+                    var answers = _context.SurveyAnswer.Where(a => a.SurveyUid == u.Uid);
+                    var takers = _context.SurveyTaker.Where(t => t.SurveyUid == u.Uid);
+                    _context.SurveyAnswer.RemoveRange(answers);
+                    _context.SurveyTaker.RemoveRange(takers);
+                }
+            }
+
+            // foreach (Prototype p in prototypes)
+            // {
+            //     if (p.Id != null)
+            //     {
+            //         var result = fileService.DeleteFile(p.PrototypePath, p.PrototypeName);
+            //         if (result == true)
+            //         {
+            //           _context.Prototype.Remove(p);
+            //         }
+            //     }
+            // }
+
+            foreach (Concept c in concepts)
+            {
+                if (c.Id != null)
+                {
+                    var iAnswers = _context.IdeationAnswers.Where(i => i.Cid == i.Id);
+                    _context.IdeationAnswers.RemoveRange(iAnswers);
+                }
+            }
 
             foreach (ProjectParameters p in param)
             {
@@ -232,7 +268,8 @@ namespace MindOverMapper_Movim.Controllers
                     _context.Links.Remove(link);
                 }
             }
-
+            _context.Survey.RemoveRange(surveys);
+            _context.Concept.RemoveRange(concepts);
             _context.ProjectParameters.RemoveRange(param);
             _context.Permissions.RemoveRange(perm);
             _context.Project.Remove(proj);
@@ -683,7 +720,7 @@ namespace MindOverMapper_Movim.Controllers
             _context.ProjectParameters.AddRange(parameters);
             _context.SaveChanges();
 
-            return Ok(new { message = "Success!" });
+            return Ok(proj);
         }
 
         [Authorize]
@@ -715,14 +752,15 @@ namespace MindOverMapper_Movim.Controllers
 
             var conc = _context.Concept.Where(c => c.Uid == new_uid).FirstOrDefault<Concept>();
 
-            foreach (var obj in answerls){
-                if (obj != null) {
+            for (int i = 0; i < answerls.Length; i++){
+
+                if (answerls[i] != null) {
                     IdeationAnswers ans = new IdeationAnswers
                     {
                         Uid = Guid.NewGuid().ToString(),
                         Cid = conc.Id,
-                        Qid = Array.IndexOf(answerls, obj),
-                        Answer = obj
+                        Qid = i,
+                        Answer = answerls[i]
                     };
 
                     _context.IdeationAnswers.Add(ans);
@@ -740,16 +778,6 @@ namespace MindOverMapper_Movim.Controllers
         {
             var queryString = "concept";
             var questions = _context.Question.Where(q => q.Type == queryString);
-
-            return Ok(questions);
-        }
-
-        [AllowAnonymous]
-        [HttpGet("retrieve-survey")]
-        public ActionResult GetSurveyQuestions()
-        {
-            var queryString = "concept";
-            var questions = _context.Question;
 
             return Ok(questions);
         }
@@ -793,7 +821,8 @@ namespace MindOverMapper_Movim.Controllers
                 Type = req.Type,
                 Notes = req.Notes,
                 DateCreated = DateTime.Now,
-                Archived = "No"
+                Archived = "No",
+                Demographic = req.Demographic
             };
 
             _context.Question.Add(qsn);
@@ -847,6 +876,39 @@ namespace MindOverMapper_Movim.Controllers
             _context.SaveChanges();
 
             return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
+        [HttpPost("promising-idea")]
+        public ActionResult AddBestIdea([FromBody] IdeaRequest req)
+        {
+
+            Project proj = _context.Project.Where(p => p.Uid == req.ProjectUid).FirstOrDefault<Project>();
+
+            ProjectParameters param = new ProjectParameters
+            {
+                Uid = Guid.NewGuid().ToString(),
+                Type = "b",
+                Content = req.Idea,
+                ProjectId = proj.Id
+            };
+
+            _context.ProjectParameters.Add(param);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Success!" });
+        }
+
+        [Authorize]
+        [HttpGet("{uid}/promising-idea")]
+        public ActionResult GetPromisingIdea(string uid)
+        {
+
+            Project proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            var promisingIdea = _context.ProjectParameters.Where(b => b.ProjectId == proj.Id);
+            promisingIdea = _context.ProjectParameters.Where(b => b.Type == "p");
+
+            return Ok(promisingIdea);
         }
     }
 }

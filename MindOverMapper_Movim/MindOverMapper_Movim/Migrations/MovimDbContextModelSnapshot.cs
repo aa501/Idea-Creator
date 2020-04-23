@@ -250,18 +250,24 @@ namespace MindOverMapper_Movim.Migrations
                         .HasColumnName("id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ProjectId");
+                    b.Property<int>("ProjectId")
+                        .HasColumnName("project_id");
 
                     b.Property<string>("PrototypeDescription")
-                        .IsRequired()
-                        .HasColumnName("description")
-                        .HasMaxLength(500)
+                        .HasColumnName("prototype_description")
+                        .HasMaxLength(1000)
                         .IsUnicode(false);
 
                     b.Property<string>("PrototypeName")
                         .IsRequired()
-                        .HasColumnName("name")
-                        .HasMaxLength(50)
+                        .HasColumnName("prototype_name")
+                        .HasMaxLength(1000)
+                        .IsUnicode(false);
+
+                    b.Property<string>("PrototypePath")
+                        .IsRequired()
+                        .HasColumnName("prototype_path")
+                        .HasMaxLength(1000)
                         .IsUnicode(false);
 
                     b.Property<string>("Uid")
@@ -291,6 +297,11 @@ namespace MindOverMapper_Movim.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnName("date_created")
                         .HasColumnType("datetime");
+
+                    b.Property<bool?>("Demographic")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("demographic")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Notes")
                         .HasColumnName("notes")
@@ -351,6 +362,186 @@ namespace MindOverMapper_Movim.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RecoveryGrant");
+                });
+
+            modelBuilder.Entity("MindOverMapper_Movim.Models.Survey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ConceptId")
+                        .HasColumnName("concept_id");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnName("date_created")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("EndDate")
+                        .HasColumnName("end_date")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Notes")
+                        .HasColumnName("notes")
+                        .HasMaxLength(2000)
+                        .IsUnicode(false);
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnName("project_id");
+
+                    b.Property<string>("Prototypes")
+                        .HasColumnName("prototypes")
+                        .HasColumnType("nvarchar(4000)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("Qualifications")
+                        .HasColumnName("qualifications")
+                        .HasColumnType("nvarchar(4000)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("Questions")
+                        .HasColumnName("questions")
+                        .HasColumnType("nvarchar(max)")
+                        .IsUnicode(false);
+
+                    b.Property<string>("Reward")
+                        .HasColumnName("reward")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnName("status")
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SurveyName")
+                        .IsRequired()
+                        .HasColumnName("name")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnName("uid")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Survey");
+                });
+
+            modelBuilder.Entity("MindOverMapper_Movim.Models.SurveyAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasColumnName("answer")
+                        .HasMaxLength(1000)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime>("DateCompleted")
+                        .HasColumnName("date_completed")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("Qid")
+                        .HasColumnName("qid");
+
+                    b.Property<string>("SurveyTakerUid")
+                        .IsRequired()
+                        .HasColumnName("survey_taker_uid")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("SurveyUid")
+                        .IsRequired()
+                        .HasColumnName("survey_uid")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnName("uid")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurveyAnswer");
+                });
+
+            modelBuilder.Entity("MindOverMapper_Movim.Models.SurveyPrototype", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("PrototypeId")
+                        .HasColumnName("prototype_id");
+
+                    b.Property<int>("SurveyId")
+                        .HasColumnName("survey_id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurveyPrototype");
+                });
+
+            modelBuilder.Entity("MindOverMapper_Movim.Models.SurveyQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnName("question_id");
+
+                    b.Property<int>("SurveyId")
+                        .HasColumnName("survey_id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurveyQuestion");
+                });
+
+            modelBuilder.Entity("MindOverMapper_Movim.Models.SurveyTaker", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Notes");
+
+                    b.Property<string>("SurveyUid")
+                        .IsRequired()
+                        .HasColumnName("notes")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<bool?>("Turk")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("turk")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnName("uid")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurveyTaker");
                 });
 
             modelBuilder.Entity("MindOverMapper_Movim.Models.User", b =>

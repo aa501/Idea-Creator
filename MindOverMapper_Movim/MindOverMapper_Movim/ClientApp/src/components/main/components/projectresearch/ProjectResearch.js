@@ -12,7 +12,9 @@ import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
 import './ProjectResearch.css';
-
+import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import * as FileSaver from 'file-saver';
 
 export default class ProjectResearch extends Component {
     constructor(props) {
@@ -33,6 +35,8 @@ export default class ProjectResearch extends Component {
             projectResearchLink2: '',
             projectResearchLink1: '',
             projectNotes: '',
+            files: [],
+            researchFiles: []
         }
     }
 
@@ -149,9 +153,11 @@ export default class ProjectResearch extends Component {
                 }],
                 'stimulus': []
             }
+        })
+        .then(response => {
+
         });
     }
-
 
     nextPage = () => {
         this.props.history.push({
@@ -160,157 +166,320 @@ export default class ProjectResearch extends Component {
         });
     }
 
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navLogout = () => {
+        this.props.history.push({
+            pathname: '/',
+            state: this.state  // need this for moving to different component
+        });
+    }
+    
+    pushToMindMap = () => {
+        this.props.history.push({
+            pathname: '/project-view',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToResearch = () => {
+        this.props.history.push({
+            pathname: '/project-research',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToConcepts = () => {
+        this.props.history.push({
+            pathname: '/concept-view',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToSurveys = () => {
+        this.props.history.push({
+            pathname: '/surveys',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    pushToPrototypes = () => {
+        this.props.history.push({
+            pathname: '/add-prototype',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navProject = () => {
+        this.props.history.push({
+            pathname: '/project-landing-page',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+     downloadFile = (file) => {
+            axios.get('/api/prototype/file/' + file, {
+                responseType: 'arraybuffer',
+                headers: {
+                    Authorization: 'Bearer ' + this.state.userData.token,
+                    'Content-Type': 'text/html'
+
+                }
+            })
+                .then(response => {
+                    let downloadedFile = new Blob([response.data], { type: response.headers['content-type'] })
+                    FileSaver.saveAs(downloadedFile, file);
+                });
+        }
+
+    onDrop = (files) => {
+        this.setState({ files: files });
+    }
+
     state = { showing: true };
 
     render() {
        const { showing } = this.state;
         return (
-            <div className='blue-card-container'>
-                <h3 className="page-title">Research</h3>
-                <Container>
-                    <Row id='r-and-d-col'>
-                        <Col md={{ span: 5, offset: 0 }}>
-                            <Row>
-                                <TextField id="projectLink-input"
-                                    value={this.state.projectResearch1}
-                                    onChange={this.handleProjectResearch1Change}
-                                    placeholder="Area of Research 1"
-                                    multiline
-                                    rows="1"
-                                    label="Area of Research 1"
-                                    margin="normal"
-                                    variant="outlined">
-                                </TextField>
-                            </Row>
-                            <Row>
-                                <TextField id="projectLink-input"
-                                    value={this.state.projectResearchLink1}
-                                    onChange={this.handleProjectResearchLink1Change}
-                                    placeholder="Link"
-                                    multiline
-                                    rows="1"
-                                    label="Link"
-                                    margin="normal"
-                                    variant="outlined">
-                                </TextField>
-                            </Row>
-                        </Col>
-                        <Col md={{ span: 6, offset: 0 }}>
-                            <Row>
-                                <TextField id="projectDescription-input"
-                                    value={this.state.projectNotes}
-                                    onChange={this.handleProjectNotesChange}
-                                    placeholder="Enter Research Notes"
-                                    multiline
-                                    rows="4"
-                                    label="Notes"
-                                    margin="normal"
-                                    variant="outlined">
-                                </TextField>
-                            </Row>
-                            </Col>
-                    </Row>
-                    <Row id='r-and-d-col'>
-                        <Col md={{ span: 5, offset: 0 }}>
-                            <Row>
-                                <TextField id="projectLink-input"
-                                    value={this.state.projectResearch2}
-                                    onChange={this.handleProjectResearch2Change}
-                                    placeholder="Area of Research 2"
-                                    multiline
-                                    rows="1"
-                                    label="Area of Research 2"
-                                    margin="normal"
-                                    variant="outlined">
-                                </TextField>
-                            </Row>
-                            <Row>
-                                <TextField id="projectLink-input"
-                                    value={this.state.projectResearchLink2}
-                                    onChange={this.handleProjectResearchLink2Change}
-                                    placeholder="Link"
-                                    multiline
-                                    rows="1"
-                                    label="Link"
-                                    margin="normal"
-                                    variant="outlined">
-                                </TextField>
-                            </Row>
-                        </Col>
-                        <Col md={{ span: 6, offset: 0 }}>
 
-                       </Col>
-                    </Row>
-                    <Row id='r-and-d-col'>
-                        <Col md={{ span: 5, offset: 0 }}>
-                            <Row>
-                                <TextField id="projectLink-input"
-                                    value={this.state.projectResearch3}
-                                    onChange={this.handleProjectResearch3Change}
-                                    placeholder="Area of Research 3"
-                                    multiline
-                                    rows="1"
-                                    label="Area of Research 3"
-                                    margin="normal"
-                                    variant="outlined">
-                                </TextField>
-                            </Row>
-                            <Row>
-                                <TextField id="projectLink-input"
-                                    value={this.state.projectResearchLink3}
-                                    onChange={this.handleProjectResearchLink3Change}
-                                    placeholder="Link"
-                                    multiline
-                                    rows="1"
-                                    label="Link"
-                                    margin="normal"
-                                    variant="outlined">
-                                </TextField>
-                            </Row>
-                        </Col>
-                    </Row>
-                    <Row>
-                     <div>
-                        <Button color="success" onClick={() => this.setState({ showing: !showing })}><FontAwesomeIcon icon="upload"/>Upload Files</Button>                      {showing
-                            ? <div className="zone">
-                                <Dropzone onDrop={this.onDrop} multiple>
-                                    {({ getRootProps, getInputProps, isDragActive, acceptedFiles }) => (
-                                        <div {...getRootProps()}>
-                                            <input {...getInputProps()} />
-                                            {isDragActive ? "Drop your file here" : 'Click or drag a file to upload'}
-                                            <ul className="list-group mt-2">
-                                                {acceptedFiles.length > 0 && acceptedFiles.map(acceptedFile => (
-                                                    <li className="list-group-item list-group-item-success">
-                                                        {acceptedFile.name}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                </Dropzone>
+            <div id="research-container">
+
+                <SideNav expanded="true" style={{
+                    backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"
+                }}
+                    onSelect={(selected) => {
+                        // Add your code here
+                    }}
+                >
+
+
+
+                    <SideNav.Nav defaultSelected="">
+
+
+                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
+                            <NavIcon>
+                                <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 20, fontSize: 16 }}>
+                                Home
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem expanded="true" role="menuitem" eventKey="project">
+                            <NavIcon>
+                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Project Options
+                            </NavText>
+                            <NavItem eventKey="options" onClick={() => this.navProject()}>
+                                <NavText id="subnav">
+                                    Project Home
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToResearch}>
+                                <NavText style={{ color: "#0283C4"}}id="subnav">
+                                    Research
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToConcepts}>
+                                <NavText id="subnav">
+                                    Concepts
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToMindMap}>
+                                <NavText id="subnav">
+                                    Mind Map
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToPrototypes}>
+                                <NavText id="subnav">
+                                    Prototypes
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToSurveys}>
+                                <NavText id="subnav">
+                                    Surveys
+                                </NavText>
+                            </NavItem>
+                        </NavItem>
+
+                        <NavItem role="menuitem" eventKey="logout"  onClick={() => this.navLogout()}>
+                            <NavIcon>
+                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Logout
+                            </NavText>
+
+                        </NavItem>
+
+
+                    </SideNav.Nav>
+
+                </SideNav>
+
+
+                <div id='research-main-content'>
+                    <div>
+                        <h3 id="subtitle">Research</h3>
+                        <hr style={{ width: "30%" }} id="hr-1" />
+                    </div>
+                   
+                        <Row id='r-and-d-col'>
+                            <Col md={{ span: 5, offset: 0 }}>
+                                <Row>
+                                    <TextField id="projectLink-input"
+                                        value={this.state.projectResearch1}
+                                        onChange={this.handleProjectResearch1Change}
+                                        placeholder="Area of Research 1"
+                                        multiline
+                                        rows="1"
+                                        label="Area of Research 1"
+                                        margin="normal"
+                                        variant="outlined">
+                                    </TextField>
+                                </Row>
+                                <Row>
+                                    <TextField id="projectLink-input"
+                                        value={this.state.projectResearchLink1}
+                                        onChange={this.handleProjectResearchLink1Change}
+                                        placeholder="Link"
+                                        multiline
+                                        rows="1"
+                                        label="Link"
+                                        margin="normal"
+                                        variant="outlined">
+                                    </TextField>
+                                </Row>
+                            </Col>
+                            <Col md={{ span: 6, offset: 0 }}>
+                                <Row>
+                                    <TextField id="projectDescription-input"
+                                        value={this.state.projectNotes}
+                                        onChange={this.handleProjectNotesChange}
+                                        placeholder="Enter Research Notes"
+                                        multiline
+                                        rows="4"
+                                        label="Notes"
+                                        margin="normal"
+                                        variant="outlined">
+                                    </TextField>
+                                </Row>
+                                </Col>
+                        </Row>
+                        <Row id='r-and-d-col'>
+                            <Col md={{ span: 5, offset: 0 }}>
+                                <Row>
+                                    <TextField id="projectLink-input"
+                                        value={this.state.projectResearch2}
+                                        onChange={this.handleProjectResearch2Change}
+                                        placeholder="Area of Research 2"
+                                        multiline
+                                        rows="1"
+                                        label="Area of Research 2"
+                                        margin="normal"
+                                        variant="outlined">
+                                    </TextField>
+                                </Row>
+                                <Row>
+                                    <TextField id="projectLink-input"
+                                        value={this.state.projectResearchLink2}
+                                        onChange={this.handleProjectResearchLink2Change}
+                                        placeholder="Link"
+                                        multiline
+                                        rows="1"
+                                        label="Link"
+                                        margin="normal"
+                                        variant="outlined">
+                                    </TextField>
+                                </Row>
+                            </Col>
+                            <Col md={{ span: 6, offset: 0 }}>
+
+                           </Col>
+                        </Row>
+                        <Row id='r-and-d-col'>
+                            <Col md={{ span: 5, offset: 0 }}>
+                                <Row>
+                                    <TextField id="projectLink-input"
+                                        value={this.state.projectResearch3}
+                                        onChange={this.handleProjectResearch3Change}
+                                        placeholder="Area of Research 3"
+                                        multiline
+                                        rows="1"
+                                        label="Area of Research 3"
+                                        margin="normal"
+                                        variant="outlined">
+                                    </TextField>
+                                </Row>
+                                <Row>
+                                    <TextField id="projectLink-input"
+                                        value={this.state.projectResearchLink3}
+                                        onChange={this.handleProjectResearchLink3Change}
+                                        placeholder="Link"
+                                        multiline
+                                        rows="1"
+                                        label="Link"
+                                        margin="normal"
+                                        variant="outlined">
+                                    </TextField>
+                                </Row>
+                            </Col>
+                        </Row>
+                        <Row>
+                         <div>
+                            <Button color="success" onClick={() => this.setState({ showing: !showing })}><FontAwesomeIcon icon="upload"/>Upload Files</Button>                      {showing
+                                ? <div className="zone">
+                                    <Dropzone onDrop={this.onDrop} multiple>
+                                        {({ getRootProps, getInputProps, isDragActive, acceptedFiles }) => (
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                {isDragActive ? "Drop your file here" : 'Click or drag a file to upload'}
+                                                <ul className="list-group mt-2">
+                                                    {acceptedFiles.length > 0 && acceptedFiles.map(acceptedFile => (
+                                                        <li className="list-group-item list-group-item-success">
+                                                            {acceptedFile.name}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </Dropzone>
+                                </div>
+                                : null}
                             </div>
-                            : null}
-                        </div>
-                    </Row>
-                    <Row>
-                        <Col md={{ span: 3, offset: 0 }}>
-                            <div id='project-id-holder'>
-                                Project ID: <input type="text" disabled='true' class="form-control" id="projectId-input" value={'#' + this.state.projectNumber} />
-                            </div>
-                        </Col>
-                        <Col md={{ span: 3, offset: 0 }}>
-                            <div id='project-id-holder'>
-                                Project Owner: <input type="text" disabled='true' class="form-control" id="projectId-input" value={this.props.location.state.userData.firstName + ' ' + this.props.location.state.userData.lastName} />
-                            </div>
-                        </Col>
-                        <Col md={{ span: 2, offset: 1 }}>
-                            <div id='confirmation-button-holder'>
-                                <Button color='warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
-                                <Button color='primary' id='submit-project' disabled={this.state.projectName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
+                        </Row>
+                        <Row>
+                            <Col md={{ span: 3, offset: 0 }}>
+                                <div id='project-id-holder'>
+                                    Project ID: <input type="text" disabled='true' class="form-control" id="projectId-input" value={'#' + this.state.projectNumber} />
+                                </div>
+                            </Col>
+                            <Col md={{ span: 3, offset: 0 }}>
+                                <div id='project-id-holder'>
+                                    Project Owner: <input type="text" disabled='true' class="form-control" id="projectId-input" value={this.props.location.state.userData.firstName + ' ' + this.props.location.state.userData.lastName} />
+                                </div>
+                            </Col>
+                            <Col md={{ span: 2, offset: 1 }}>
+                                <div id='confirmation-button-holder'>
+                                    <Button color='warning' id='reset-fields' onClick={this.resetFields}><FontAwesomeIcon icon="undo" /> Reset</Button>
+                                    <Button color='primary' id='submit-project' disabled={this.state.projectName === ''} onClick={this.nextPage}><FontAwesomeIcon icon="check" /> Submit</Button>
+                                </div>
+                            </Col>
+                        </Row>
+                   
+                </div>
+
             </div>
         );
     }

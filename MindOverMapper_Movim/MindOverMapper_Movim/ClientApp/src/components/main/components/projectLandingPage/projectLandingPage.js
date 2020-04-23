@@ -47,12 +47,10 @@ export default class ProjectLandingPage extends Component {
         this.state = {
             userData: this.props.location.state.userData,
             projectName: this.props.location.state.projectName,
-            concepts: [],
         }
     }
 
     componentDidMount = () => {
-      this.pullConcepts();
         if (this.props.location.state === undefined) {
             this.props.history.push({
                 pathname: '/'
@@ -63,6 +61,7 @@ export default class ProjectLandingPage extends Component {
                 projectName: this.props.location.state.projectName,
             });
         }
+        console.log(this.state.projectName)
     }
 
     pushToMindMap = () => {
@@ -74,7 +73,7 @@ export default class ProjectLandingPage extends Component {
 
     pushToResearch = () => {
         this.props.history.push({
-            pathname: '/project-research',
+            pathname: '/project-research-editing',
             state: this.state  // need this for moving to different component
         });
     }
@@ -88,7 +87,7 @@ export default class ProjectLandingPage extends Component {
 
     pushToSurveys = () => {
         this.props.history.push({
-            pathname: '/survey-question',
+            pathname: '/surveys',
             state: this.state  // need this for moving to different component
         });
     }
@@ -100,101 +99,92 @@ export default class ProjectLandingPage extends Component {
         });
     }
 
-    pullConcepts = async () => {
-        const response = await axios.get('/api/project/' + this.state.projectName.uid + '/get-concepts', {
-            headers: {
-                Authorization: 'Bearer ' + this.state.userData.token
-              }//the token is a variable which holds the token
-          }).then(response => response.data);
-              this.setState({
-              concepts: response
-          });
-        const test = await console.log(this.state.concepts);
+    navHome = () => {
+        this.props.history.push({
+            pathname: '/home',
+            state: this.state  // need this for moving to different component
+        });
+    }
+
+    navLogout = () => {
+        this.props.history.push({
+            pathname: '/',
+            state: this.state  // need this for moving to different component
+        });
     }
 
     render() {
         return (
             <div class="landing-page-container">
-                <SideNav
+                <SideNav expanded="true" style={{
+                    backgroundColor: "#EBF2F2", marginTop: 60, borderRight: "solid", borderRightColor: "#028DCB"
+                }}
                     onSelect={(selected) => {
                         // Add your code here
                     }}
                 >
 
-                    <SideNav.Toggle />
+
 
                     <SideNav.Nav defaultSelected="">
 
 
-                        <NavItem role="menuitem" eventKey="home">
+                        <NavItem style={{ marginTop: 40 }} role="menuitem" eventKey="home" onClick={() => this.navHome()}>
                             <NavIcon>
-                                <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="home" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 20, fontSize: 16 }}>
                                 Home
                             </NavText>
 
                         </NavItem>
 
-                        <NavItem eventKey="charts">
+                        <NavItem expanded="true" role="menuitem" eventKey="project">
                             <NavIcon>
-                                <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
-                            <NavText style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                Add Project
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Project Options
                             </NavText>
-                            <NavItem eventKey="charts/linechart">
-                                <NavText>
-                                    Line Chart
+                            <NavItem eventKey="options" onClick={() => this.navProject()}>
+                                <NavText style={{ color: "#0283C4" }} id="subnav">
+                                    Project Home
                                 </NavText>
                             </NavItem>
-                            <NavItem eventKey="charts/barchart">
-                                <NavText>
-                                    Bar Chart
+                            <NavItem eventKey="options"  onClick={this.pushToResearch}>
+                                <NavText id="subnav">
+                                    Research
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToConcepts}>
+                                <NavText id="subnav">
+                                    Concepts
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToMindMap}>
+                                <NavText id="subnav">
+                                    Mind Map
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToPrototypes}>
+                                <NavText id="subnav">
+                                    Prototypes
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToSurveys}>
+                                <NavText id="subnav">
+                                    Surveys
                                 </NavText>
                             </NavItem>
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="settings">
+                        <NavItem role="menuitem" eventKey="logout" onClick={() => this.navLogout()}>
                             <NavIcon>
-                                <FontAwesomeIcon icon="cogs" id="dash-icon" style={{ fontSize: '1.75em' }} />
+                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                Settings
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="info">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="info-circle" id="dash-icon" style={{ fontSize: '1.75em' }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                About
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="help">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="question" id="dash-icon" style={{ fontSize: '1.75em' }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
-                                Help
-                            </NavText>
-
-                        </NavItem>
-
-                        <NavItem role="menuitem" eventKey="logout">
-                            <NavIcon>
-                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.75em' }} />
-                            </NavIcon>
-
-                            <NavText id="nav-text" style={{ paddingTop: 13, paddingRight: 32, fontSize: 18 }}>
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
                                 Logout
                             </NavText>
 
@@ -209,7 +199,7 @@ export default class ProjectLandingPage extends Component {
 
                     <div class="landing-page-body">
 
-                        <h2 id="project-name" >{this.state.projectName.title}</h2>
+                        <h3 id="project-name" >{this.state.projectName.title}</h3>
                         <hr id="hr-1" />
 
                         <div class="page-body-1 row">
@@ -264,6 +254,19 @@ export default class ProjectLandingPage extends Component {
                                 </Card>
                             </div>
                             <div class="col-sm-2">
+                                <Card class="card-button-5">
+                                    <CardActionArea onClick={this.pushToMindMap}>
+                                        <CardContent>
+                                            <Typography id="options-label">
+                                                <center>
+                                                    Mind Map
+                                                 </center>
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>
+                            <div class="col-sm-2">
                                 <Card class="card-button-3">
                                     <CardActionArea onClick={this.pushToPrototypes}>
                                         <CardContent>
@@ -283,19 +286,6 @@ export default class ProjectLandingPage extends Component {
                                             <Typography id="options-label">
                                                 <center>
                                                     Surveys
-                                                 </center>
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </div>
-                            <div class="col-sm-2">
-                                <Card class="card-button-5">
-                                    <CardActionArea onClick={this.pushToMindMap}>
-                                        <CardContent>
-                                            <Typography id="options-label">
-                                                <center>
-                                                    Mind Map
                                                  </center>
                                             </Typography>
                                         </CardContent>

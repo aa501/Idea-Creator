@@ -20,7 +20,7 @@ export default class Concept extends Component {
         this.state = {
             projectName: '',
             userData: this.props.location.state.userData || this.props.userData,
-            conceptName: '',
+            conceptName: this.props.location.state.projectConcept || '',
             newsHeadline: '',
             customer: '',
             customerProblem: '',

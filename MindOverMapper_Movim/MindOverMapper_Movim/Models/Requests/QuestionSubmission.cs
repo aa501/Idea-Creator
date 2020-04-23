@@ -7,5 +7,6 @@ namespace MindOverMapper_Movim.Models
       public string Type { get; set; }
       public string Notes { get; set; }
       public string Archived { get; set; }
+      public bool Demographic { get; set; }
     }
 }

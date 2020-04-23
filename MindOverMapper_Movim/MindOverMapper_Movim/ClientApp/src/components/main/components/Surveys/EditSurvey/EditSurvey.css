@@ -1,0 +1,13 @@
+#test {
+  align-items: center;
+}
+
+#add-button {
+  margin-top: 25px;
+  margin-left: 5px;
+  height: 45px;
+}
+
+#surveyId {
+  width: 100px;
+}

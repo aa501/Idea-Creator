@@ -31,6 +31,8 @@ export default class MindMap extends React.Component {
       userData: this.props.userData,
       projectInfo: this.props.projectInfo,
       projectConcept: '',
+      bestIdea: '',
+      tempBestIdea: '',
       pushBack: '',
       change: false,
       diagramVersion: 0,
@@ -39,12 +41,18 @@ export default class MindMap extends React.Component {
       newState: null,
       loading: true,
       visible: true,
-      modalIsOpen: false
+      visible2: true,
+      modalIsOpen: false,
+      modalIsOpen2: false
 
     };
     // This was adam's idea
     this.timeOutID = null;
     this.initModel();
+  }
+
+  componentDidMount = () =>  {
+    this.getBestIdea();
   }
 
   diagram;
@@ -75,12 +83,23 @@ export default class MindMap extends React.Component {
       this.setState({
           visible: !this.state.visible
       });
-  }
-  toggleModal() {
+    }
+    toggleAlert2() {
+        this.setState({
+            visible2: !this.state.visible2
+        });
+    }
+    toggleModal() {
+
       this.setState({
           modalIsOpen: !this.state.modalIsOpen
       });
-  }
+    }
+    toggleModal2() {
+        this.setState({
+            modalIsOpen2: !this.state.modalIsOpen2
+        });
+    }
 
 
   handleProjectConcept = (event) => {
@@ -89,9 +108,23 @@ export default class MindMap extends React.Component {
       });
     }
 
+    handleBestIdea = (event) => {
+        this.setState({
+            bestIdea: event.target.value
+        });
+    }
+
     goToConcept = () => {
         let projectConcept = this.state.projectConcept;
         this.props.projectConcept(projectConcept);
+    }
+
+    setBestIdea = () => {
+      let bestIdea = this.state.bestIdea;
+      this.props.bestIdea(bestIdea);
+      this.setState({
+        modalIsOpen2: false
+      });
     }
 
     viewProject = () => {
@@ -267,39 +300,42 @@ export default class MindMap extends React.Component {
       canRedo
     };
     return (
-      <Row>
-      <Col md={{ span: 9 }}>
-        <Toolbar {...toolbarProps} />
-      </Col>
-      <Col md={{ span: 2 }}>
-      <div id="conceptButton" align="right">
-          <Button color="secondary" onClick={this.viewProject}><FontAwesomeIcon icon="arrow-left"/> Back to Project</Button>
+      <div>
+        <Row>
+          <Col md={{ span: 8 }}>
+            <Toolbar {...toolbarProps} />
+          </Col>
+          <Col md={{ span: 2 }}>
+            <div id="conceptButton" align="right">
+                <Button color="secondary" onClick={this.viewProject}><FontAwesomeIcon icon="arrow-left"/> Back to Project</Button>
+            </div>
+          </Col>
+          <Col md={{ span: 1 }}>
+            <div id="conceptButton" align="right">
+                <Button color="primary" onClick={this.toggleModal.bind(this)}><FontAwesomeIcon icon="plus"/> Concept</Button>
+            </div>
+          </Col>
+        </Row>
+
+        <Modal isOpen={this.state.modalIsOpen}>
+            <ModalHeader toggle={this.toggleModal.bind(this)}>Concept</ModalHeader>
+            <ModalBody>
+                <div className='project-concept'>
+                    <TextField
+                        value={this.state.projectConcept}
+                        onChange={this.handleProjectConcept}
+                        label="Title"
+                        margin="normal"
+                        placeholder="Enter Title..."
+                        variant="outlined">
+                    </TextField>
+                </div>
+            </ModalBody>
+            <ModalFooter>
+                  <Button color="primary" onClick={this.goToConcept}>Add Concept</Button>
+            </ModalFooter>
+        </Modal>
       </div>
-      </Col>
-      <Col md={{ span: 1.5 }}>
-      <div id="conceptButton" align="right">
-          <Button color="primary" onClick={this.toggleModal.bind(this)}><FontAwesomeIcon icon="plus"/> Concept</Button>
-      </div>
-      <Modal isOpen={this.state.modalIsOpen}>
-          <ModalHeader toggle={this.toggleModal.bind(this)}>Concept</ModalHeader>
-          <ModalBody>
-              <div className='project-concept'>
-                  <TextField
-                      value={this.state.projectConcept}
-                      onChange={this.handleProjectConcept}
-                      label="Title"
-                      margin="normal"
-                      placeholder="Enter Title..."
-                      variant="outlined">
-                  </TextField>
-              </div>
-          </ModalBody>
-          <ModalFooter>
-                        <Button color="primary" onClick={this.goToConcept}>Add Concept</Button>
-          </ModalFooter>
-      </Modal>
-      </Col>
-      </Row>
     );
   }
 
@@ -358,7 +394,7 @@ export default class MindMap extends React.Component {
           ContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id"><CheckCircleIcon /> Newer Changes Detected, Loading...</span>}
+          message={<span id="message-id"><CheckCircleIcon /> Newer Changes Detetcted, Loading...</span>}
           action={[
             <IconButton
               key="close"
