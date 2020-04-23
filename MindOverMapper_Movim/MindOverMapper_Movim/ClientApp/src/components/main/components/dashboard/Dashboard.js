@@ -453,7 +453,7 @@ export default class Dashboard extends Component {
                             {this.state.projectList.map((project, index) => {
                                 return (
                                     <div class='project-paper-holder'>
-                                        <Card style={{ height: 150, width: 240, borderTop: "solid", borderTopWidth: "6px", borderTopColor: "#028ECC"}}>
+                                        <Card style={{ height: 200, width: 240, borderTop: "solid", borderTopWidth: "6px", borderTopColor: "#028ECC"}}>
                                             <Paper className='project-paper'>
                                                 <CardActionArea style={{ height: 200 }} onClick={() => this.viewProject(project)}>
 
