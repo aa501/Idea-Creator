@@ -511,7 +511,7 @@ export default class ConceptView extends Component {
 
     pushToResearch = () => {
         this.props.history.push({
-            pathname: '/project-research',
+            pathname: '/project-research-editing',
             state: this.state  // need this for moving to different component
         });
     }
@@ -630,7 +630,7 @@ export default class ConceptView extends Component {
 
                         <NavItem role="menuitem" eventKey="add-question" onClick={() => this.addQuestion()}>
                             <NavIcon>
-                                <FontAwesomeIcon icon="sign-out-alt" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                                <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
                             <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>

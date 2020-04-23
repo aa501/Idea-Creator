@@ -875,6 +875,8 @@ export default class EditSurvey extends Component {
       if (this.state.qstType === "Check All") {
         return(
           <div>
+          <Row>
+          <Col>
             <FormGroup>
               <TextField id="text-field"
                   value={this.state.subQuestion}
@@ -888,7 +890,8 @@ export default class EditSurvey extends Component {
                   variant="outlined">
               </TextField>
             </FormGroup>
-            <FormGroup>
+            </Col>
+            <Col>
               <TextField
                   value={this.state.choices}
                   onChange={this.handleChoices}
@@ -899,7 +902,8 @@ export default class EditSurvey extends Component {
                   variant="outlined">
               </TextField>
               <Button id ="add-button" variant="success" onClick={() => this.addChoice()}><FontAwesomeIcon icon="plus" /></Button>
-            </FormGroup>
+              </Col>
+              </Row>
             <FormGroup>
               <p><b> Your Answers: </b></p>
               {

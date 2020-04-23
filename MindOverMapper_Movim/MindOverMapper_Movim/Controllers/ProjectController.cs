@@ -214,6 +214,8 @@ namespace MindOverMapper_Movim.Controllers
         public ActionResult DeleteProject(string uid)
         {
             var proj = _context.Project.Where(p => p.Uid == uid).FirstOrDefault<Project>();
+            AzureFileService fileService = new AzureFileService(this._appSettings);
+
 
             if (proj == null)
             {
@@ -222,6 +224,41 @@ namespace MindOverMapper_Movim.Controllers
 
             var perm = _context.Permissions.Where(p => p.ProjId == proj.Id);
             var param = _context.ProjectParameters.Where(p => p.ProjectId == proj.Id).ToList<ProjectParameters>();
+            var concepts = _context.Concept.Where(c => c.ProjectId == proj.Id).ToList<Concept>();
+            var surveys = _context.Survey.Where(u => u.ProjectId == proj.Id).ToList<Survey>();
+            var prototypes = _context.Prototype.Where(p => p.ProjectId == proj.Id).ToList<Prototype>();
+
+            foreach (Survey u in surveys)
+            {
+                if (u.Id != null)
+                {
+                    var answers = _context.SurveyAnswer.Where(a => a.SurveyUid == u.Uid);
+                    var takers = _context.SurveyTaker.Where(t => t.SurveyUid == u.Uid);
+                    _context.SurveyAnswer.RemoveRange(answers);
+                    _context.SurveyTaker.RemoveRange(takers);
+                }
+            }
+
+            // foreach (Prototype p in prototypes)
+            // {
+            //     if (p.Id != null)
+            //     {
+            //         var result = fileService.DeleteFile(p.PrototypePath, p.PrototypeName);
+            //         if (result == true)
+            //         {
+            //           _context.Prototype.Remove(p);
+            //         }
+            //     }
+            // }
+
+            foreach (Concept c in concepts)
+            {
+                if (c.Id != null)
+                {
+                    var iAnswers = _context.IdeationAnswers.Where(i => i.Cid == i.Id);
+                    _context.IdeationAnswers.RemoveRange(iAnswers);
+                }
+            }
 
             foreach (ProjectParameters p in param)
             {
@@ -231,7 +268,8 @@ namespace MindOverMapper_Movim.Controllers
                     _context.Links.Remove(link);
                 }
             }
-
+            _context.Survey.RemoveRange(surveys);
+            _context.Concept.RemoveRange(concepts);
             _context.ProjectParameters.RemoveRange(param);
             _context.Permissions.RemoveRange(perm);
             _context.Project.Remove(proj);

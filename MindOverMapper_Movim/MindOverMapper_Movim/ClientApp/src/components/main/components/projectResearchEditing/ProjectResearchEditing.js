@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -190,10 +191,10 @@ export default class ProjectResearchEditing extends Component {
                     Authorization: 'Bearer ' + this.state.userData.token, //the token is a variable which holds the token
                     'Content-Type': 'multipart/form-data'
                 }
-            }           
+            }
             ).then(response => {
                 this.setState({researchFiles: response.data});
-                
+
             });
         }
 
@@ -209,7 +210,7 @@ export default class ProjectResearchEditing extends Component {
         let r2l = '';
         let r3l = '';
         let ex = '';
-        
+
         axios.get(`/api/research/${uid}`, {
             headers: {
                 Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
@@ -223,7 +224,7 @@ export default class ProjectResearchEditing extends Component {
                 Authorization: 'Bearer ' + this.state.userData.token //the token is a variable which holds the token
             }
         }).then(response => response.data);
-    
+
         console.log(response)
         if (response.areasOfResearch.length === 1) {
             console.log("1");
@@ -301,7 +302,7 @@ export default class ProjectResearchEditing extends Component {
 
     pushToResearch = () => {
         this.props.history.push({
-            pathname: '/project-research',
+            pathname: '/project-research-editing',
             state: this.state  // need this for moving to different component
         });
     }
@@ -468,7 +469,32 @@ export default class ProjectResearchEditing extends Component {
 
 
                 <div id='research-main-content'>
-                    <div>
+
+                <div>
+                    <h3 id="subtitle">Attachments</h3>
+                    <hr style={{ width: "30%" }} id="hr-1" />
+                </div>
+                <div  align="center">
+                  <TableContainer style={{ width: "80%" }} component={Paper}>
+                    <Table size="small" aria-label="a dense table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        { this.state.researchFiles.map(file => (
+                            <TableRow>
+                                <TableCell style={{maxWidth:"130px", wordWrap: 'break-word'}}>{file.fileName}</TableCell>
+                                <TableCell style={{maxWidth:"70px"}}><a href="javascript:void(0);" onClick={() => { this.downloadFile(file.fileName) }}><Button color="primary">Download </Button></a></TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    </div>
+                    <div style={{marginTop: 20}}>
                         <h3 id="subtitle">Update Research</h3>
                         <hr style={{ width: "30%" }} id="hr-1" />
                     </div>
@@ -599,13 +625,13 @@ export default class ProjectResearchEditing extends Component {
 
                         <div>
                             {
-                                this.state.researchFiles.map( file => 
+                                this.state.researchFiles.map( file =>
                                     <Card>
                                         <a href="javascript:void(0);" onClick={() => { this.downloadFile(file.fileName) }}>{file.fileName}</a>
                                     </Card>
                                 )
                             }
-                            
+
                         </div>
                     </Row>
                         <Row>

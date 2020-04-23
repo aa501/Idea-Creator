@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
-import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
+import { Button, Form, FormGroup, FormText, Label, Input, Alert } from 'reactstrap';
 import { Container, Row, Col } from 'react-bootstrap';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -319,6 +319,15 @@ export default class ProjectSurvey extends Component {
 
     openDeployDialog = (uid) => {
       this.setState({ deployDialog: true,
+                      warning: false,
+                      currentUid: uid,
+                      settingStatus: surveyStates.Deployed
+                    })
+    }
+
+    openOverrideDialog = (uid) => {
+      this.setState({ deployDialog: true,
+                      warning: true,
                       currentUid: uid,
                       settingStatus: surveyStates.Deployed
                     })
@@ -380,6 +389,17 @@ export default class ProjectSurvey extends Component {
         )
     }
 
+    stateColor (state) {
+      if (state == "Written")
+        return 'rgb(102, 178, 255)'
+
+      if (state == "Deployed")
+        return 'rgb(255, 205, 0)'
+
+      if (state == "Closed")
+        return 'rgb(20, 166, 0)'
+    }
+
     pushToMindMap = () => {
       this.props.history.push({
           pathname: '/project-view',
@@ -434,6 +454,26 @@ export default class ProjectSurvey extends Component {
             pathname: '/project-landing-page',
             state: this.state  // need this for moving to different component
         });
+    }
+
+    surveyStateManager = (surveyState, standard) => {
+
+      if (this.state.userData.type != "admin")
+      {
+        return true;
+      }
+
+      else if (this.state.userData.type == "admin")
+      {
+        if (surveyState != standard)
+        {
+          return true;
+        }
+      }
+
+      else {
+        return false;
+      }
     }
 
   render() {
@@ -527,13 +567,15 @@ export default class ProjectSurvey extends Component {
 
                  <div class="row" id="survey-id">
                      <div className="d-flex flex-wrap justify-content-around">
+                      <div hidden={this.state.userData.type != "admin"}>
                        <Button style={{ height: 60, backgroundColor: "#009941", borderColor: "#009941"}}onClick={this.newSurvey}>Create New Survey</Button>
+                       </div>
                      </div>
                       <div className='survey-board-body'>
                           {this.state.specificSurveys.map((survey, index) => {
                               return (
                                   <div class='survey-paper-holder'>
-                                      <Card style={{width: 400}}>
+                                      <Card style={{width: 400, borderTop: "solid", borderTopWidth: "6px", borderTopColor: this.stateColor(survey.status)}}>
                                           <Paper className='survey-paper'>
                                                   <CardContent>
                                                       <Typography gutterBottom variant="h5" component="h2">
@@ -563,7 +605,7 @@ export default class ProjectSurvey extends Component {
                                                       </Typography>
                                                       <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
                                                           <Row style={{marginLeft: "3px"}}><FontAwesomeIcon id='font-awesome-space-right' icon="comments" style={{ fontSize: '1.4em' }}/>
-                                                          <strong>Turk:</strong> { this.state.mTurk ? <div class="offset">Yes</div> : <div class="offset">No</div>}</Row>
+                                                          <strong>Turk:</strong> { survey.hitId ? <div class="offset">Yes</div> : <div class="offset">No</div>}</Row>
                                                       </Typography>
                                                       <hr />
                                                       <Typography id="description-logo" variant="body2" color="textSecondary" component="p">
@@ -573,13 +615,14 @@ export default class ProjectSurvey extends Component {
                                                       </Typography>
                                                       <hr />
                                                       <Typography>
-                                                      <div className="d-flex flex-wrap justify-content-around">
-                                                        <div hidden={survey.status != "Written"}><Button color="warning" onClick={() => this.editSurvey(survey)}>Edit</Button></div>
-                                                        <div hidden={survey.status != "Written"}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>Deploy</Button></div>
-                                                        <div hidden={survey.status != "Deployed"}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>Extend</Button></div>
-                                                        <div hidden={survey.status == "Written"}><Button color="success" onClick={() => this.analyzeSurvey(survey)}>View Data</Button></div>
-                                                        <div hidden={survey.status != "Deployed"}><Button color="danger" onClick={() => this.handleOpenEndConfirmationModal(survey.uid)}>End Now</Button></div>
-                                                      </div>
+                                                        <div className="d-flex flex-wrap justify-content-around">
+                                                          <div hidden={survey.status == "Written"}><Button color="success" onClick={() => this.analyzeSurvey(survey)}>View Data</Button></div>
+                                                          <div hidden={this.surveyStateManager(survey.status, "Written")}><Button color="warning" onClick={() => this.editSurvey(survey)}>Edit</Button></div>
+                                                          <div hidden={this.surveyStateManager(survey.status, "Written")}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>Deploy</Button></div>
+                                                          <div hidden={this.surveyStateManager(survey.status, "Deployed")}><Button color="primary" onClick={() => this.openDeployDialog(survey.uid)}>Extend</Button></div>
+                                                          <div hidden={this.surveyStateManager(survey.status, "Deployed")}><Button color="danger" onClick={() => this.handleOpenEndConfirmationModal(survey.uid)}>End Now</Button></div>
+                                                          <div hidden={this.surveyStateManager(survey.status, "Closed")}><Button color="warning" onClick={() => this.openOverrideDialog(survey.uid)}>Re-open</Button></div>
+                                                        </div>
                                                       </Typography>
                                                   </CardContent>
                                           </Paper>
@@ -595,6 +638,9 @@ export default class ProjectSurvey extends Component {
                           open={this.state.deployDialog}
                           maxWidth='xl' >
                                   <DialogContent dividers>
+                                      <div hidden={!this.state.warning}>
+                                      <Alert color="warning">WARNING: Re-opening surveys can negatively impact results.</Alert>
+                                      </div>
                                       <div><h6>Enter an end date for your survey. <br />
                                                Your choice must be at least 24 hours from now.</h6></div>
                                       <div>

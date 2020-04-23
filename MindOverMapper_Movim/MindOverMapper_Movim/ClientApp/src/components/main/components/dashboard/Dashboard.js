@@ -410,7 +410,7 @@ export default class Dashboard extends Component {
                             </NavText>
 
                         </NavItem>
-                    
+
 
                         <NavItem role="menuitem" eventKey="logout" onClick={() => this.navLogout()}>
                             <NavIcon>
