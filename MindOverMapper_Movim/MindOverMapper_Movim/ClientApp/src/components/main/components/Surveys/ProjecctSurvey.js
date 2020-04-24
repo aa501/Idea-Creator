@@ -414,7 +414,7 @@ export default class ProjectSurvey extends Component {
 
   pushToResearch = () => {
       this.props.history.push({
-          pathname: '/project-research',
+          pathname: '/project-research-editing',
           state: this.state  // need this for moving to different component
       });
   }
@@ -525,7 +525,7 @@ export default class ProjectSurvey extends Component {
                                   Research
                                 </NavText>
                           </NavItem>
-                         
+
                           <NavItem eventKey="options" onClick={this.pushToMindMap}>
                               <NavText id="subnav">
                                   Mind Map

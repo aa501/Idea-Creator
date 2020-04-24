@@ -622,17 +622,6 @@ export default class ProjectResearchEditing extends Component {
                                 </div>
                                 : null}
                         </div>
-
-                        <div>
-                            {
-                                this.state.researchFiles.map( file =>
-                                    <Card>
-                                        <a href="javascript:void(0);" onClick={() => { this.downloadFile(file.fileName) }}>{file.fileName}</a>
-                                    </Card>
-                                )
-                            }
-
-                        </div>
                     </Row>
                         <Row>
                             <Col md={{ span: 6, offset: 0 }}>

@@ -17,6 +17,10 @@ import './ProjectPrototype.css';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
+
 export default class ProjectPrototype extends Component {
     constructor(props) {
         super(props);
@@ -69,31 +73,67 @@ export default class ProjectPrototype extends Component {
         this.setState({ files: files });
     }
 
+    handleCloseErrorModal = () => {
+      this.setState({
+          errorModal: false,
+      });
+    }
 
+    openErrorModal = () => {
+      this.setState({
+          errorModal: true
+      });
+    }
+
+    handleCloseSuccessModal = () => {
+      this.setState({
+          successModal: false
+      });
+    }
+
+    openSuccessModal = () => {
+      this.setState({
+          successModal: true
+      });
+    }
 
     submitPrototype = () => {
         let formData = new FormData();
         this.state.files.map(file => {
             formData.append('Files', file);
         });
-        formData.append('ProjectId', this.state.projectName.uid);
-        formData.append('prototypeName', this.state.prototypeName);
-        formData.append('prototypeDescription', this.state.prototypeDescription);
-        formData.append('projectUid', this.state.projectName.uid);
-        axios.post('/api/prototype',
-            formData,
-            {
-                headers: {
-                    Authorization: 'Bearer ' + this.state.userData.token,
-                    'Content-Type': 'multipart/form-data'
-
-                }
-            })
-            .then(response => {
-                this.setState({ prototypes: [response.data, ...this.state.prototypes] });
-            }).catch(() => {
-          console.log("Failure");
+        if (this.state.prototypeName == '' || this.state.prototypeName == null)
+        {
+          this.setState({
+            errorModal: true,
+            errorMessage: "Enter a name for your prototype."
           });
+        }
+        else {
+          formData.append('ProjectId', this.state.projectName.uid);
+          formData.append('prototypeName', this.state.prototypeName);
+          formData.append('prototypeDescription', this.state.prototypeDescription);
+          formData.append('projectUid', this.state.projectName.uid);
+          axios.post('/api/prototype',
+              formData,
+              {
+                  headers: {
+                      Authorization: 'Bearer ' + this.state.userData.token,
+                      'Content-Type': 'multipart/form-data'
+
+                  }
+              })
+              .then(response => {
+                  this.setState({ prototypes: [response.data, ...this.state.prototypes],
+                                  successModal: true,
+                                  successMessage: "Prototype submitted"});
+              }).catch(() => {
+                this.setState({
+                  errorModal: true,
+                  errorMessage: "Prototype submission failed."
+                });
+            });
+        }
         }
 
 
@@ -225,7 +265,7 @@ export default class ProjectPrototype extends Component {
                                     Research
                                 </NavText>
                             </NavItem>
-                           
+
                             <NavItem eventKey="options" onClick={this.pushToMindMap}>
                                 <NavText id="subnav">
                                     Mind Map
@@ -347,6 +387,43 @@ export default class ProjectPrototype extends Component {
                 </div>
                 </div>
           </div>
+          <div>
+        <Dialog
+          open={this.state.errorModal}
+          TransitionComponent={Transition}
+          keepMounted
+          maxWidth='lg'
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description">
+          <DialogTitle id="responsibe-alert-dialog-slide-title">
+            {this.state.errorMessage}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={this.handleCloseErrorModal} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+      <div>
+
+        <Dialog
+          open={this.state.successModal}
+          TransitionComponent={Transition}
+          keepMounted
+          maxWidth='lg'
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description">
+          <DialogTitle id="responsibe-alert-dialog-slide-title">
+            {this.state.successMessage}
+          </DialogTitle>
+          <DialogActions>
+            <Button onClick={this.handleCloseSuccessModal} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
           </div>
         );
     }
