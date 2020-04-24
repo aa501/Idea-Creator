@@ -224,15 +224,15 @@ export default class ProjectPrototype extends Component {
                                 <NavText id="subnav">
                                     Research
                                 </NavText>
+                            </NavItem>                           
+                            <NavItem eventKey="options" onClick={this.pushToMindMap}>
+                                <NavText id="subnav">
+                                    Mind Map
+                                </NavText>
                             </NavItem>
                             <NavItem eventKey="options" onClick={this.pushToConcepts}>
                                 <NavText  id="subnav">
                                     Concepts
-                                </NavText>
-                            </NavItem>
-                            <NavItem eventKey="options" onClick={this.pushToMindMap}>
-                                <NavText id="subnav">
-                                    Mind Map
                                 </NavText>
                             </NavItem>
                             <NavItem eventKey="options" onClick={this.pushToPrototypes}>
