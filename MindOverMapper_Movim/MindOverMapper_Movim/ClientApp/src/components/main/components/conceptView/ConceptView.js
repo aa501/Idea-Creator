@@ -625,14 +625,15 @@ export default class ConceptView extends Component {
                                     Research
                                 </NavText>
                             </NavItem>
-                            <NavItem eventKey="options" onClick={this.pushToConcepts}>
-                                <NavText style={{ color: "#0283C4" }} id="subnav">
-                                    Concepts
-                                </NavText>
-                            </NavItem>
+                            
                             <NavItem eventKey="options" onClick={this.pushToMindMap}>
                                 <NavText id="subnav">
                                     Mind Map
+                                </NavText>
+                            </NavItem>
+                            <NavItem eventKey="options" onClick={this.pushToConcepts}>
+                                <NavText style={{ color: "#0283C4" }} id="subnav">
+                                    Concepts
                                 </NavText>
                             </NavItem>
                             <NavItem eventKey="options" onClick={this.pushToPrototypes}>
