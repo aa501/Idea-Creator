@@ -241,12 +241,12 @@ export default class ProjectLandingPage extends Component {
                                 </Card>
                             </div>
                             <div class="col-sm-2">
-                                <Card class="card-button-2">
-                                    <CardActionArea onClick={this.pushToConcepts}>
+                                <Card class="card-button-5">
+                                    <CardActionArea onClick={this.pushToMindMap}>
                                         <CardContent>
                                             <Typography id="options-label">
                                                 <center>
-                                                    Concepts
+                                                    Mind Map
                                                  </center>
                                             </Typography>
                                         </CardContent>
@@ -254,12 +254,12 @@ export default class ProjectLandingPage extends Component {
                                 </Card>
                             </div>
                             <div class="col-sm-2">
-                                <Card class="card-button-5">
-                                    <CardActionArea onClick={this.pushToMindMap}>
+                                <Card class="card-button-2">
+                                    <CardActionArea onClick={this.pushToConcepts}>
                                         <CardContent>
                                             <Typography id="options-label">
                                                 <center>
-                                                    Mind Map
+                                                    Concepts
                                                  </center>
                                             </Typography>
                                         </CardContent>

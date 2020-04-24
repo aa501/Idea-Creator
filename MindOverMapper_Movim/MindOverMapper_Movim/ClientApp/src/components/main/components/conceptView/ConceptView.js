@@ -88,8 +88,20 @@ export default class ConceptView extends Component {
     }
 
     componentDidMount = async () => {
-        this.pullConcepts();
+        await this.pullConcepts();
+        await this.getQuestions();
         console.log(this.props);
+    }
+
+    reset = async () => {
+      this.setState({
+        answers: [],
+        newAnswers: [],
+        updatedAnswers: [],
+        answerQueue: '',
+        combinedAnswered: [],
+        unansweredQuestions: [],
+      });
     }
 
     pullConcepts = async () => {
@@ -176,7 +188,6 @@ export default class ConceptView extends Component {
             deathThreats: concept.deathThreats,
             completedConcept: true
           }, () => {
-          this.getQuestions();
         });
         this.setLoading(true);
         setTimeout(1000);
@@ -211,14 +222,14 @@ export default class ConceptView extends Component {
       else {
         this.setState({
             questionModal: false
-        });
+        }, () => (this.reset()));
       }
     }
 
     handleCloseOldQuestionModal = () => {
         this.setState({
             oldQuestionModal: false,
-        });
+        }, () => (this.reset()));
     }
 
 
@@ -636,9 +647,20 @@ export default class ConceptView extends Component {
                             </NavItem>
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="add-question" onClick={() => this.addQuestion()}>
+                        <NavItem role="menuitem" eventKey="add-question" onClick={() => this.addConcept()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
+                            </NavIcon>
+
+                            <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
+                                Add Concept
+                            </NavText>
+
+                        </NavItem>
+
+                        <NavItem hidden={this.state.userData.type != "admin"} role="menuitem" eventKey="add-question" onClick={() => this.addQuestion()}>
+                            <NavIcon>
+                                <FontAwesomeIcon icon="comment-dots" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
 
                             <NavText id="nav-text" style={{ paddingTop: 15, paddingRight: 28, fontSize: 16 }}>
@@ -700,29 +722,6 @@ export default class ConceptView extends Component {
                                 );
                             })
                             }
-                                <div className='concept-paper-holder'>
-                                    <Card>
-                                        <Paper className='concept-paper' onClick={this.addConcept}>
-                                            <CardActionArea>
-                                                <CardMedia
-                                                    style={{ height: 0, paddingTop: '56.25%' }}
-                                                    image={addProject}
-                                                    title="Add Concept"
-                                                />
-
-                                                <CardContent>
-
-                                                    <Typography variant="h5" component="h2">
-                                                        <center>
-                                                            Add Concept +
-                                        </center>
-                                                    </Typography>
-                                                </CardContent>
-                                            </CardActionArea>
-
-                                        </Paper>
-                                    </Card>
-                                </div>
                             </div>
 
                             <div>
