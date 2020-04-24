@@ -130,7 +130,7 @@ export default class ConceptQuestion extends Component {
 
     returnToMap = () => {
         this.props.history.push({
-            pathname: '/project-view',
+            pathname: '/concept-view',
             state: {
                 userData: this.state.userData,
                 projectName: this.state.projectName

@@ -6,13 +6,13 @@
 
     #subnav:hover {
         color: #0283C4;
-        
+
     }
 
 .landing-page-container {
     width: 100%;
     height: 100%;
-    
+
 }
 
 #root{
@@ -40,7 +40,7 @@
 }
 
 #project-name {
-   
+
 }
 
 #project-options {
@@ -89,7 +89,7 @@
     width: 150px;
     background-color: white;
     border-top: solid;
-    border-top-color: aqua;
+    border-top-color: rgb(153, 204, 255);
     border-top-width: 12px;
     box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
@@ -100,7 +100,7 @@
     width: 150px;
     background-color: white;
     border-top: solid;
-    border-top-color: salmon;
+    border-top-color: rgb(51, 153, 255);
     border-top-width: 12px;
     box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
@@ -111,7 +111,7 @@
     width: 150px;
     background-color: white;
     border-top: solid;
-    border-top-color: yellow;
+    border-top-color: rgb(204, 103, 255);
     border-top-width: 12px;
     box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
@@ -122,7 +122,7 @@
     width: 150px;
     background-color: white;
     border-top: solid;
-    border-top-color: violet;
+    border-top-color: rgb(178, 102, 255);
     border-top-width: 12px;
     box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
@@ -133,7 +133,7 @@
     width: 150px;
     background-color: white;
     border-top: solid;
-    border-top-color: teal;
+    border-top-color: rgb(102, 178, 255);
     border-top-width: 12px;
     box-shadow: 0 2px 5px 0 rgba(158, 168, 179, 0.6);
     border-radius: 10px;
@@ -162,7 +162,7 @@ ul {
 
 html, body {
     height: 100%;
-    
+
 }
 
 Sidenav{

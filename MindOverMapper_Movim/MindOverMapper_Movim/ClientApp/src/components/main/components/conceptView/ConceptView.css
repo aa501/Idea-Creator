@@ -45,7 +45,7 @@
 .concept-board-body {
     display: flex;
     max-height: 200vh;
-    margin-left: 10%;
+    margin-left: -10%;
     margin-right: 5%;
     width: 90%;
     flex-direction: row;

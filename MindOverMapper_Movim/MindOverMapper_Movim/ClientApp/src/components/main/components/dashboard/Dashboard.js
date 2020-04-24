@@ -402,7 +402,7 @@ export default class Dashboard extends Component {
 
                         </NavItem>
 
-                        <NavItem role="menuitem" eventKey="project" onClick={() => this.addProject()}>
+                        <NavItem hidden={this.state.userData.type != "admin"} role="menuitem" eventKey="project" onClick={() => this.addProject()}>
                             <NavIcon>
                                 <FontAwesomeIcon icon="plus" id="dash-icon" style={{ fontSize: '1.1em', color: "black" }} />
                             </NavIcon>
@@ -479,31 +479,6 @@ export default class Dashboard extends Component {
                                 );
                             })
                             }
-                            {this.state.userData.type === 'admin' ? (
-                                <div className='project-paper-holder'>
-                                    <Card>
-                                        <Paper className='project-paper' onClick={this.addProject}>
-                                            <CardActionArea>
-                                                <CardMedia
-                                                    style={{ height: 0, paddingTop: '56.25%' }}
-                                                    image={require("../../../../static/addProject.jpg")}
-                                                    title="Add Project"
-                                                />
-
-                                                <CardContent>
-
-                                                    <Typography variant="h5" component="h2">
-                                                        <center>
-                                                            Add Project +
-                                        </center>
-                                                    </Typography>
-                                                </CardContent>
-                                            </CardActionArea>
-
-                                        </Paper>
-                                    </Card>
-                                </div>
-                            ) : (null)}
                         </div>
 
 
